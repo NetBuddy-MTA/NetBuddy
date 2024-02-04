@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetBuddy.Server", "NetBuddy.Server\NetBuddy.Server.csproj", "{3A492FAB-3E59-4BA7-B2FA-A64EAB508F25}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "netbuddy.client", "netbuddy.client\netbuddy.client.esproj", "{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A492FAB-3E59-4BA7-B2FA-A64EAB508F25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A492FAB-3E59-4BA7-B2FA-A64EAB508F25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A492FAB-3E59-4BA7-B2FA-A64EAB508F25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A492FAB-3E59-4BA7-B2FA-A64EAB508F25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E7C2B1-98C0-4A60-BF37-5C54D555F6FB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13458AED-CE24-4BCC-AEA1-0540B9194A3B}
+	EndGlobalSection
+EndGlobal
