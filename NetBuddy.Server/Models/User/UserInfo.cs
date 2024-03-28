@@ -1,8 +1,8 @@
 ﻿using Marten.Schema;
 
-namespace NetBuddy.Server.Models;
+namespace NetBuddy.Server.Models.User;
 
-public sealed class User
+public sealed class UserInfo
 {
     // Email is the primary key
     [Identity]

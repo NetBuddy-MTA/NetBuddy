@@ -1,4 +1,4 @@
-﻿using NetBuddy.Server.Interfaces;
+﻿using NetBuddy.Server.Interfaces.Security;
 using static BCrypt.Net.BCrypt;
 
 namespace NetBuddy.Server.Services;

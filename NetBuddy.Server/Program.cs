@@ -1,6 +1,6 @@
 using Marten;
-using NetBuddy.Server.Interfaces;
-using NetBuddy.Server.Models;
+using NetBuddy.Server.Interfaces.Security;
+using NetBuddy.Server.Models.User;
 using NetBuddy.Server.Services;
 using NetBuddy.Server.test;
 using Weasel.Core;
@@ -24,7 +24,8 @@ builder.Services.AddMarten(options =>
     // define the connection string to the underlying postgresql database
     options.Connection(connectionString!);
     // define the index for the user model
-    options.Schema.For<User>().Index(user => user.Email);
+    options.Schema.For<UserInfo>().Index(user => user.Email);
+    options.Schema.For<Preferences>().Index(pref => pref.Email);
     // automatically create the schema if it doesn't exist
     options.AutoCreateSchemaObjects = AutoCreate.All;
 }).UseLightweightSessions();

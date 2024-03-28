@@ -1,4 +1,4 @@
-﻿namespace NetBuddy.Server.Interfaces;
+﻿namespace NetBuddy.Server.Interfaces.Security;
 
 public interface IPasswordService
 {
