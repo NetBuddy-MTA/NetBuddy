@@ -2,6 +2,7 @@ using Marten;
 using NetBuddy.Server.Interfaces;
 using NetBuddy.Server.Models;
 using NetBuddy.Server.Services;
+using NetBuddy.Server.test;
 using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,12 @@ builder.Services.AddMarten(options =>
     options.Schema.For<User>().Index(user => user.Email);
     // automatically create the schema if it doesn't exist
     options.AutoCreateSchemaObjects = AutoCreate.All;
-});
+}).UseLightweightSessions();
+
+// pre-populate the database with some test data
+#if DEBUG
+builder.Services.InitializeMartenWith<TestingData>();
+#endif
 
 // add the password hashing service to the context
 builder.Services.AddScoped<IPasswordService, BCryptPasswordService>();
