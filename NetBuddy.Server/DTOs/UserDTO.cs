@@ -1,4 +1,5 @@
 ﻿using System.Net.Mail;
+using NetBuddy.Server.Models;
 
 namespace NetBuddy.Server.DTOs;
 
@@ -20,5 +21,16 @@ public sealed class UserDTO
 
         // check that the email is a valid email address
         return MailAddress.TryCreate(Email, out _) ? string.Empty : "Invalid email address";
+    }
+
+    public User ToUser()
+    {
+        return new User
+        {
+            CreatedOn = DateTime.UtcNow,
+            Email = Email,
+            Username = Username,
+            PasswordHash = Password
+        };
     }
 }
