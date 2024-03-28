@@ -10,18 +10,20 @@ public sealed class UserDTO
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
 
-    public string Validate()
+    public bool Validate(out string message)
     {
         // check that none of the fields are empty
         if (string.IsNullOrWhiteSpace(Email))
-            return "Email is required";
-        if (string.IsNullOrWhiteSpace(Username))
-            return "Username is required";
-        if (string.IsNullOrWhiteSpace(Password))
-            return "Password is required";
-
+            message = "Email is required";
+        else if (string.IsNullOrWhiteSpace(Username))
+            message = "Username is required";
+        else if (string.IsNullOrWhiteSpace(Password))
+            message = "Password is required";
         // check that the email is a valid email address
-        return MailAddress.TryCreate(Email, out _) ? string.Empty : "Invalid email address";
+        else
+            message = MailAddress.TryCreate(Email, out _) ? string.Empty : "Invalid email address";
+        
+        return string.IsNullOrEmpty(message);
     }
 
     public UserInfo ToUser()
