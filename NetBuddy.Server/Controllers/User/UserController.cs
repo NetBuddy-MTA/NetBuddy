@@ -101,12 +101,10 @@ public class UserController : ControllerBase
         var (oldUserDto, newUserDto) = _;
         
         // validate the incoming data (should also be done on the client side)
-        bool valid = oldUserDto.Validate(out string message);
-        if (!valid)
+        if (!oldUserDto.Validate(out string message))
             return BadRequest(message);
         
-        valid = newUserDto.Validate(out message);
-        if (!valid)
+        if (!newUserDto.Validate(out message))
             return BadRequest(message);
         
         await using var session = _store.LightweightSession();
