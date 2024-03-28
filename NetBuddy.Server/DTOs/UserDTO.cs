@@ -2,7 +2,7 @@
 
 namespace NetBuddy.Server.DTOs;
 
-public sealed class NewUserDto
+public sealed class UserDTO
 {
     public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
