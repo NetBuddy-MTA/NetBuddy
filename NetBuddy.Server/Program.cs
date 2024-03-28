@@ -1,7 +1,13 @@
+using Marten;
 using NetBuddy.Server.Interfaces;
+using NetBuddy.Server.Models;
 using NetBuddy.Server.Services;
+using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// add the secret configuration to the builder
+builder.Configuration.AddJsonFile("appsettings.secret.json", false);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -9,6 +15,18 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// configure the Marten document store
+var connectionString = builder.Configuration.GetConnectionString("postgres");
+builder.Services.AddMarten(options =>
+{
+    // define the connection string to the underlying postgresql database
+    options.Connection(connectionString!);
+    // define the index for the user model
+    options.Schema.For<User>().Index(user => user.Email);
+    // automatically create the schema if it doesn't exist
+    options.AutoCreateSchemaObjects = AutoCreate.All;
+});
 
 // add the password hashing service to the context
 builder.Services.AddScoped<IPasswordService, BCryptPasswordService>();
