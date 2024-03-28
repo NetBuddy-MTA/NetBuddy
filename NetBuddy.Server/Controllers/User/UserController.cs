@@ -48,9 +48,9 @@ public class UserController : ControllerBase
     public async Task<IActionResult> Create([FromBody] UserDTO userDto)
     {
         // validate the incoming data (should also be done on the client side)
-        string message = userDto.Validate();
+        bool valid = userDto.Validate(out string message);
         
-        if (!string.IsNullOrWhiteSpace(message))
+        if (!valid)
             return BadRequest(message);
 
         await using var session = _store.LightweightSession();
@@ -100,6 +100,15 @@ public class UserController : ControllerBase
     {
         var (oldUserDto, newUserDto) = _;
         
+        // validate the incoming data (should also be done on the client side)
+        bool valid = oldUserDto.Validate(out string message);
+        if (!valid)
+            return BadRequest(message);
+        
+        valid = newUserDto.Validate(out message);
+        if (!valid)
+            return BadRequest(message);
+        
         await using var session = _store.LightweightSession();
 
         var user = await session.Query<UserInfo>().Where(user => user.Email == oldUserDto.Email).FirstOrDefaultAsync();
@@ -116,7 +125,7 @@ public class UserController : ControllerBase
 
         // update the user
         user.Username = newUserDto.Username;
-        user.PasswordHash = newUserDto.Password;
+        user.PasswordHash = _passwordService.Hash(newUserDto.Password);
 
         session.Update(user);
 
