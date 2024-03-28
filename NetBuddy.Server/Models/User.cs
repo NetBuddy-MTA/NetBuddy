@@ -1,8 +1,11 @@
-﻿namespace NetBuddy.Server.Models;
+﻿using Marten.Schema;
+
+namespace NetBuddy.Server.Models;
 
 public sealed class User
 {
     // Email is the primary key
+    [Identity]
     public string Email { get; set; } = string.Empty;
     
     // Username is the display name
