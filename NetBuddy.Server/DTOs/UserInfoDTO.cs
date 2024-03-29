@@ -25,15 +25,4 @@ public sealed class UserInfoDTO
         
         return string.IsNullOrEmpty(message);
     }
-
-    public UserInfo ToUser()
-    {
-        return new UserInfo
-        {
-            CreatedOn = DateTime.UtcNow,
-            Email = Email,
-            Username = Username,
-            PasswordHash = Password
-        };
-    }
 }

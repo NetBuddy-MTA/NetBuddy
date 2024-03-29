@@ -62,7 +62,13 @@ public class UserController : ControllerBase
             return BadRequest("Email is already taken");
         
         // create and save the new user
-        session.Store(userInfoDto.ToUser());
+        session.Store(new UserInfo
+        {
+            CreatedOn = DateTime.UtcNow,
+            Email = userInfoDto.Email,
+            Username = userInfoDto.Username,
+            PasswordHash = _passwordService.Hash(userInfoDto.Password)
+        });
 
         await session.SaveChangesAsync();
         
