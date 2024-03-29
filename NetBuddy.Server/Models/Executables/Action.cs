@@ -23,4 +23,13 @@ public sealed class Action
     
     // The actual typescript/javascript code to be executed on the client
     public string Code { get; set; } = string.Empty;
+    
+    // Owner is the email of the user who created the action
+    public string Owner { get; set; } = string.Empty;
+    
+    // CreatedAt is the time the action was created
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    // IsPublished is whether the action is published or not (a published action can be used by other users)
+    public bool IsPublished { get; set; } = false;
 }
