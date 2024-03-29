@@ -44,10 +44,10 @@ public class UserController : ControllerBase
 #endif
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] UserDTO userDto)
+    public async Task<IActionResult> Create([FromBody] UserInfoDTO userInfoDto)
     {
         // validate the incoming data (should also be done on the client side)
-        bool valid = userDto.Validate(out string message);
+        bool valid = userInfoDto.Validate(out string message);
         
         if (!valid)
             return BadRequest(message);
@@ -56,13 +56,13 @@ public class UserController : ControllerBase
         
         // check if the email is already taken by another user
         var existingUser =
-            await session.Query<UserInfo>().Where(user => user.Email == userDto.Email).FirstOrDefaultAsync();
+            await session.Query<UserInfo>().Where(user => user.Email == userInfoDto.Email).FirstOrDefaultAsync();
 
         if (existingUser != null)
             return BadRequest("Email is already taken");
         
         // create and save the new user
-        session.Store(userDto.ToUser());
+        session.Store(userInfoDto.ToUser());
 
         await session.SaveChangesAsync();
         
@@ -70,11 +70,11 @@ public class UserController : ControllerBase
     }
     
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] UserDTO userDto)
+    public async Task<IActionResult> Delete([FromBody] UserInfoDTO userInfoDto)
     {
         await using var session = _store.LightweightSession();
 
-        var user = await session.Query<UserInfo>().Where(user => user.Email == userDto.Email).FirstOrDefaultAsync();
+        var user = await session.Query<UserInfo>().Where(user => user.Email == userInfoDto.Email).FirstOrDefaultAsync();
         
         // if the user doesn't exist, return a 400
         if (user == null)
@@ -82,8 +82,8 @@ public class UserController : ControllerBase
         
         // if the password is incorrect, return a 400 (and not a 404 'not found')
         // this is done to prevent attackers from guessing email addresses
-        if (userDto.Username != user.Username ||
-            !_passwordService.Verify(userDto.Password, user.PasswordHash)) 
+        if (userInfoDto.Username != user.Username ||
+            !_passwordService.Verify(userInfoDto.Password, user.PasswordHash)) 
             return BadRequest();
 
         // delete the user
@@ -95,7 +95,7 @@ public class UserController : ControllerBase
     }
     
     [HttpPut]
-    public async Task<IActionResult> Update([FromBody] (UserDTO oldUserDto, UserDTO newUserDto) _)
+    public async Task<IActionResult> Update([FromBody] (UserInfoDTO oldUserDto, UserInfoDTO newUserDto) _)
     {
         var (oldUserDto, newUserDto) = _;
         
