@@ -4,7 +4,7 @@ using NetBuddy.Server.Models.User;
 
 namespace NetBuddy.Server.DTOs;
 
-public sealed class UserDTO
+public sealed class UserInfoDTO
 {
     public string Email { get; set; } = string.Empty;
     public string Username { get; set; } = string.Empty;
