@@ -18,9 +18,8 @@ public class UserController : ControllerBase
         _store = store;
         _passwordService = passwordService;
     }
-    
-    
-    // todo: remove this endpoint, it's for testing only
+
+#if DEBUG
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -31,7 +30,6 @@ public class UserController : ControllerBase
         return Ok(userList);
     }
     
-    // todo: remove this endpoint, it's for testing only
     [HttpGet("{email}")]
     public async Task<IActionResult> GetByEmail([FromRoute] string email)
     {
@@ -43,6 +41,7 @@ public class UserController : ControllerBase
             return NotFound();
         return Ok(user);
     }
+#endif
 
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] UserDTO userDto)
