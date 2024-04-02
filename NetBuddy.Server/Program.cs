@@ -1,13 +1,11 @@
+using System.Text;
 using Marten;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NetBuddy.Server.Data;
-using NetBuddy.Server.Interfaces.Security;
 using NetBuddy.Server.Models.User;
-using NetBuddy.Server.Services;
-using NetBuddy.Server.test;
 using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -40,11 +38,6 @@ builder.Services.AddMarten(options =>
     options.AutoCreateSchemaObjects = AutoCreate.All;
 }).UseLightweightSessions();
 
-// pre-populate the database with some test data
-#if DEBUG
-builder.Services.InitializeMartenWith<TestingData>();
-#endif
-
 // configure the identity service
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<IdentityDbContext>();
@@ -67,12 +60,9 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
+            Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
 });
-
-// add the password hashing service to the context
-builder.Services.AddScoped<IPasswordService, BCryptPasswordService>();
 
 var app = builder.Build();
 

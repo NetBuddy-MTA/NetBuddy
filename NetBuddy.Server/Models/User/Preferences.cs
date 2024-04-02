@@ -5,7 +5,7 @@ namespace NetBuddy.Server.Models.User;
 public sealed class Preferences
 {
     [Identity] 
-    public string Email { get; set; } = string.Empty;
+    public string UserName { get; set; } = string.Empty;
 
     public bool DarkMode { get; set; } = false;
 
