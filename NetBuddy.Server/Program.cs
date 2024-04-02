@@ -39,7 +39,7 @@ builder.Services.AddMarten(options =>
 }).UseLightweightSessions();
 
 // configure the identity service
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<UserAccount, IdentityRole>()
     .AddEntityFrameworkStores<IdentityDbContext>();
 
 builder.Services.AddAuthentication(options =>

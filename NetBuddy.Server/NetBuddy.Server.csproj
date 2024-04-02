@@ -36,8 +36,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Login\" />
-    <Folder Include="Controllers\User\" />
     <Folder Include="Migrations\" />
     <Folder Include="Models\Records\" />
   </ItemGroup>

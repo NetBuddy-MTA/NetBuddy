@@ -2,7 +2,7 @@
 
 namespace NetBuddy.Server.Models.User;
 
-public class ApplicationUser : IdentityUser
+public class UserAccount : IdentityUser
 {
     
 }
