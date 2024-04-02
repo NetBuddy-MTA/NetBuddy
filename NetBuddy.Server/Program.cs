@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NetBuddy.Server.Data;
+using NetBuddy.Server.Interfaces.Authentication;
 using NetBuddy.Server.Models.User;
+using NetBuddy.Server.Services.Authentication;
 using Weasel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,6 +65,9 @@ builder.Services.AddAuthentication(options =>
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
 });
+
+// add the token service
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
