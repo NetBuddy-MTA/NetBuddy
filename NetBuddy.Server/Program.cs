@@ -8,9 +8,32 @@ using NetBuddy.Server.Data;
 using NetBuddy.Server.Interfaces.Authentication;
 using NetBuddy.Server.Models.User;
 using NetBuddy.Server.Services.Authentication;
+using Serilog;
+using Serilog.Events;
 using Weasel.Core;
 
+// initialize startup logger
+string logPath = Path.Combine(Directory.GetCurrentDirectory(), "logs");
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(Path.Combine(logPath, "nb_server_startup_.log"), rollingInterval: RollingInterval.Day)
+    .CreateBootstrapLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+// add the logger to the builder
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog((context, services, configuration) => configuration
+#if DEBUG
+    .MinimumLevel.Information()
+#else
+    .MinimumLevel.Warning()
+#endif
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File(Path.Combine(logPath, "nb_server_log_.log"), rollingInterval: RollingInterval.Month));
 
 // add the secret configuration to the builder
 builder.Configuration.AddJsonFile("appsettings.secret.json", false);
@@ -70,6 +93,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
+
+// add serilog http request logging
+app.UseSerilogRequestLogging();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

@@ -13,13 +13,15 @@ namespace NetBuddy.Server.Controllers.Account;
 [ApiController]
 public class AccountController : ControllerBase
 {
+    private readonly ILogger<AccountController> _logger;
     private readonly UserManager<UserAccount> _userManager;
     private readonly ITokenService _tokenService;
     private readonly SignInManager<UserAccount> _signInManager;
     
-    public AccountController(UserManager<UserAccount> userManager, ITokenService tokenService, 
-        SignInManager<UserAccount> signInManager)
+    public AccountController(ILogger<AccountController> logger, UserManager<UserAccount> userManager,
+        ITokenService tokenService, SignInManager<UserAccount> signInManager)
     {
+        _logger = logger;
         _userManager = userManager;
         _tokenService = tokenService;
         _signInManager = signInManager;
@@ -28,10 +30,14 @@ public class AccountController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
     {
+        _logger.Log(LogLevel.Information, "Registering new user...");
         try
         {
             if (!ModelState.IsValid)
+            {
+                _logger.Log(LogLevel.Information, "Model state is invalid: {state}", ModelState);
                 return BadRequest(ModelState);
+            }
 
             // define the user variable based on the registerDto
             UserAccount user = new UserAccount
@@ -44,7 +50,11 @@ public class AccountController : ControllerBase
             var createdUser = await _userManager.CreateAsync(user, registerDto.Password!);
     
             // if the user was not created, return the errors
-            if (!createdUser.Succeeded) return StatusCode(500, createdUser.Errors);
+            if (!createdUser.Succeeded)
+            {
+                _logger.Log(LogLevel.Information, "User creation failed: {errors}", createdUser.Errors);
+                return StatusCode(500, createdUser.Errors);
+            }
             
             // add the user to the User role
             var roleResult = await _userManager.AddToRoleAsync(user, "User");
@@ -52,6 +62,7 @@ public class AccountController : ControllerBase
             // return the result of the role addition
             if (roleResult.Succeeded)
             {
+                _logger.Log(LogLevel.Information, "User created successfully: {user}", user);
                 return Ok(
                     new NewAccountDto
                     {
@@ -71,16 +82,31 @@ public class AccountController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        _logger.Log(LogLevel.Information, "Logging in user...");
+        
+        if (!ModelState.IsValid)
+        {
+            _logger.Log(LogLevel.Information, "Model state is invalid: {state}", ModelState);
+            return BadRequest(ModelState);
+        }
 
         var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == loginDto.UserName);
         
-        if (user == default) return Unauthorized("Invalid username!");
+        if (user == default)
+        {
+            _logger.Log(LogLevel.Information, "User not found: {username}", loginDto.UserName);
+            return Unauthorized("Invalid username!");
+        }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password!, false);
 
-        if (!result.Succeeded) return Unauthorized("Username or password is incorrect!");
-
+        if (!result.Succeeded)
+        {
+            _logger.Log(LogLevel.Information, "User login failed: {errors}", result);
+            return Unauthorized("Username or password is incorrect!");
+        }
+        
+        _logger.Log(LogLevel.Information, "User logged in successfully: {username}", user.UserName);
         return Ok(
             new NewAccountDto
             {
