@@ -71,10 +71,12 @@ public class AccountController : ControllerBase
                         Token = _tokenService.CreateToken(user)
                     });
             }
+            _logger.Log(LogLevel.Information, "User creation failed: {errors}", roleResult.Errors);
             return StatusCode(500, roleResult.Errors);
         }
         catch (Exception e)
         {
+            _logger.Log(LogLevel.Information, "An error occurred: {error}", e.Message);
             return StatusCode(500, e);
         }
     }
@@ -95,14 +97,14 @@ public class AccountController : ControllerBase
         if (user == default)
         {
             _logger.Log(LogLevel.Information, "User not found: {username}", loginDto.UserName);
-            return Unauthorized("Invalid username!");
+            return Unauthorized("Username or password is incorrect!");
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password!, false);
 
         if (!result.Succeeded)
         {
-            _logger.Log(LogLevel.Information, "User login failed: {errors}", result);
+            _logger.Log(LogLevel.Information, "User login failed, incorrect password!");
             return Unauthorized("Username or password is incorrect!");
         }
         
@@ -131,8 +133,8 @@ public class AccountController : ControllerBase
         
         if (user == default)
         {
-            _logger.Log(LogLevel.Information, "User not found: {username}", User.Identity?.Name);
-            return Unauthorized("Invalid username!");
+            _logger.Log(LogLevel.Information, "User not found: {username}", loginDto.UserName);
+            return Unauthorized("Username or password is incorrect!");
         }
 
         var passwordCheck = _userManager.CheckPasswordAsync(user, loginDto.Password!);
@@ -147,7 +149,7 @@ public class AccountController : ControllerBase
 
         if (!result.Succeeded)
         {
-            _logger.Log(LogLevel.Information, "User deletion failed: {errors}", result);
+            _logger.Log(LogLevel.Information, "User deletion failed: {errors}", result.Errors);
             return StatusCode(500, result.Errors);
         }
         
