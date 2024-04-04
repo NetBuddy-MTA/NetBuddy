@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetBuddy.Server.DTOs.Account;
@@ -7,6 +8,7 @@ using NetBuddy.Server.Models.User;
 
 namespace NetBuddy.Server.Controllers.Account;
 
+[AllowAnonymous]
 [Route("api/account")]
 [ApiController]
 public class AccountController : ControllerBase
