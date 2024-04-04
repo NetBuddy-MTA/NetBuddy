@@ -115,4 +115,43 @@ public class AccountController : ControllerBase
                 Token = _tokenService.CreateToken(user)
             });
     }
+    
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteAccount([FromBody] LoginDto loginDto)
+    {
+        _logger.Log(LogLevel.Information, "Deleting user account...");
+
+        if (!ModelState.IsValid)
+        {
+            _logger.Log(LogLevel.Information, "Model state is invalid: {state}", ModelState);
+            return BadRequest(ModelState);
+        }
+        
+        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == loginDto.UserName);
+        
+        if (user == default)
+        {
+            _logger.Log(LogLevel.Information, "User not found: {username}", User.Identity?.Name);
+            return Unauthorized("Invalid username!");
+        }
+
+        var passwordCheck = _userManager.CheckPasswordAsync(user, loginDto.Password!);
+        
+        if (!passwordCheck.Result)
+        {
+            _logger.Log(LogLevel.Information, "User login failed: {errors}", passwordCheck);
+            return Unauthorized("Username or password is incorrect!");
+        }
+        
+        var result = await _userManager.DeleteAsync(user);
+
+        if (!result.Succeeded)
+        {
+            _logger.Log(LogLevel.Information, "User deletion failed: {errors}", result);
+            return StatusCode(500, result.Errors);
+        }
+        
+        _logger.Log(LogLevel.Information, "User deleted successfully: {username}", user.UserName);
+        return Ok("User deleted successfully!");
+    }
 }
