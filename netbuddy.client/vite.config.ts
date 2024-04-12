@@ -1,6 +1,6 @@
-import { fileURLToPath, URL } from 'node:url';
+import {fileURLToPath, URL} from 'node:url';
 
-import { defineConfig } from 'vite';
+import {defineConfig} from 'vite';
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
@@ -37,7 +37,7 @@ if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
 }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+const config = {
     plugins: [plugin()],
     resolve: {
         alias: {
@@ -51,4 +51,5 @@ export default defineConfig({
             cert: fs.readFileSync(certFilePath),
         }
     }
-})
+};
+export default defineConfig(config);
