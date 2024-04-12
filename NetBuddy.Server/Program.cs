@@ -23,6 +23,9 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
+// todo: remove this when the app is ready for production
+builder.WebHost.UseUrls("https://localhost:7298/");
+
 // add the logger to the builder
 builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, services, configuration) => configuration
@@ -97,6 +100,12 @@ var app = builder.Build();
 // add serilog http request logging
 app.UseSerilogRequestLogging();
 
+// allow any origin, method, and header for CORS
+app.UseCors(options => options
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+    .AllowAnyOrigin()
+);
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
