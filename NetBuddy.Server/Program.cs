@@ -23,8 +23,9 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-// todo: remove this when the app is ready for production
+#if DEBUG
 builder.WebHost.UseUrls("https://localhost:7298/");
+#endif
 
 // add the logger to the builder
 builder.Logging.ClearProviders();
