@@ -11,4 +11,8 @@
   <ItemGroup>
     <Script Include="tsconfig.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\assets\logo\" />
+    <Folder Include="src\layouts\" />
+  </ItemGroup>
 </Project>
