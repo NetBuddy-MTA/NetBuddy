@@ -1,13 +1,30 @@
-import './App.css';
 import LoginForm from "./screens/login/LoginForm.tsx";
-import {useState} from "react";
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar.tsx";
+import Home from "./screens/Home/Home.tsx";
+import logo from "./assets/logo/netbuddylogo.jpeg";
 
-function App({init}: { init: string }) {
-  const [screen, setScreen] = useState(init);
-  
+let pageAndLinks: PageAndLink[] = [
+  {
+    page: "Home",
+    link: "/home"
+  },
+  {
+    page: "Login",
+    link: "/login"
+  },
+];
+
+function App() {
   return (
-    <div className="App">
-      {screen === 'login' && <LoginForm />}
+    <div className="max-h-screen flex flex-col">
+      <BrowserRouter>
+        <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginForm />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
