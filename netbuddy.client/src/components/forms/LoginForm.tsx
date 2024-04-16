@@ -16,20 +16,29 @@ const LoginForm = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    // prevent sending multiple requests
+    if (waiting) return;
     setWaiting(true);
+    // prevent default behaviour
     event.preventDefault();
+    // get form data
     const data = new FormData(event.currentTarget);
+    // send request to server
     let response = await login(data.get('username') as string, data.get('password') as string);
+    // check for response and validate it
     if (response instanceof Response) {
       const json = await response.json();
       if (json as {UserName: string, Email: string, Token: string}) {
+        // login was successful
         setLocked(false);
         // todo: store username and email for view and token for authentication
       }
     }
     else {
+      // if error was caught in login api
       alert("An error occured while processing the request!");
     }
+    // stop waiting
     setWaiting(false);
   }
   
