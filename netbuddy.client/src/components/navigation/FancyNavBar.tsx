@@ -1,9 +1,11 @@
 ﻿import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu';
 import {Link} from 'react-router-dom';
 
 export interface PageAndLink {
-  page: any
+  page: string
   link: string
 }
 
@@ -14,22 +16,19 @@ interface FancyNavBarProps {
 
 const FancyNavBar = ({logo, pageAndLinks} : FancyNavBarProps) => {
   return (
-    <AppBar position="static" sx={{top: 0, left: 0}}>
-      <Toolbar>
-        <div className="gap:16px">
-          <img src={logo} alt="NetBuddyLogo" width={64} height={64} />
-        </div>
-        <div>
-          {pageAndLinks?.map(pageAndLink => {
-            return (
-              <Link to={pageAndLink.link} key={pageAndLink.page}>
-                <button type="button">
-                  {pageAndLink.page}
-                </button>
-              </Link>
-            );
-          })}
-        </div>
+    <AppBar position="static" sx={{px: 0, mx:0}}>
+      <Toolbar sx={{px: 0, mx: 0}}>
+        <Button sx={{paddingLeft: 0}}>
+          <MenuIcon/>
+        </Button>
+        <img src={logo} alt="NetBuddyLogo" width={48} height={48} />
+        {pageAndLinks?.map(pageAndLink => {
+          return (
+            <Button key={pageAndLink.link} component={Link} to={pageAndLink.link} variant="text">
+              {pageAndLink.page}
+            </Button>
+          );
+        })}
       </Toolbar>
     </AppBar>
   );

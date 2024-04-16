@@ -1,33 +1,44 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/HomeRounded';
-import LoginIcon from '@mui/icons-material/LoginRounded'
-import LoginForm from "./screens/login/LoginForm.tsx";
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar.tsx";
 import Home from "./screens/Home/Home.tsx";
 import logo from "./assets/logo/netbuddylogo.jpeg";
+import {ThemeProvider} from "@emotion/react";
+import {darkTheme} from "./layouts/style/Themes.tsx";
+import LoginForm from "./components/forms/LoginForm.tsx";
+import CssBaseline from '@mui/material/CssBaseline';
 
 let pageAndLinks: PageAndLink[] = [
   {
-    page: <HomeIcon />,
+    page: "Home",
     link: "/home"
   },
   {
-    page: <LoginIcon />,
+    page: "Login",
     link: "/login"
   },
 ];
 
 function App() {
   return (
-    <div className="max-h-screen flex flex-col">
-      <BrowserRouter>
-        <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<LoginForm />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline/>
+      <div>
+        <BrowserRouter>
+          <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
+          <Routes>
+            {/*default route*/}
+            <Route path="/" element={<Navigate to="/home" replace={true} />} />
+            
+            {/*pages*/}
+            <Route path="/home" element={<Home />} />
+            <Route path="/login" element={<LoginForm />} />
+            
+            {/*unknown route*/}
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
   );
 }
 
