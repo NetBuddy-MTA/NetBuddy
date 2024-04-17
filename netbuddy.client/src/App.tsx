@@ -3,7 +3,7 @@ import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar.tsx"
 import logo from "./assets/logo/netbuddylogo.jpeg";
 import {ThemeProvider} from "@emotion/react";
 import {darkTheme} from "./layouts/style/Themes.tsx";
-import LoginForm from "./components/forms/LoginForm.tsx";
+import SignInForm from "./components/forms/SignInForm.tsx";
 import CssBaseline from '@mui/material/CssBaseline';
 
 let pageAndLinks: PageAndLink[] = [
@@ -22,10 +22,10 @@ function App() {
           <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
           <Routes>
             {/*default route*/}
-            <Route path="/" element={<Navigate to="/login" replace={true} />} />
+            <Route path="/" element={<Navigate to="/signin" replace={true} />} />
             
             {/*pages*/}
-            <Route path="/login" element={<LoginForm />} />
+            <Route path="/signin" element={<SignInForm />} />
             
             {/*handle any other unaccounted for route*/}
             <Route path="*" element={<Navigate to="/" replace={true} />} />
