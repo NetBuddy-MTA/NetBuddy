@@ -9,9 +9,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import {login} from "../../api/auth/userAuth.ts";
+import {Link as RouterLink} from "react-router-dom";
+import signin, {LoginResponse} from "../../api/Account/SignIn";
 
-const LoginForm = () => {
+const SignInForm = () => {
   const [locked, setLocked] = useState<boolean>(true);
   const [waiting, setWaiting] = useState<boolean>(false);
   
@@ -24,15 +25,12 @@ const LoginForm = () => {
     // get form data
     const data = new FormData(event.currentTarget);
     // send request to server
-    let response = await login(data.get('username') as string, data.get('password') as string);
+    let response = await signin(data.get('username') as string, data.get('password') as string);
     // check for response and validate it
-    if (response instanceof Response) {
-      const json = await response.json();
-      if (json as {UserName: string, Email: string, Token: string}) {
-        // login was successful
-        setLocked(false);
-        // todo: store username and email for view and token for authentication
-      }
+    if (response as LoginResponse) {
+      // login was successful
+      setLocked(false);
+      // todo: store username and email for view and token for authentication
     }
     else {
       // if error was caught in login api
@@ -91,12 +89,12 @@ const LoginForm = () => {
           <Grid container>
             <Grid item xs>
               {/*todo: add forgot password page*/}
-              <Link href="/iforgor" variant="body2">
+              <Link component={RouterLink} to="/iforgor" variant="body2">
                 Forgot password?
               </Link>
             </Grid>
             <Grid item>
-              <Link href="/signup" variant="body2">
+              <Link component={RouterLink} to="/signup" variant="body2">
                 Don't have an account? Sign Up
               </Link>
             </Grid>
@@ -107,4 +105,4 @@ const LoginForm = () => {
   );
 }
 
-export default LoginForm;
+export default SignInForm;
