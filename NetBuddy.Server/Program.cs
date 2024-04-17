@@ -96,17 +96,26 @@ builder.Services.AddAuthentication(options =>
 // add the token service
 builder.Services.AddScoped<ITokenService, TokenService>();
 
+// add a cors policy for the react app
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("react", policyBuilder =>
+    {
+        policyBuilder.WithOrigins("https://localhost:5173");
+        policyBuilder.AllowAnyHeader();
+        policyBuilder.AllowAnyMethod();
+        policyBuilder.AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
 // add serilog http request logging
 app.UseSerilogRequestLogging();
 
-// allow any origin, method, and header for CORS
-app.UseCors(options => options
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-    .AllowAnyOrigin()
-);
+// use the react cors policy
+app.UseCors("react");
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
