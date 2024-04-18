@@ -1,21 +1,29 @@
 ﻿import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import LockClosedIcon from "@mui/icons-material/Lock";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import {useState} from "react";
+import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import {useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import signup, {SignupResponse} from "../../api/Account/SignUp";
 
 const LoginForm = () => {
-  const [locked, setLocked] = useState<boolean>(true);
+  const [success, setSuccess] = useState<boolean>(false);
   const [waiting, setWaiting] = useState<boolean>(false);
-
+  const navigate = useNavigate();
+  
+  useEffect(() => {
+    if (success) {
+      navigate("/login");
+      alert("Account created successfully");
+    }
+  }, [success]);
+  
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
     if (waiting) return;
@@ -33,8 +41,7 @@ const LoginForm = () => {
     // check for response and validate it
     if (response as SignupResponse) {
       // login was successful
-      setLocked(false);
-      // todo: store username and email for view and token for authentication
+      setSuccess(true);
     }
     else {
       // if error was caught in login api
@@ -55,7 +62,7 @@ const LoginForm = () => {
         }}
       >
         <Avatar sx={{ m: 1, bgColor: 'secondary.main'}}>
-          {!locked ? <LockOpenIcon/> : <LockClosedIcon/>}
+          <AccountCircleRoundedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -65,20 +72,20 @@ const LoginForm = () => {
             margin="normal"
             required={true}
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
+            autoComplete="username"
             autoFocus={true}
           />
           <TextField
             margin="normal"
             required={true}
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus
           />
           <TextField

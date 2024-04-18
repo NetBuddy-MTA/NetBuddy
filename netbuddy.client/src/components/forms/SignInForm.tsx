@@ -3,18 +3,21 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import LockClosedIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import signin, {LoginResponse} from "../../api/Account/SignIn";
+import UserInfoContext from "../../contexts/UserInfoContext.tsx";
 
 const SignInForm = () => {
   const [locked, setLocked] = useState<boolean>(true);
   const [waiting, setWaiting] = useState<boolean>(false);
+  const {setUserInfo} = useContext(UserInfoContext)
+  const navigate = useNavigate();
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
@@ -29,8 +32,18 @@ const SignInForm = () => {
     // check for response and validate it
     if (response as LoginResponse) {
       // login was successful
+      const {username, email} = response as LoginResponse;
+      // todo: set expires from token
+      const expires = new Date();
+      expires.setDate(expires.getDate() + 1);
+      if (setUserInfo) setUserInfo({
+        username,
+        email,
+        expires
+      });
+      // go to default page
+      navigate("/");
       setLocked(false);
-      // todo: store username and email for view and token for authentication
     }
     else {
       // if error was caught in login api
