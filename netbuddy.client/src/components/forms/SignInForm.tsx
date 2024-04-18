@@ -31,6 +31,8 @@ const SignInForm = () => {
     let response = await signin(data.get('username') as string, data.get('password') as string);
     // check for response and validate it
     if (response as LoginResponse) {
+      // unlock
+      setLocked(false);
       // login was successful
       const {username, email} = response as LoginResponse;
       // todo: set expires from token
@@ -43,7 +45,6 @@ const SignInForm = () => {
       });
       // go to default page
       navigate("/");
-      setLocked(false);
     }
     else {
       // if error was caught in login api
