@@ -31,15 +31,16 @@ const SignInForm = () => {
     let response = await signin(data.get('username') as string, data.get('password') as string);
     // check for response and validate it
     if (response as LoginResponse) {
+      console.log(response);
       // unlock
       setLocked(false);
       // login was successful
-      const {username, email} = response as LoginResponse;
+      const {userName, email} = response as LoginResponse;
       // todo: set expires from token
       const expires = new Date();
       expires.setDate(expires.getDate() + 1);
       if (setUserInfo) setUserInfo({
-        username,
+        username: userName,
         email,
         expires
       });

@@ -2,7 +2,7 @@
 
 export type LoginResponse = {
   email: string
-  username: string
+  userName: string
   token: string
 }
 
