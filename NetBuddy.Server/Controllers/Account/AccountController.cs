@@ -15,14 +15,16 @@ public class AccountController : ControllerBase
 {
     private readonly ILogger<AccountController> _logger;
     private readonly UserManager<UserAccount> _userManager;
+    private readonly IRefreshService _refreshService;
     private readonly ITokenService _tokenService;
     private readonly SignInManager<UserAccount> _signInManager;
     
     public AccountController(ILogger<AccountController> logger, UserManager<UserAccount> userManager,
-        ITokenService tokenService, SignInManager<UserAccount> signInManager)
+        IRefreshService refreshService, ITokenService tokenService, SignInManager<UserAccount> signInManager)
     {
         _logger = logger;
         _userManager = userManager;
+        _refreshService = refreshService;
         _tokenService = tokenService;
         _signInManager = signInManager;
     }
@@ -63,13 +65,7 @@ public class AccountController : ControllerBase
             if (roleResult.Succeeded)
             {
                 _logger.Log(LogLevel.Information, "User created successfully: {user}", user);
-                return Ok(
-                    new NewAccountDto
-                    {
-                        UserName = user.UserName!,
-                        Email = user.Email!,
-                        Token = _tokenService.CreateToken(user)
-                    });
+                return Ok();
             }
             _logger.Log(LogLevel.Information, "User creation failed: {errors}", roleResult.Errors);
             return StatusCode(500, roleResult.Errors);
@@ -109,15 +105,37 @@ public class AccountController : ControllerBase
         }
         
         _logger.Log(LogLevel.Information, "User logged in successfully: {username}", user.UserName);
+        
+        // put the token and username in a cookie
+        var options = new CookieOptions
+        {
+            Expires = DateTimeOffset.Now.AddDays(30),
+            HttpOnly = true,
+            Secure = true,
+            IsEssential = true,
+            SameSite = SameSiteMode.None
+        };
+        var refreshToken = _refreshService.CreateRefresh();
+        HttpContext.Response.Cookies.Append("X-Refresh-Token", refreshToken.Token, options);
+        HttpContext.Response.Cookies.Append("username", user.UserName!, options);
+        HttpContext.Response.Cookies.Append("X-Access-Token", _tokenService.CreateToken(user), new CookieOptions
+        {
+            Expires = DateTimeOffset.Now.AddMinutes(15),
+            HttpOnly = true,
+            Secure = true,
+            IsEssential = true,
+            SameSite = SameSiteMode.None
+        });
+
         return Ok(
-            new NewAccountDto
+            new UserInfoDto
             {
                 UserName = user.UserName!,
                 Email = user.Email!,
-                Token = _tokenService.CreateToken(user)
             });
     }
     
+    [Authorize]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteAccount([FromBody] LoginDto loginDto)
     {
@@ -129,12 +147,40 @@ public class AccountController : ControllerBase
             return BadRequest(ModelState);
         }
         
-        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == loginDto.UserName);
+        var refreshToken = Request.Cookies["X-Refresh-Token"];
+        // ensure that refresh token exists in cookie
+        if (refreshToken == null)
+        {
+            _logger.Log(LogLevel.Information, "No refresh token in cookie!");
+            return Unauthorized();
+        }
         
+        var usernameCookie = Request.Cookies["username"];
+        // ensure that refresh token exists in cookie
+        if (usernameCookie == null)
+        {
+            _logger.Log(LogLevel.Information, "No username in cookie!");
+            return Unauthorized();
+        }
+
+        if (loginDto.UserName != usernameCookie)
+        {
+            _logger.Log(LogLevel.Information, "Can't delete user that's not the one who's signed in!");
+            return Unauthorized();
+        }
+
+        var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName == loginDto.UserName);
+
         if (user == default)
         {
             _logger.Log(LogLevel.Information, "User not found: {username}", loginDto.UserName);
             return Unauthorized("Username or password is incorrect!");
+        }
+
+        if (!user.Refresh.IsValid || user.Refresh.Token != refreshToken)
+        {
+            _logger.Log(LogLevel.Information, "Invalid refresh token!");
+            return Unauthorized("Invalid refresh token!");
         }
 
         var passwordCheck = _userManager.CheckPasswordAsync(user, loginDto.Password!);

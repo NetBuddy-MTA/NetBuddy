@@ -30,19 +30,15 @@ const SignInForm = () => {
     // send request to server
     let response = await signin(data.get('username') as string, data.get('password') as string);
     // check for response and validate it
-    if (response as LoginResponse) {
+    if (response) {
       console.log(response);
       // unlock
       setLocked(false);
       // login was successful
       const {userName, email} = response as LoginResponse;
-      // todo: set expires from token
-      const expires = new Date();
-      expires.setDate(expires.getDate() + 1);
       if (setUserInfo) setUserInfo({
         username: userName,
-        email,
-        expires
+        email
       });
       // go to default page
       navigate("/");

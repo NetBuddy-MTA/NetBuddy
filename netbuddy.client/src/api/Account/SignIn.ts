@@ -1,15 +1,22 @@
-﻿import {agentNoCredentials as agent} from '../agent.ts';
+﻿import { AxiosError } from 'axios';
+import {agentNoCredentials as agent} from '../agent.ts';
 
 export type LoginResponse = {
   email: string
   userName: string
-  token: string
 }
 
 export default async function(UserName: string, Password: string) {
   return await agent.post(
     '/account/login',
     JSON.stringify({UserName, Password}))
-    .catch(error => console.log(error.error))
-    .then(response => response?.data as void | LoginResponse);
+    .then(response => response?.data as void | LoginResponse)
+    .catch((reason: AxiosError) => {
+      if (reason.response!.status === 400) {
+        alert("One of the fields doesn't match the requirements!");
+      }
+      else if (reason.response!.status === 401) {
+        alert("At least one of the fields is incorrect!");
+      }
+    });
 }

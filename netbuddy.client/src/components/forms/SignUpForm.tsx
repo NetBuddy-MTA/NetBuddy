@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signup, {SignupResponse} from "../../api/Account/SignUp";
+import signup from "../../api/Account/SignUp";
 
 const LoginForm = () => {
   const [success, setSuccess] = useState<boolean>(false);
@@ -38,8 +38,9 @@ const LoginForm = () => {
       data.get('email') as string,
       data.get('password') as string
     );
+    
     // check for response and validate it
-    if (response as SignupResponse) {
+    if (response) {
       // login was successful
       setSuccess(true);
     }
