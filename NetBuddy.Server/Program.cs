@@ -79,8 +79,12 @@ builder.Services.AddAuthentication(options =>
                 options.DefaultScheme =
                     options.DefaultSignInScheme =
                         options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie(options =>
+{
+    options.Cookie.Name = "token";
 }).AddJwtBearer(options =>
 {
+    // validation parameters
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -90,6 +94,15 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
+    };
+    // pull token out of cookie and into the context
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["token"];
+            return Task.CompletedTask;
+        }
     };
 });
 
