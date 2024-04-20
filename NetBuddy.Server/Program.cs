@@ -100,13 +100,14 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            context.Token = context.Request.Cookies["token"];
+            context.Token = context.Request.Cookies["X-Access-Token"];
             return Task.CompletedTask;
         }
     };
 });
 
 // add the token service
+builder.Services.AddScoped<IRefreshService, RefreshService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // add a cors policy for the react app
