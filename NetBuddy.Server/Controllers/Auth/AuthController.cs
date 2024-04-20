@@ -10,12 +10,12 @@ namespace NetBuddy.Server.Controllers.Auth;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly Logger<AuthController> _logger;
+    private readonly ILogger<AuthController> _logger;
     private readonly UserManager<UserAccount> _userManager;
     private readonly IRefreshService _refreshService;
     private readonly ITokenService _tokenService;
 
-    public AuthController(Logger<AuthController> logger, UserManager<UserAccount> userManager, 
+    public AuthController(ILogger<AuthController> logger, UserManager<UserAccount> userManager, 
         IRefreshService refreshService, ITokenService tokenService)
     {
         _logger = logger;
@@ -27,12 +27,6 @@ public class AuthController : ControllerBase
     [HttpGet("refresh")]
     public async Task<IActionResult> GetRefreshToken()
     {
-        if (!ModelState.IsValid)
-        {
-            _logger.Log(LogLevel.Information, "Invalid model state!");
-            return BadRequest(ModelState);
-        }
-        
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         // ensure that refresh token exists in cookie
         if (refreshToken == null)
@@ -97,12 +91,6 @@ public class AuthController : ControllerBase
     [HttpGet("jwt")]
     public async Task<IActionResult> GetJwtToken()
     {
-        if (!ModelState.IsValid)
-        {
-            _logger.Log(LogLevel.Information, "Invalid model state!");
-            return BadRequest(ModelState);
-        }
-        
         var refreshToken = Request.Cookies["X-Refresh-Token"];
         // ensure that refresh token exists in cookie
         if (refreshToken == null)
