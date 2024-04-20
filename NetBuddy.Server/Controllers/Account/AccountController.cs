@@ -63,13 +63,7 @@ public class AccountController : ControllerBase
             if (roleResult.Succeeded)
             {
                 _logger.Log(LogLevel.Information, "User created successfully: {user}", user);
-                return Ok(
-                    new NewAccountDto
-                    {
-                        UserName = user.UserName!,
-                        Email = user.Email!,
-                        Token = _tokenService.CreateToken(user)
-                    });
+                return Ok();
             }
             _logger.Log(LogLevel.Information, "User creation failed: {errors}", roleResult.Errors);
             return StatusCode(500, roleResult.Errors);
@@ -109,12 +103,23 @@ public class AccountController : ControllerBase
         }
         
         _logger.Log(LogLevel.Information, "User logged in successfully: {username}", user.UserName);
+        
+        // put the token in a cookie
+        HttpContext.Response.Cookies.Append("token", _tokenService.CreateToken(user),
+            new CookieOptions
+            {
+                Expires = DateTimeOffset.Now.AddDays(7),
+                HttpOnly = true,
+                Secure = true,
+                IsEssential = true,
+                SameSite = SameSiteMode.None
+            });
+        
         return Ok(
-            new NewAccountDto
+            new UserInfoDto
             {
                 UserName = user.UserName!,
                 Email = user.Email!,
-                Token = _tokenService.CreateToken(user)
             });
     }
     
