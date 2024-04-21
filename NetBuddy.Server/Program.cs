@@ -79,8 +79,12 @@ builder.Services.AddAuthentication(options =>
                 options.DefaultScheme =
                     options.DefaultSignInScheme =
                         options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddCookie(options =>
+{
+    options.Cookie.Name = "token";
 }).AddJwtBearer(options =>
 {
+    // validation parameters
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -91,9 +95,19 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
     };
+    // pull token out of cookie and into the context
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            context.Token = context.Request.Cookies["X-Access-Token"];
+            return Task.CompletedTask;
+        }
+    };
 });
 
 // add the token service
+builder.Services.AddScoped<IRefreshService, RefreshService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 // add a cors policy for the react app

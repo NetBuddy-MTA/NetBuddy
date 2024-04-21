@@ -3,7 +3,6 @@
 export type UserInfo = {
   username?: string
   email?: string
-  expires?: Date
 }
 
 type ContextType = {
