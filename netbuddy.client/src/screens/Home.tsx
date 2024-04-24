@@ -1,6 +1,7 @@
 import Grid from "@mui/material/Grid";
 import {Link as RouterLink} from "react-router-dom";
 import Link from "@mui/material/Link";
+import Button from "@mui/material/Button";
 
 const Links: {label: string, link: string}[] = [
   {
@@ -19,11 +20,22 @@ const Links: {label: string, link: string}[] = [
 
 const Home = () => {
   return (
-    <Grid container spacing={2} justifyItems="center" alignItems="center">
+    <Grid 
+      container 
+      spacing={2} 
+      justifyItems="center" 
+      alignItems="center"
+      justifyContent="center"
+      alignContent="center"
+      sx={{
+        minHeight: '50vh',
+      }}>
       {Links.map(({label, link}, index) => (
         <Grid item key={index}>
           <Link component={RouterLink} to={link}>
-            {label}  
+            <Button variant="contained" size="large">
+              {label}
+            </Button>
           </Link>
         </Grid>
       ))}
