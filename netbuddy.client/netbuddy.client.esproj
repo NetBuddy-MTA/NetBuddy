@@ -12,6 +12,7 @@
     <Script Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="src\api\embed\" />
     <Folder Include="src\assets\logo\" />
   </ItemGroup>
 </Project>

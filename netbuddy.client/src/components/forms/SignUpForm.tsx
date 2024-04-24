@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signup from "../../api/Account/SignUp";
+import signup from "../../api/account/SignUp";
 
 const LoginForm = () => {
   const [success, setSuccess] = useState<boolean>(false);

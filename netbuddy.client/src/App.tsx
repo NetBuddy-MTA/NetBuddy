@@ -26,7 +26,7 @@ function App() {
             <Routes>
               {/*default route*/}
               {
-                userInfo.expires && userInfo.expires!.getTime() > Date.now() ? 
+                userInfo.username ? 
                   <Route path="/" element={<Navigate to="/home" replace={true} />} /> : 
                   <Route path="/" element={<Navigate to="/signin" replace={true} />} />
               }

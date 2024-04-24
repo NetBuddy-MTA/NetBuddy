@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signin, {LoginResponse} from "../../api/Account/SignIn";
+import signin, {LoginResponse} from "../../api/account/SignIn";
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
 
 const SignInForm = () => {
