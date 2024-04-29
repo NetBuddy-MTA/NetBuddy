@@ -9,6 +9,7 @@ import SignUpForm from "./components/forms/SignUpForm.tsx";
 import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
+import EmbedForm from "./components/forms/EmbedForm.tsx";
 
 let pageAndLinks: PageAndLink[] = [
 ];
@@ -20,27 +21,27 @@ function App() {
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
-        <div>
-          <BrowserRouter>
-            <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
-            <Routes>
-              {/*default route*/}
-              {
-                userInfo.expires && userInfo.expires!.getTime() > Date.now() ? 
-                  <Route path="/" element={<Navigate to="/home" replace={true} />} /> : 
-                  <Route path="/" element={<Navigate to="/signin" replace={true} />} />
-              }
-              
-              {/*pages*/}
-              <Route path="/home" element={<Home />} />
-              <Route path="/signin" element={<SignInForm />} />
-              <Route path="/signup" element={<SignUpForm />} />
-              
-              {/*handle any other unaccounted for route*/}
-              <Route path="*" element={<Navigate to="/" replace={true} />} />
-            </Routes>
-          </BrowserRouter>
-        </div>
+        <BrowserRouter>
+          <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
+          <Routes>
+            {/*default route*/}
+            {
+              userInfo.username ? 
+                <Route path="/" element={<Navigate to="/home" replace={true} />} /> : 
+                <Route path="/" element={<Navigate to="/signin" replace={true} />} />
+            }
+            
+            {/*pages*/}
+            <Route path="/home" element={<Home />} />
+            <Route path="/signin" element={<SignInForm />} />
+            <Route path="/signup" element={<SignUpForm />} />
+            
+            <Route path="/embed" element={<EmbedForm />} />
+            
+            {/*handle any other unaccounted for route*/}
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
+          </Routes>
+        </BrowserRouter>
       </ThemeProvider>
     </UserInfoContext.Provider>
   );
