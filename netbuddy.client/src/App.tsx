@@ -9,9 +9,11 @@ import SignUpForm from "./components/forms/SignUpForm.tsx";
 import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
+import History from "./components/other/History.tsx";
 import EmbedForm from "./components/forms/EmbedForm.tsx";
 
 let pageAndLinks: PageAndLink[] = [
+  { page: "History", link: "/history" },
 ];
 
 function App() {
@@ -35,7 +37,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/signin" element={<SignInForm />} />
             <Route path="/signup" element={<SignUpForm />} />
-            
+            <Route path="/history" element={<History />} />
             <Route path="/embed" element={<EmbedForm />} />
             
             {/*handle any other unaccounted for route*/}
