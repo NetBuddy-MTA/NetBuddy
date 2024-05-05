@@ -115,10 +115,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("react", policyBuilder =>
     {
-        policyBuilder.WithOrigins("https://localhost:5173");
-        policyBuilder.AllowAnyHeader();
-        policyBuilder.AllowAnyMethod();
-        policyBuilder.AllowCredentials();
+        policyBuilder
+            .SetIsOriginAllowed(_ => true) // allow any origin
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
