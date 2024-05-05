@@ -12,9 +12,6 @@ import Home from "./screens/Home";
 import History from "./components/other/History";
 import EmbedForm from "./components/forms/EmbedForm";
 import Sequence_Screen from "./components/other/Sequence_Screen";
-import SideDrawer from "./components/drawer/SideDrawer";
-import { DrawerControlProvider } from "./contexts/DrawerControlsContext";
-
 
 let pageAndLinks: PageAndLink[] = [
     { page: "History", link: "/history" },
@@ -29,27 +26,24 @@ function App() {
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />
                 <BrowserRouter>
-                    <DrawerControlProvider>
-                        <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} />
-                        <SideDrawer />
-                        <Routes>
-                            {/* Default route */}
-                            {
-                                userInfo.username ?
-                                    <Route path="/" element={<Navigate to="/home" replace={true} />} /> :
-                                    <Route path="/" element={<Navigate to="/signin" replace={true} />} />
-                            }
-                            {/* Pages */}
-                            <Route path="/home" element={<Home />} />
-                            <Route path="/signin" element={<SignInForm />} />
-                            <Route path="/signup" element={<SignUpForm />} />
-                            <Route path="/history" element={<History />} />
-                            <Route path="/embed" element={<EmbedForm />} />
-                            <Route path="/sequences" element={<Sequence_Screen />} />
-                            {/* Handle any other unaccounted for route */}
-                            <Route path="*" element={<Navigate to="/" replace={true} />} />
-                        </Routes>
-                    </DrawerControlProvider>
+                    <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} />
+                    <Routes>
+                        {/* Default route */}
+                        {
+                            userInfo.username ?
+                                <Route path="/" element={<Navigate to="/home" replace={true} />} /> :
+                                <Route path="/" element={<Navigate to="/signin" replace={true} />} />
+                        }
+                        {/* Pages */}
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/signin" element={<SignInForm />} />
+                        <Route path="/signup" element={<SignUpForm />} />
+                        <Route path="/history" element={<History />} />
+                        <Route path="/embed" element={<EmbedForm />} />
+                        <Route path="/sequences" element={<Sequence_Screen />} />
+                        {/* Handle any other unaccounted for route */}
+                        <Route path="*" element={<Navigate to="/" replace={true} />} />
+                    </Routes>
                 </BrowserRouter>
             </ThemeProvider>
         </UserInfoContext.Provider>
