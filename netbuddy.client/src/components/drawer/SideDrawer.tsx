@@ -9,63 +9,57 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import {useDrawerControl} from "../../contexts/DrawerControlsContext.tsx";
 
-type SideDrawerProps = {
-    open: boolean;
-    onClose: () => void;
-};
+const SideDrawer: React.FC = () => {
+    const { isDrawerOpen, closeDrawer } = useDrawerControl();
 
-const SideDrawer: React.FC<SideDrawerProps> = ({ open, onClose }) => {
     // Drawer content (list of items)
     const list = (
-        < Box
+        <Box
             sx={{ width: 250 }}
             role="presentation"
-            onClick={onClose}
-            onKeyDown={onClose}
+            onClick={closeDrawer}
+            onKeyDown={closeDrawer}
         >
-            < List >
-                {
-                    ['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        < ListItem key={text}
-                            disablePadding >
-                            < ListItemButton >
-                                < ListItemIcon >
-                                    {index % 2 === 0 ? < InboxIcon /> : < MailIcon />}
-                                </ ListItemIcon >
-                                < ListItemText primary={text} />
-                            </ ListItemButton >
-                        </ ListItem >
-                    ))}
-            </ List >
-            < Divider />
-            < List >
-                {
-                    ['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        < ListItem key={text}
-                            disablePadding >
-                            < ListItemButton >
-                                < ListItemIcon >
-                                    {index % 2 === 0 ? < InboxIcon /> : < MailIcon />}
-                                </ ListItemIcon >
-                                < ListItemText primary={text} />
-                            </ ListItemButton >
-                        </ ListItem >
-                    ))}
-            </ List >
-        </ Box >
+            <List>
+                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+            <Divider />
+            <List>
+                {['All mail', 'Trash', 'Spam'].map((text, index) => (
+                    <ListItem key={text} disablePadding>
+                        <ListItemButton>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
     );
 
     // Render the drawer using the open and onClose props
     return (
-        < SwipeableDrawer
+        <SwipeableDrawer
             anchor="left"
-            open={open}
-            onClose={onClose}
-            onOpen={() => { }}
+            open={isDrawerOpen}
+            onClose={closeDrawer}
+            onOpen={() => {}}
         >
             {list}
-        </ SwipeableDrawer >
+        </SwipeableDrawer>
     );
 };
 
