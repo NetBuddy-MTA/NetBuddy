@@ -1,9 +1,9 @@
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar.tsx";
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import FancyNavBar, { PageAndLink } from "./components/navigation/FancyNavBar";
 import logo from "./assets/logo/netbuddylogo.jpeg";
-import {ThemeProvider} from "@emotion/react";
-import {darkTheme} from "./layouts/style/Themes.tsx";
-import SignInForm from "./components/forms/SignInForm.tsx";
+import { ThemeProvider } from "@emotion/react";
+import { darkTheme } from "./layouts/style/Themes";
+import SignInForm from "./components/forms/SignInForm";
 import CssBaseline from '@mui/material/CssBaseline';
 import SignUpForm from "./components/forms/SignUpForm.tsx";
 import {useState} from 'react';
@@ -14,8 +14,8 @@ import EmbedForm from "./components/forms/EmbedForm.tsx";
 import SequenceScreen from "./components/other/SequenceScreen.tsx";
 
 let pageAndLinks: PageAndLink[] = [
-  { page: "History", link: "/history" },
-  { page: "Sequences", link: "/sequences" },
+    { page: "History", link: "/history" },
+    { page: "Sequences", link: "/sequences" },
 ];
 
 function App() {
