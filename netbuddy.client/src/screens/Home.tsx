@@ -3,7 +3,7 @@ import {Link as RouterLink} from "react-router-dom";
 import Link from "@mui/material/Link";
 import Button from "@mui/material/Button";
 
-const Links: {label: string, link: string}[] = [
+const Links: { label: string, link: string }[] = [
   {
     label: "Test1",
     link: "/test1"
@@ -20,10 +20,10 @@ const Links: {label: string, link: string}[] = [
 
 const Home = () => {
   return (
-    <Grid 
-      container 
-      spacing={2} 
-      justifyItems="center" 
+    <Grid
+      container
+      spacing={2}
+      justifyItems="center"
       alignItems="center"
       justifyContent="center"
       alignContent="center"

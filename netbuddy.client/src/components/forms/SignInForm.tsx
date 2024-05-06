@@ -18,7 +18,7 @@ const SignInForm = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
   const {setUserInfo} = useContext(UserInfoContext)
   const navigate = useNavigate();
-  
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
     if (waiting) return;
@@ -42,15 +42,14 @@ const SignInForm = () => {
       });
       // go to default page
       navigate("/");
-    }
-    else {
+    } else {
       // if error was caught in login api
       alert("An error occured while processing the request!");
     }
     // stop waiting
     setWaiting(false);
   }
-  
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -61,13 +60,13 @@ const SignInForm = () => {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgColor: 'secondary.main'}}>
+        <Avatar sx={{m: 1, bgColor: 'secondary.main'}}>
           {!locked ? <LockOpenIcon/> : <LockClosedIcon/>}
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
           <TextField
             margin="normal"
             required={true}
@@ -92,7 +91,7 @@ const SignInForm = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{mt: 3, mb: 2}}
             disabled={waiting}
           >
             Sign In

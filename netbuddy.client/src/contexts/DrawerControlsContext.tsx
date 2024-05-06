@@ -1,12 +1,12 @@
-﻿import { createContext } from "react";
+﻿import {createContext} from "react";
 
 export type SideDrawerControls = {
-   isOpen: boolean
-   }
+  isOpen: boolean
+}
 
 type ContextType = {
-    sideDrawerControls?: SideDrawerControls
-    setSideDrawerControls?: (sideDrawerControl: SideDrawerControls) => void
+  sideDrawerControls?: SideDrawerControls
+  setSideDrawerControls?: (sideDrawerControl: SideDrawerControls) => void
 }
 
 export default createContext<ContextType>({});

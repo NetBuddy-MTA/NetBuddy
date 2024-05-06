@@ -8,7 +8,7 @@ import UserInfoContext from '../../contexts/UserInfoContext.tsx';
 const ProfileMenu = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {userInfo} = useContext(UserInfoContext);
-  
+
   const switchMenuOpen = () => setMenuOpen(!menuOpen);
 
   return (
@@ -17,15 +17,15 @@ const ProfileMenu = () => {
         e.preventDefault();
         switchMenuOpen();
       }}>
-        <Avatar sx={{ width: 32, height: 32 }}>
+        <Avatar sx={{width: 32, height: 32}}>
           {userInfo?.username!.charAt(0).toUpperCase()}
         </Avatar>
       </Button>
-      
+
       <Menu
         open={menuOpen}
-        anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'center', horizontal: 'right' }}
+        anchorOrigin={{vertical: 'center', horizontal: 'right'}}
+        transformOrigin={{vertical: 'center', horizontal: 'right'}}
       >
         <MenuItem onClick={e => {
           e.preventDefault();
@@ -33,7 +33,7 @@ const ProfileMenu = () => {
         }}>
           Sign Out
         </MenuItem>
-        
+
         <MenuItem onClick={e => {
           e.preventDefault();
           switchMenuOpen();

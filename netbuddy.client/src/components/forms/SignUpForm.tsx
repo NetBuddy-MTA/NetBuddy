@@ -15,15 +15,15 @@ const LoginForm = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [waiting, setWaiting] = useState<boolean>(false);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (success) {
       navigate("/login");
       alert("Account created successfully");
     }
   }, [success]);
-  
-  
+
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
     if (waiting) return;
@@ -34,17 +34,16 @@ const LoginForm = () => {
     const data = new FormData(event.currentTarget);
     // send request to server
     let response = await signup(
-      data.get('username') as string, 
+      data.get('username') as string,
       data.get('email') as string,
       data.get('password') as string
     );
-    
+
     // check for response and validate it
     if (response) {
       // login was successful
       setSuccess(true);
-    }
-    else {
+    } else {
       // if error was caught in login api
       alert("An error occured while processing the request!");
     }
@@ -62,13 +61,13 @@ const LoginForm = () => {
           alignItems: 'center',
         }}
       >
-        <Avatar sx={{ m: 1, bgColor: 'secondary.main'}}>
+        <Avatar sx={{m: 1, bgColor: 'secondary.main'}}>
           <AccountCircleRoundedIcon/>
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
           <TextField
             margin="normal"
             required={true}
@@ -103,7 +102,7 @@ const LoginForm = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{mt: 3, mb: 2}}
             disabled={waiting}
           >
             Sign In

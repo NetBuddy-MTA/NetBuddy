@@ -1,23 +1,25 @@
 ﻿import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import {useEffect, useState } from "react";
-import axios from "axios";
+import {useState} from "react";
 
 const EmbedForm = () => {
   const [url, setUrl] = useState<string>("");
-  const [page, setPage] = useState<string>("");
-  useEffect(() => {
-    axios.get(url, {headers: {'Access-Control-Allow-Origin': '*'}})
-      .then(resp => {
-        console.log(resp);
-        setPage(resp.data);
-      })
-      .catch(err => console.log(err));
-  }, [url]);
-  
+  const [src, setSrc] = useState<string>("");
+
+  function sendRequest() {
+    setSrc(url);
+    // axios.get(url)
+    //   .then(resp => {
+    //     console.log(resp);
+    //     setPage(resp.data);
+    //   })
+    //   .catch(err => console.log(err));
+  }
+
   return (
-    <Grid container>
-      <Grid item>
+    <Grid container display="flex" flexDirection="column" alignItems="stretch"
+          sx={{minHeight: '100vh', minWidth: '100vh'}}>
+      <Grid item width="100%">
         <TextField
           margin="normal"
           fullWidth
@@ -32,8 +34,14 @@ const EmbedForm = () => {
           }}
         />
       </Grid>
-      <Grid item>
-        {page}
+      <Grid item width="100%" height="100%">
+        <form onSubmit={e => {
+          e.preventDefault();
+          sendRequest();
+        }}>
+          <iframe src={src} height="100%" width="100%"/>
+          <button type="submit">Update</button>
+        </form>
       </Grid>
     </Grid>
   );
