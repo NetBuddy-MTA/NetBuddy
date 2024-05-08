@@ -37,7 +37,7 @@
   <ItemGroup>
     <Folder Include="logs\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Models\Records\" />
+    <Folder Include="Models\Records\Results\" />
   </ItemGroup>
 
 </Project>
