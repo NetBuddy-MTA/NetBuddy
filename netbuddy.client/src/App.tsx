@@ -10,7 +10,6 @@ import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
-import EmbedForm from "./components/forms/EmbedForm.tsx";
 import SequenceScreen from "./components/other/SequenceScreen.tsx";
 
 let pageAndLinks: PageAndLink[] = [
@@ -41,7 +40,6 @@ function App() {
             <Route path="/signup" element={<SignUpForm/>}/>
             <Route path="/history" element={<History/>}/>
             <Route path="/sequences" element={<SequenceScreen/>}/>
-            <Route path="/embed" element={<EmbedForm/>}/>
 
             {/*handle any other unaccounted for route*/}
             <Route path="*" element={<Navigate to="/" replace={true}/>}/>
