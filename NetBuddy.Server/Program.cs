@@ -65,7 +65,9 @@ builder.Services.AddMarten(options =>
     options.Connection(connectionString!);
     // automatically create the schema if it doesn't exist
     options.AutoCreateSchemaObjects = AutoCreate.All;
-}).UseLightweightSessions();
+})
+    .InitializeWith<PopulateActions>()
+    .UseLightweightSessions();
 
 // configure the identity service
 builder.Services.AddIdentity<UserAccount, IdentityRole>()
