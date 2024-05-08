@@ -5,7 +5,7 @@ using Action = NetBuddy.Server.Models.Executables.Action.Action;
 
 namespace NetBuddy.Server.Data;
 
-public class PopulateActions : IInitialData
+public sealed class PopulateActions : IInitialData
 {
     private readonly Action[] _actions =
     [
@@ -15,6 +15,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Create New Tab",
             ActionString = "CreateTab",
             Description = "Creates a new tab in the browser",
+            Category = "Browser",
             Inputs = [
                 new Variable
                 {
@@ -40,6 +41,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Navigate to URL",
             ActionString = "NavigateToURL",
             Description = "Navigates to a URL in the provided tab",
+            Category = "Browser",
             Inputs = [
                 new Variable
                 {
@@ -69,6 +71,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Find Elements by Selector",
             ActionString = "FindElementsBySelector",
             Description = "Finds all elements matching the given selector in the tab",
+            Category = "Extraction",
             Inputs = [
                 new Variable
                 {
@@ -104,6 +107,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Click Element",
             ActionString = "ClickElement",
             Description = "Clicks the provided element",
+            Category = "Interactions",
             Inputs = [
                 new Variable
                 {
@@ -121,6 +125,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Read Text from Element",
             ActionString = "ReadElementText",
             Description = "Reads the text from the provided element",
+            Category = "Extraction",
             Inputs = [
                 new Variable
                 {
@@ -144,6 +149,7 @@ public class PopulateActions : IInitialData
             DisplayName = "Write Text to Element",
             ActionString = "WriteElementText",
             Description = "Writes the provided text to the provided element",
+            Category = "Interactions",
             Inputs = [
                 new Variable
                 {

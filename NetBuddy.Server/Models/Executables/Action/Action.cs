@@ -14,6 +14,9 @@ public sealed class Action
     // Description is the description of the action
     public string Description { get; set; } = string.Empty;
     
+    // Category for the action
+    public string Category { get; set; } = string.Empty;
+    
     // Inputs is the list of variables that the action uses
     public List<Variable> Inputs { get; set; } = [];
     
