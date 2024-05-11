@@ -1,13 +1,8 @@
-using System.Text;
 using Marten;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using NetBuddy.Server.Data;
-using NetBuddy.Server.Interfaces.Authentication;
 using NetBuddy.Server.Models.User;
-using NetBuddy.Server.Services.Authentication;
 using Serilog;
 using Serilog.Events;
 using Weasel.Core;
@@ -49,10 +44,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// configure the identity database context
-var identityConnectionString = builder.Configuration.GetConnectionString("nb_identity");
-builder.Services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(identityConnectionString));
-
 // configure the Marten document store
 #if DEBUG
 var connectionString = builder.Configuration.GetConnectionString("nb_dev");
@@ -70,47 +61,17 @@ builder.Services.AddMarten(options =>
     .UseLightweightSessions();
 
 // configure the identity service
-builder.Services.AddIdentity<UserAccount, IdentityRole>()
-    .AddEntityFrameworkStores<IdentityDbContext>();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication()
+    .AddCookie(IdentityConstants.ApplicationScheme);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme =
-        options.DefaultChallengeScheme =
-            options.DefaultForbidScheme =
-                options.DefaultScheme =
-                    options.DefaultSignInScheme =
-                        options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddCookie(options =>
-{
-    options.Cookie.Name = "token";
-}).AddJwtBearer(options =>
-{
-    // validation parameters
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidateAudience = true,
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]!))
-    };
-    // pull token out of cookie and into the context
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            context.Token = context.Request.Cookies["X-Access-Token"];
-            return Task.CompletedTask;
-        }
-    };
-});
+builder.Services.AddIdentityCore<UserAccount>()
+    .AddEntityFrameworkStores<IdentityDbContext>()
+    .AddApiEndpoints();
 
-// add the token service
-builder.Services.AddScoped<IRefreshService, RefreshService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
+// configure the identity database context
+var identityConnectionString = builder.Configuration.GetConnectionString("nb_identity");
+builder.Services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(identityConnectionString));
 
 // add a cors policy for the react app
 builder.Services.AddCors(options =>
@@ -147,6 +108,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapIdentityApi<UserAccount>();
 
 app.MapControllers();
 

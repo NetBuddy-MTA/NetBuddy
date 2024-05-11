@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <PackageReference Include="Marten" Version="7.5.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
@@ -35,9 +34,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Controllers\Account\" />
+    <Folder Include="Interfaces\" />
     <Folder Include="logs\" />
     <Folder Include="Migrations\" />
     <Folder Include="Models\Records\Results\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
