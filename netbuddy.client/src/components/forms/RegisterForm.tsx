@@ -9,7 +9,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signup from "../../api/account/SignUp";
+import register from "../../api/account/register.ts";
 
 const LoginForm = () => {
   const [success, setSuccess] = useState<boolean>(false);
@@ -33,8 +33,7 @@ const LoginForm = () => {
     // get form data
     const data = new FormData(event.currentTarget);
     // send request to server
-    let response = await signup(
-      data.get('username') as string,
+    let response = await register(
       data.get('email') as string,
       data.get('password') as string
     );
@@ -68,16 +67,6 @@ const LoginForm = () => {
           Sign up
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-          <TextField
-            margin="normal"
-            required={true}
-            fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
-            autoFocus={true}
-          />
           <TextField
             margin="normal"
             required={true}

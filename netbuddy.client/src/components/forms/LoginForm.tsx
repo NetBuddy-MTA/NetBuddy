@@ -10,10 +10,11 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signin, {LoginResponse} from "../../api/account/SignIn";
+import login from "../../api/account/login.ts";
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
+import info from "../../api/account/info.ts";
 
-const SignInForm = () => {
+const LoginForm = () => {
   const [locked, setLocked] = useState<boolean>(true);
   const [waiting, setWaiting] = useState<boolean>(false);
   const {setUserInfo} = useContext(UserInfoContext)
@@ -28,23 +29,24 @@ const SignInForm = () => {
     // get form data
     const data = new FormData(event.currentTarget);
     // send request to server
-    let response = await signin(data.get('username') as string, data.get('password') as string);
+    let response = await login(data.get('email') as string, data.get('password') as string);
     // check for response and validate it
     if (response) {
-      console.log(response);
+      const infoResponse = await info();
       // unlock
       setLocked(false);
       // login was successful
-      const {userName, email} = response as LoginResponse;
-      if (setUserInfo) setUserInfo({
-        username: userName,
-        email
-      });
+      if (infoResponse.data && infoResponse.data.userName && infoResponse.data.email) {
+        if (setUserInfo) setUserInfo({
+          username: infoResponse.data.userName,
+          email: infoResponse.data.email
+        });
+      }
       // go to default page
       navigate("/");
     } else {
       // if error was caught in login api
-      alert("An error occured while processing the request!");
+      alert("The server might be offline. Please try again later.");
     }
     // stop waiting
     setWaiting(false);
@@ -71,10 +73,10 @@ const SignInForm = () => {
             margin="normal"
             required={true}
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus={true}
           />
           <TextField
@@ -115,4 +117,4 @@ const SignInForm = () => {
   );
 }
 
-export default SignInForm;
+export default LoginForm;

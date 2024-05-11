@@ -6,7 +6,7 @@ using Action = NetBuddy.Server.Models.Executables.Action.Action;
 namespace NetBuddy.Server.Controllers.Execution.Actions;
 
 [Authorize]
-[Route("api/execution/actions")]
+[Route("execution/actions")]
 [ApiController]
 public class ActionsController : ControllerBase
 {

@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Account\" />
     <Folder Include="Interfaces\" />
     <Folder Include="logs\" />
     <Folder Include="Migrations\" />

@@ -17,7 +17,7 @@ export type Action = {
 };
 
 export default async function () {
-  return await agent.get('api/execution/actions')
+  return await agent.get('/execution/actions')
     .catch(error => console.log(error.error))
     .then(response => response?.data as Action[]);
 }
