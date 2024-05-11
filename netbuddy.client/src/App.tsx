@@ -3,15 +3,15 @@ import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar";
 import logo from "./assets/logo/netbuddylogo.jpeg";
 import {ThemeProvider} from "@emotion/react";
 import {darkTheme} from "./layouts/style/Themes";
-import SignInForm from "./components/forms/SignInForm";
+import LoginForm from "./components/forms/LoginForm.tsx";
 import CssBaseline from '@mui/material/CssBaseline';
-import SignUpForm from "./components/forms/SignUpForm.tsx";
+import RegisterForm from "./components/forms/RegisterForm.tsx";
 import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
-import EmbedForm from "./components/forms/EmbedForm.tsx";
 import SequenceScreen from "./components/other/SequenceScreen.tsx";
+import GetActions from "./api/actions/Actions.ts";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
@@ -20,12 +20,25 @@ let pageAndLinks: PageAndLink[] = [
 
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo>({});
-
+  
+  const TestElement = () => {
+    return (
+      <button onClick={e => {
+        e.preventDefault();
+        GetActions()
+        .then(actions => console.log(actions));
+      }}>
+        Get Actions
+      </button>
+    );
+  }
+  
   return (
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <BrowserRouter>
+          <TestElement/>
           <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
           <Routes>
             {/*default route*/}
@@ -37,12 +50,11 @@ function App() {
 
             {/*pages*/}
             <Route path="/home" element={<Home/>}/>
-            <Route path="/signin" element={<SignInForm/>}/>
-            <Route path="/signup" element={<SignUpForm/>}/>
+            <Route path="/signin" element={<LoginForm/>}/>
+            <Route path="/signup" element={<RegisterForm/>}/>
             <Route path="/history" element={<History/>}/>
             <Route path="/sequences" element={<SequenceScreen/>}/>
-            <Route path="/embed" element={<EmbedForm/>}/>
-
+            
             {/*handle any other unaccounted for route*/}
             <Route path="*" element={<Navigate to="/" replace={true}/>}/>
           </Routes>

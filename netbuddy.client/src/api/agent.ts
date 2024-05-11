@@ -1,6 +1,6 @@
 ﻿import axios from 'axios';
 
-const BASE_URL: string = 'https://localhost:7298/api';
+const BASE_URL: string = 'https://localhost:7298/';
 
 export const agentNoCredentials = axios.create({
   withCredentials: false,

@@ -3,22 +3,32 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import LockClosedIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
-import signin, {LoginResponse} from "../../api/account/SignIn";
+import login from "../../api/account/login.ts";
+import {getUserInfo} from "../../api/account/info.ts";
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
 
-const SignInForm = () => {
+const LoginForm = () => {
   const [locked, setLocked] = useState<boolean>(true);
   const [waiting, setWaiting] = useState<boolean>(false);
-  const {setUserInfo} = useContext(UserInfoContext)
   const navigate = useNavigate();
+  const {userInfo, setUserInfo} = useContext(UserInfoContext);
 
+  useEffect(() => {
+    getUserInfo().then(info => {
+      if (setUserInfo && userInfo != info) {
+        setUserInfo(info);
+        navigate("/");
+      }
+    });
+  }, []);
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
     if (waiting) return;
@@ -28,23 +38,16 @@ const SignInForm = () => {
     // get form data
     const data = new FormData(event.currentTarget);
     // send request to server
-    let response = await signin(data.get('username') as string, data.get('password') as string);
+    let response = await login(data.get('email') as string, data.get('password') as string);
     // check for response and validate it
     if (response) {
-      console.log(response);
       // unlock
       setLocked(false);
-      // login was successful
-      const {userName, email} = response as LoginResponse;
-      if (setUserInfo) setUserInfo({
-        username: userName,
-        email
-      });
       // go to default page
       navigate("/");
     } else {
       // if error was caught in login api
-      alert("An error occured while processing the request!");
+      alert("The server might be offline. Please try again later.");
     }
     // stop waiting
     setWaiting(false);
@@ -71,10 +74,10 @@ const SignInForm = () => {
             margin="normal"
             required={true}
             fullWidth
-            id="username"
-            label="Username"
-            name="username"
-            autoComplete="username"
+            id="email"
+            label="Email"
+            name="email"
+            autoComplete="email"
             autoFocus={true}
           />
           <TextField
@@ -115,4 +118,4 @@ const SignInForm = () => {
   );
 }
 
-export default SignInForm;
+export default LoginForm;

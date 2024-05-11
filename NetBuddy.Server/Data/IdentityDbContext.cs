@@ -29,11 +29,8 @@ public class IdentityDbContext : IdentityDbContext<UserAccount>
                 NormalizedName = "USER"
             }
         ];
-        // add roles
-        builder.Entity<IdentityRole>().HasData(roles);
         
-        // configure relationship between UserAccount and RefreshToken
-        builder.Entity<UserAccount>()
-            .OwnsOne(e => e.Refresh);
+        // ensure schema is created
+        builder.HasDefaultSchema("identity");
     }
 }
