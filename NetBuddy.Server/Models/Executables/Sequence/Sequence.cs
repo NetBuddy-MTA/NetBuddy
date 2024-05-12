@@ -16,7 +16,7 @@ public sealed class Sequence
     public string Description { get; set; } = string.Empty;
     
     // Actions is the list of actions that the sequence contains
-    public List<Action.Action> Actions { get; set; } = [];
+    public List<ExecutableAction> Actions { get; set; } = [];
     
     // Owner is the user that created the sequence
     public UserAccount Owner { get; set; }
