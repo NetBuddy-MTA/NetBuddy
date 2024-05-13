@@ -1,19 +1,19 @@
 ﻿import agent from "../agent.ts";
 
 export type Variable = {
-  Name: string,
-  Description: string,
-  Type: string,
-  Optional: boolean
+  name: string,
+  description: string,
+  type: string,
+  optional: boolean
 };
 
 export type Action = {
-  DisplayName: string,
-  ActionString: string,
-  Description: string,
-  Category: string,
-  Inputs: Variable[],
-  Outputs: Variable[]
+  displayName: string,
+  actionString: string,
+  description: string,
+  category: string,
+  inputs: Variable[],
+  outputs: Variable[]
 };
 
 export default async function () {

@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
-import Collapsible from 'react-collapsible';
 import Button from '@mui/material/Button';
-import getActions, {Action} from "../../api/actions/Actions.ts";
+import getActions, {Action} from "../../api/actions/actions.ts";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -11,12 +10,12 @@ function groupByCategory(items:Action[]) {
   // Use reduce to group the items by category
   const grouped = items.reduce((acc:{[key:string]:Action[]}, item) => {
     // If the category hasn't been seen before, initialize it with an empty array
-    if (!acc[item.Category]) {
-      acc[item.Category] = [];
+    if (!acc[item.category]) {
+      acc[item.category] = [];
     }
 
     // Push the current item into the array for its category
-    acc[item.Category].push(item);
+    acc[item.category].push(item);
     return acc;
   }, {});
 
@@ -40,7 +39,7 @@ const SequenceScreen = () => {
           <AccordionSummary
             expandIcon={<ExpandMore />}
           >
-            {actionGroup[0].Category}
+            {actionGroup[0].category}
           </AccordionSummary>
           <AccordionDetails>
             { 
@@ -48,9 +47,9 @@ const SequenceScreen = () => {
                 return (
                   <Button onClick={e => {
                     e.preventDefault();
-                    setSelected([...selected,action.DisplayName]);
+                    setSelected([...selected,action.displayName]);
                   }}>
-                    {action.DisplayName}
+                    {action.displayName}
                   </Button>
                 )
               })
