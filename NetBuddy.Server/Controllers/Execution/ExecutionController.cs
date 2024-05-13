@@ -8,15 +8,14 @@ using Action = NetBuddy.Server.Models.Executables.Action.Action;
 
 namespace NetBuddy.Server.Controllers.Execution;
 
-[Authorize]
 [Route("execution")]
 [ApiController]
-public class ActionsController : ControllerBase
+public class ExecutionController : ControllerBase
 {
     private readonly IDocumentStore _store;
     private readonly UserManager<UserAccount> _userManager;
     
-    public ActionsController(IDocumentStore store, UserManager<UserAccount> userManager)
+    public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager)
     {
         _store = store;
         _userManager = userManager;
@@ -33,6 +32,7 @@ public class ActionsController : ControllerBase
         return Ok(actions);
     }
     
+    [Authorize]
     [Route("sequences/{sequenceId?}")]
     [HttpGet]
     public async Task<IActionResult> GetSequence(Guid sequenceId)
