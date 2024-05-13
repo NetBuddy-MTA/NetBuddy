@@ -22,12 +22,7 @@ export type ExecutableAction = {
   outputs: SequenceVariable[];
 };
 
-export type Sequence = {
-  id: string;
-  name: string;
-  description: string;
-  actions: ExecutableAction[];
-};
+export type Sequence = SequenceDisplay & {actions: ExecutableAction[]};
 
 export async function GetSequencesDisplay() {
   return await agent.get("execution/sequences")
