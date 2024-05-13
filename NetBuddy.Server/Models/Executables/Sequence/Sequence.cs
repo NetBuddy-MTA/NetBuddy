@@ -19,5 +19,5 @@ public sealed class Sequence
     public List<ExecutableAction> Actions { get; set; } = [];
     
     // Owner is the user that created the sequence
-    public UserAccount Owner { get; set; }
+    public UserAccount? Owner { get; set; }
 }
