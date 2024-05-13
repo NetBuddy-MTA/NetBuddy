@@ -69,4 +69,44 @@ public class ExecutionController : ControllerBase
         // If the user is not the owner of the sequence, return a 400 Bad Request
         return BadRequest();
     }
+
+    [Authorize]
+    [Route("sequences")]
+    [HttpPut]
+    public async Task<IActionResult> PutSequence([FromBody] Sequence sequence)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        
+        // todo: some checks that confirm the sequence is valid :D
+
+        // if the sequence already has an id that means it was edited:
+        // in that case we should check that the user is the owner of the sequence of that id, if not just assign it a new id
+        // if the user is the owner we want to delete the old sequence and all its actions and replace it with the new one
+        await using var session = _store.LightweightSession();
+
+        var user = await _userManager.GetUserAsync(User);
+        // should never happen, but just in case
+        if (user == null) return Unauthorized();
+        
+        sequence.Owner = user;
+        
+        if (sequence.Id != Guid.Empty)
+        {
+            var oldSequence = await session.LoadAsync<Sequence>(sequence.Id);
+            if (oldSequence != null)
+            {
+                // if the user is not the owner of the sequence, return a 400 Bad Request
+                // this should never happen anyway
+                if (oldSequence.Owner != user) return BadRequest();
+            }
+        }
+        
+        session.Store(sequence);
+        
+        await session.SaveChangesAsync();
+        
+        return Ok(sequence.Id);
+    }
+    
 }
