@@ -31,6 +31,28 @@ public class ExecutionController : ControllerBase
 
         return Ok(actions);
     }
+
+    [Authorize]
+    [Route("sequences")]
+    [HttpGet]
+    public async Task<IActionResult> GetAllUserSequences()
+    {
+        await using var session = _store.QuerySession();
+        
+        var user = await _userManager.GetUserAsync(User);
+        
+        var sequences = await session.Query<Sequence>()
+            .Where(x => x.Owner == user)
+            .Select(x => new
+            {
+                x.Id,
+                x.Name,
+                x.Description
+            })
+            .ToListAsync();
+        
+        return Ok(sequences);
+    }
     
     [Authorize]
     [Route("sequences/{sequenceId?}")]
