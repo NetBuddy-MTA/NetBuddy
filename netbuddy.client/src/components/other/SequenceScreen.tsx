@@ -1,91 +1,15 @@
-// @ts-nocheck
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Collapsible from 'react-collapsible';
-interface Sequences {
-  [key: string]: string;
-}
+import Button from '@mui/material/Button';
+import getActions, {Action} from "../../api/actions/Actions.ts";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
-const sequences: Sequences =  [
-  {
-    DisplayName : "Create New Tab",
-    ActionString : "CreateTab",
-    Description : "Creates a new tab in the browser",
-    Category : "Browser",
-    Inputs : [
-      {
-        Name : "Url",
-        Description : "The URL of the page to open (Optional)",
-        Type : "URL",
-        Optional : true
-      }
-    ],
-    Outputs : [
-      {
-        Name : "Tab",
-        Description : "The tab that was created",
-        Type : "Tab"
-      }
-    ]
-  },
-  {
-    DisplayName : "Navigate to URL",
-    ActionString : "NavigateToURL",
-    Description : "Navigates to a URL in the provided tab",
-    Category : "Browser",
-    Inputs : [
-      {
-        Name : "Tab",
-        Description : "The tab to navigate in",
-        Type : "Tab"
-      },
-      {
-        Name : "Url",
-        Description : "The URL to navigate to",
-        Type : "URL"
-      }
-    ],
-    Outputs : [
-      {
-        Name : "Tab",
-        Description : "The tab that was navigated",
-        Type : "Tab"
-      }
-    ]
-  },
-  {
-    DisplayName : "Find Elements by Selector",
-    ActionString : "FindElementsBySelector",
-    Description : "Finds all elements matching the given selector in the tab",
-    Category : "Extraction",
-    Inputs : [
-      {
-        Name : "Selector",
-        Description : "The selector that the elements will be matched against",
-        Type : "Selector"
-      },
-      {
-        Name : "Tab",
-        Description : "The tab to be searched",
-        Type : "Tab"
-      }
-    ],
-    Outputs : [
-      {
-        Name : "Elements",
-        Description : "The elements in the tab that match the selector",
-        Type : "Element[]"
-      },
-      {
-        Name : "Count",
-        Description : "The number of elements that match the selector",
-        Type : "Number"
-      }
-    ]
-  },
-];
-function groupByCategory(items) {
+function groupByCategory(items:Action[]) {
   // Use reduce to group the items by category
-  const grouped = items.reduce((acc, item) => {
+  const grouped = items.reduce((acc:{[key:string]:Action[]}, item) => {
     // If the category hasn't been seen before, initialize it with an empty array
     if (!acc[item.Category]) {
       acc[item.Category] = [];
@@ -99,18 +23,40 @@ function groupByCategory(items) {
   // Convert the grouped object into an array of arrays
   return Object.values(grouped);
 }
-const grouped = groupByCategory(sequences);
+
 const SequenceScreen = () => {
-  const [selected, setSelected] = useState([]);
-  
+  const [selected, setSelected] = useState<string[]>([]);
+  const [actions, setActions] = useState<Action[]>([]);
+  useEffect(() => {
+    getActions().then(setActions)
+   
+  }, []);
+  const grouped = groupByCategory(actions);
   return (
     <div>
       <h1>Select a Sequence</h1>
-      {grouped.map(category=> (
-        /* @ts-ignore */
-        <Collapsible trigger={category[0].Category} key={category[0].Category}>
-          {category.map(({DisplayName}) => (<button onClick={() => setSelected((prev)=>[...prev,DisplayName])} key={DisplayName}> {DisplayName} </button>))}
-        </Collapsible>
+      {grouped.map(actionGroup=> (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+          >
+            {actionGroup[0].Category}
+          </AccordionSummary>
+          <AccordionDetails>
+            { 
+              actionGroup.map(action => {
+                return (
+                  <Button onClick={e => {
+                    e.preventDefault();
+                    setSelected([...selected,action.DisplayName]);
+                  }}>
+                    {action.DisplayName}
+                  </Button>
+                )
+              })
+            }
+          </AccordionDetails>
+        </Accordion>
       ))}
       <ul>
         {selected.map((action,i) => <li key={`${action}-${i}`}>{action}</li>)}
