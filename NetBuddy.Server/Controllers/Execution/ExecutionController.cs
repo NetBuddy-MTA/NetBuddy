@@ -43,12 +43,7 @@ public class ExecutionController : ControllerBase
         
         var sequences = await session.Query<Sequence>()
             .Where(x => x.Owner == user)
-            .Select(x => new
-            {
-                x.Id,
-                x.Name,
-                x.Description
-            })
+            .Select(x => new { x.Id, x.Name, x.Description })
             .ToListAsync();
         
         return Ok(sequences);
@@ -57,11 +52,11 @@ public class ExecutionController : ControllerBase
     [Authorize]
     [Route("sequences/{sequenceId?}")]
     [HttpGet]
-    public async Task<IActionResult> GetSequence(Guid sequenceId)
+    public async Task<IActionResult> GetSequence(string sequenceId)
     {
         await using var session = _store.QuerySession();
 
-        var sequence = await session.LoadAsync<Sequence>(sequenceId);
+        var sequence = await session.LoadAsync<Sequence>(new Guid(sequenceId));
 
         // If the sequence doesn't exist, return a 400 Bad Request
         if (sequence == null) return BadRequest();
