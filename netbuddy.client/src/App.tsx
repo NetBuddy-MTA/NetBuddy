@@ -11,7 +11,7 @@ import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
 import SequenceScreen from "./components/other/SequenceScreen.tsx";
-import GetActions from "./api/actions/Actions.ts";
+import GetActions from "./api/actions/actions.ts";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
