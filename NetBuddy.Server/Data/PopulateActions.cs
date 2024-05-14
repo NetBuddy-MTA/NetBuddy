@@ -9,6 +9,24 @@ public sealed class PopulateActions : IInitialData
 {
     private readonly Action[] _actions =
     [
+        // Create a new chrome window to work in
+        new Action
+        {
+            DisplayName = "Create New Window",
+            ActionString = "CreateWindow",
+            Description = "Creates a new browser window",
+            Category = "Browser",
+            Inputs = [
+            ],
+            Outputs = [
+                new Variable
+                {
+                    Name = "Window",
+                    Description = "The window that was created",
+                    Type = "Window"
+                }
+            ]
+        },
         // Create a new tab action
         new Action
         {
@@ -17,6 +35,12 @@ public sealed class PopulateActions : IInitialData
             Description = "Creates a new tab in the browser",
             Category = "Browser",
             Inputs = [
+                new Variable
+                {
+                    Name = "Window",
+                    Description = "The window to create the tab in",
+                    Type = "Window"
+                },
                 new Variable
                 {
                     Name = "Url",
