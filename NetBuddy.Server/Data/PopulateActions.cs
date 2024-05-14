@@ -27,6 +27,24 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
+        // todo: Close a window
+        new Action
+        {
+            DisplayName = "Close Window",
+            ActionString = "CloseWindow",
+            Description = "Closes the provided window",
+            Category = "Browser",
+            Inputs = [
+                new Variable
+                {
+                    Name = "Window",
+                    Description = "The window to close",
+                    Type = "Window"
+                }
+            ],
+            Outputs = [
+            ]
+        },
         // Create a new tab action
         new Action
         {
@@ -58,7 +76,6 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
-        
         // Navigate to URL action
         new Action
         {
@@ -196,7 +213,71 @@ public sealed class PopulateActions : IInitialData
                     Type = "Boolean"
                 }
             ]
-        }
+        },
+        // todo: http/s request
+        new Action
+        {
+            DisplayName = "HTTP(S) Request",
+            ActionString = "HttpRequest",
+            Description = "Performs an HTTP(S) request",
+            Category = "Requests",
+            Inputs = [
+                new Variable
+                {
+                    Name = "Url",
+                    Description = "The URL to request",
+                    Type = "URL"
+                },
+                new Variable
+                {
+                    Name = "Method",
+                    Description = "The HTTP method to use",
+                    Type = "String",
+                    Optional = true,
+                    DefaultValue = "GET"
+                },
+                new Variable
+                {
+                    Name = "Headers",
+                    Description = "The headers to send with the request",
+                    Type = "String",
+                    Optional = true
+                }
+            ],
+            Outputs = [
+                new Variable
+                {
+                    Name = "Response",
+                    Description = "The response from the request",
+                    Type = "HttpResponse"
+                }
+            ]
+        },
+        // todo: Set a variable
+        new Action
+        {
+            DisplayName = "Set Variable",
+            ActionString = "SetVariable",
+            Description = "Sets a variable to the provided value",
+            Category = "Variables",
+            Inputs = [
+                new Variable
+                {
+                    Name = "Variable",
+                    Description = "The variable to set",
+                    Type = "Variable"
+                },
+                new Variable
+                {
+                    Name = "Value",
+                    Description = "The value to set the variable to",
+                    Type = "?"
+                }
+            ],
+            Outputs = [
+            ]
+        },
+        // 
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
