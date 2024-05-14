@@ -1,26 +1,64 @@
-interface Sequences {
-  [key: string]: string;
+import {useEffect, useState} from "react";
+import Button from '@mui/material/Button';
+import getActions, {Action} from "../../api/actions/actions.ts";
+import Accordion from '@mui/material/Accordion';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMore from "@mui/icons-material/ExpandMore";
+
+function groupByCategory(items:Action[]) {
+  // Use reduce to group the items by category
+  const grouped = items.reduce((acc:{[key:string]:Action[]}, item) => {
+    // If the category hasn't been seen before, initialize it with an empty array
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+
+    // Push the current item into the array for its category
+    acc[item.category].push(item);
+    return acc;
+  }, {});
+
+  // Convert the grouped object into an array of arrays
+  return Object.values(grouped);
 }
 
-const sequences: Sequences = {
-  'sequence1': 'Sequence 1 description',
-  'sequence2': 'Sequence 2 description',
-  'sequence3': 'Sequence 3 description',
-};
-
 const SequenceScreen = () => {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [actions, setActions] = useState<Action[]>([]);
+  useEffect(() => {
+    getActions().then(setActions)
+   
+  }, []);
+  const grouped = groupByCategory(actions);
   return (
     <div>
       <h1>Select a Sequence</h1>
+      {grouped.map(actionGroup=> (
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+          >
+            {actionGroup[0].category}
+          </AccordionSummary>
+          <AccordionDetails>
+            { 
+              actionGroup.map(action => {
+                return (
+                  <Button onClick={e => {
+                    e.preventDefault();
+                    setSelected([...selected,action.displayName]);
+                  }}>
+                    {action.displayName}
+                  </Button>
+                )
+              })
+            }
+          </AccordionDetails>
+        </Accordion>
+      ))}
       <ul>
-        {Object.keys(sequences).map((sequenceId) => (
-          <li key={sequenceId}>
-            <button>
-              {sequenceId}
-            </button>
-            <p>{sequences[sequenceId]}</p>
-          </li>
-        ))}
+        {selected.map((action,i) => <li key={`${action}-${i}`}>{action}</li>)}
       </ul>
     </div>
   );

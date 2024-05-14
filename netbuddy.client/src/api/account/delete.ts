@@ -1,4 +1,4 @@
-﻿import {agentNoCredentials as agent} from '../agent.ts';
+﻿import agent from '../agent.ts';
 
 export type DeleteResponse = {}
 

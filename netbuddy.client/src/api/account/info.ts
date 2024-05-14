@@ -1,4 +1,4 @@
-﻿import {agentWithCredentials as agent} from "../agent.ts";
+﻿import agent from "../agent.ts";
 
 export default async function info() {
   return await agent.get('info');
