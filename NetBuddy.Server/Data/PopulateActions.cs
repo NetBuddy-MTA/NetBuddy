@@ -27,7 +27,7 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
-        // todo: Close a window
+        // Close a window
         new Action
         {
             DisplayName = "Close Window",
@@ -214,7 +214,7 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
-        // todo: http/s request
+        // http/s request
         new Action
         {
             DisplayName = "HTTP(S) Request",
@@ -253,7 +253,7 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
-        // todo: Set a variable
+        // Set a variable
         new Action
         {
             DisplayName = "Set Variable",
