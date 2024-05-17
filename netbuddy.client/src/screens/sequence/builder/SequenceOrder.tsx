@@ -58,11 +58,13 @@ const SequenceOrder = (props: {
           {executableActions.map((action, index) => {
             return (
               <Grid item key={index}>
-                <Paper elevation={12}>
-                  <Typography variant="h5" >
-                    {actionStringToAction[action.actionString].displayName}
-                  </Typography>
-                </Paper>
+                <Box m={0.5} p={0.5}>
+                  <Paper elevation={12}>
+                    <Typography variant="h5" >
+                      {actionStringToAction[action.actionString].displayName}
+                    </Typography>
+                  </Paper>
+                </Box>
               </Grid>
             );
           })}

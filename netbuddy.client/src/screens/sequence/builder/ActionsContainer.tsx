@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import Button from '@mui/material/Button';
 import {Action} from "../../../api/actions/actions.ts";
 import Accordion from '@mui/material/Accordion';
@@ -29,10 +29,16 @@ const ActionsContainer = (props: {
   actions: Action[],
   addAction: (action: Action) => void
 }) => {
+  const [expanded, setExpanded] = useState<string | false>(false);
+  
   const {actions, addAction} = props;
   
   useEffect(() => {
   }, [actions]);
+  
+  const handleAccordionChange = (category: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    return setExpanded(isExpanded ? category : false);
+  };
   
   const grouped = groupByCategory(actions);
   
@@ -40,7 +46,10 @@ const ActionsContainer = (props: {
     <Paper elevation={4}>
       <Typography variant="h4" p={1}>Action Menu:</Typography>
       {grouped.map(actionGroup=> (
-        <Accordion>
+        <Accordion 
+          expanded={expanded === actionGroup[0].category} 
+          onChange={handleAccordionChange(actionGroup[0].category)}
+        >
           <AccordionSummary
             expandIcon={<ExpandMore />}
           >
