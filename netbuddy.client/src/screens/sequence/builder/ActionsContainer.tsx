@@ -1,6 +1,6 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import Button from '@mui/material/Button';
-import getActions, {Action} from "../../api/actions/actions.ts";
+import {Action} from "../../../api/actions/actions.ts";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -23,14 +23,17 @@ function groupByCategory(items:Action[]) {
   return Object.values(grouped);
 }
 
-const SequenceScreen = () => {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [actions, setActions] = useState<Action[]>([]);
+const ActionsContainer = (props: {
+  actions: Action[],
+  addAction: (action: Action) => void
+}) => {
+  const {actions, addAction} = props;
+  
   useEffect(() => {
-    getActions().then(setActions)
-   
-  }, []);
+  }, [actions]);
+  
   const grouped = groupByCategory(actions);
+  
   return (
     <div>
       <h1>Select a Sequence</h1>
@@ -47,7 +50,7 @@ const SequenceScreen = () => {
                 return (
                   <Button onClick={e => {
                     e.preventDefault();
-                    setSelected([...selected,action.displayName]);
+                    addAction(action);
                   }}>
                     {action.displayName}
                   </Button>
@@ -57,11 +60,8 @@ const SequenceScreen = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-      <ul>
-        {selected.map((action,i) => <li key={`${action}-${i}`}>{action}</li>)}
-      </ul>
     </div>
   );
 };
 
-export default SequenceScreen;
+export default ActionsContainer;
