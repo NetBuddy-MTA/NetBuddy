@@ -4,6 +4,7 @@ import {ExecutableAction, SequenceVariable} from "../../../api/sequences/sequenc
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const SequenceOrder = (props: {
   actionStringToAction: {[key: string]: Action}, 
@@ -51,19 +52,23 @@ const SequenceOrder = (props: {
     setExecutableActions(executableActions.filter(act => act !== action));
   
   return (
-    <Grid container spacing={2}>
-      {executableActions.map((action, index) => {
-        return (
-          <Grid item key={index}>
-            <Paper elevation={12}>
-              <Typography variant="h5" >
-                {actionStringToAction[action.actionString].displayName}
-              </Typography>
-            </Paper>
-          </Grid>
-        );
-      })}
-    </Grid>
+    <Box m={1} p={1}>
+      <Paper elevation={4}>
+        <Grid container spacing={2} direction="column">
+          {executableActions.map((action, index) => {
+            return (
+              <Grid item key={index}>
+                <Paper elevation={12}>
+                  <Typography variant="h5" >
+                    {actionStringToAction[action.actionString].displayName}
+                  </Typography>
+                </Paper>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Paper>
+    </Box>
   );
 }
 

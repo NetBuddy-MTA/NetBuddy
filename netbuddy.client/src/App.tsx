@@ -11,6 +11,7 @@ import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
 import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
+import Box from '@mui/material/Box';
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
@@ -25,25 +26,31 @@ function App() {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <BrowserRouter>
-          <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
-          <Routes>
-            {/*default route*/}
-            {
-              userInfo.username ?
-                <Route path="/" element={<Navigate to="/sequences" replace={true}/>}/> :
-                <Route path="/" element={<Navigate to="/signin" replace={true}/>}/>
-            }
-
-            {/*pages*/}
-            <Route path="/home" element={<Home/>}/>
-            <Route path="/signin" element={<LoginForm/>}/>
-            <Route path="/signup" element={<RegisterForm/>}/>
-            <Route path="/history" element={<History/>}/>
-            <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
-            
-            {/*handle any other unaccounted for route*/}
-            <Route path="*" element={<Navigate to="/" replace={true}/>}/>
-          </Routes>
+          <Box m={2}>
+            <Box m={2}>
+              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} />
+            </Box>
+            <Box m={2}>
+              <Routes>
+                {/*default route*/}
+                {
+                  userInfo.username ?
+                    <Route path="/" element={<Navigate to="/sequences" replace={true}/>}/> :
+                    <Route path="/" element={<Navigate to="/signin" replace={true}/>}/>
+                }
+    
+                {/*pages*/}
+                <Route path="/home" element={<Home/>}/>
+                <Route path="/signin" element={<LoginForm/>}/>
+                <Route path="/signup" element={<RegisterForm/>}/>
+                <Route path="/history" element={<History/>}/>
+                <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
+                
+                {/*handle any other unaccounted for route*/}
+                <Route path="*" element={<Navigate to="/" replace={true}/>}/>
+              </Routes>
+            </Box>
+          </Box>
         </BrowserRouter>
       </ThemeProvider>
     </UserInfoContext.Provider>

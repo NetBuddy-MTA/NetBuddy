@@ -4,6 +4,7 @@ import getActions, {Action} from "../../../api/actions/actions.ts";
 import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
 import {ExecutableAction, Sequence} from "../../../api/sequences/sequences.ts";
+import Box from "@mui/material/Box";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -37,18 +38,20 @@ const SequenceBuilderScreen = () => {
   }
   
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={3}>
-        <ActionsContainer actions={actionCatalogue} addAction={addAction} />
+    <Box paddingTop={3}>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <ActionsContainer actions={actionCatalogue} addAction={addAction} />
+        </Grid>
+        <Grid item xs={6}>
+          <SequenceOrder 
+            actionStringToAction={actionStringToAction}
+            actionsToAdd={actionsToAdd} setActionsToAdd={setActionsToAdd}
+            executableActions={executableActions} setExecutableActions={setExecutableActions}
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-        <SequenceOrder 
-          actionStringToAction={actionStringToAction}
-          actionsToAdd={actionsToAdd} setActionsToAdd={setActionsToAdd}
-          executableActions={executableActions} setExecutableActions={setExecutableActions}
-        />
-      </Grid>
-    </Grid>
+    </Box>
   );
 }
 

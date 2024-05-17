@@ -5,6 +5,8 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 
 function groupByCategory(items:Action[]) {
   // Use reduce to group the items by category
@@ -35,8 +37,8 @@ const ActionsContainer = (props: {
   const grouped = groupByCategory(actions);
   
   return (
-    <div>
-      <h1>Select a Sequence</h1>
+    <Paper elevation={4}>
+      <Typography variant="h4" p={1}>Action Menu:</Typography>
       {grouped.map(actionGroup=> (
         <Accordion>
           <AccordionSummary
@@ -60,7 +62,7 @@ const ActionsContainer = (props: {
           </AccordionDetails>
         </Accordion>
       ))}
-    </div>
+    </Paper>
   );
 };
 
