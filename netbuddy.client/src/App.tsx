@@ -10,8 +10,8 @@ import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
-import SequenceScreen from "./components/other/SequenceScreen.tsx";
-import GetActions from "./api/actions/actions.ts";
+import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
+import Box from '@mui/material/Box';
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
@@ -21,43 +21,36 @@ let pageAndLinks: PageAndLink[] = [
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo>({});
   
-  const TestElement = () => {
-    return (
-      <button onClick={e => {
-        e.preventDefault();
-        GetActions()
-        .then(actions => console.log(actions));
-      }}>
-        Get Actions
-      </button>
-    );
-  }
-  
   return (
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
       <ThemeProvider theme={darkTheme}>
         <CssBaseline/>
         <BrowserRouter>
-          <TestElement/>
-          <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
-          <Routes>
-            {/*default route*/}
-            {
-              userInfo.username ?
-                <Route path="/" element={<Navigate to="/sequences" replace={true}/>}/> :
-                <Route path="/" element={<Navigate to="/signin" replace={true}/>}/>
-            }
-
-            {/*pages*/}
-            <Route path="/home" element={<Home/>}/>
-            <Route path="/signin" element={<LoginForm/>}/>
-            <Route path="/signup" element={<RegisterForm/>}/>
-            <Route path="/history" element={<History/>}/>
-            <Route path="/sequences" element={<SequenceScreen/>}/>
-            
-            {/*handle any other unaccounted for route*/}
-            <Route path="*" element={<Navigate to="/" replace={true}/>}/>
-          </Routes>
+          <Box m={2}>
+            <Box m={2}>
+              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} />
+            </Box>
+            <Box m={2}>
+              <Routes>
+                {/*default route*/}
+                {
+                  userInfo.username ?
+                    <Route path="/" element={<Navigate to="/sequences" replace={true}/>}/> :
+                    <Route path="/" element={<Navigate to="/signin" replace={true}/>}/>
+                }
+    
+                {/*pages*/}
+                <Route path="/home" element={<Home/>}/>
+                <Route path="/signin" element={<LoginForm/>}/>
+                <Route path="/signup" element={<RegisterForm/>}/>
+                <Route path="/history" element={<History/>}/>
+                <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
+                
+                {/*handle any other unaccounted for route*/}
+                <Route path="*" element={<Navigate to="/" replace={true}/>}/>
+              </Routes>
+            </Box>
+          </Box>
         </BrowserRouter>
       </ThemeProvider>
     </UserInfoContext.Provider>

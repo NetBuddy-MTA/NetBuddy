@@ -1,10 +1,12 @@
 import {useEffect, useState} from "react";
 import Button from '@mui/material/Button';
-import getActions, {Action} from "../../api/actions/actions.ts";
+import {Action} from "../../../api/actions/actions.ts";
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 
 function groupByCategory(items:Action[]) {
   // Use reduce to group the items by category
@@ -23,19 +25,31 @@ function groupByCategory(items:Action[]) {
   return Object.values(grouped);
 }
 
-const SequenceScreen = () => {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [actions, setActions] = useState<Action[]>([]);
+const ActionsContainer = (props: {
+  actions: Action[],
+  addAction: (action: Action) => void
+}) => {
+  const [expanded, setExpanded] = useState<string | false>(false);
+  
+  const {actions, addAction} = props;
+  
   useEffect(() => {
-    getActions().then(setActions)
-   
-  }, []);
+  }, [actions]);
+  
+  const handleAccordionChange = (category: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
+    return setExpanded(isExpanded ? category : false);
+  };
+  
   const grouped = groupByCategory(actions);
+  
   return (
-    <div>
-      <h1>Select a Sequence</h1>
+    <Paper elevation={4}>
+      <Typography variant="h4" p={1}>Action Menu:</Typography>
       {grouped.map(actionGroup=> (
-        <Accordion>
+        <Accordion 
+          expanded={expanded === actionGroup[0].category} 
+          onChange={handleAccordionChange(actionGroup[0].category)}
+        >
           <AccordionSummary
             expandIcon={<ExpandMore />}
           >
@@ -47,7 +61,7 @@ const SequenceScreen = () => {
                 return (
                   <Button onClick={e => {
                     e.preventDefault();
-                    setSelected([...selected,action.displayName]);
+                    addAction(action);
                   }}>
                     {action.displayName}
                   </Button>
@@ -57,11 +71,8 @@ const SequenceScreen = () => {
           </AccordionDetails>
         </Accordion>
       ))}
-      <ul>
-        {selected.map((action,i) => <li key={`${action}-${i}`}>{action}</li>)}
-      </ul>
-    </div>
+    </Paper>
   );
 };
 
-export default SequenceScreen;
+export default ActionsContainer;
