@@ -42,5 +42,5 @@ export async function SaveExecutableSequence(sequence: Sequence) {
   return await agent
     .put("/execution/sequences", JSON.stringify(sequence))
     .catch((error) => console.log(error.error))
-    .then((response) => response?.data as string);
+    .then((response) => response?.data as { id: string; errors: string[] });
 }
