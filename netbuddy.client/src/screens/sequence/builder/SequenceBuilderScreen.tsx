@@ -112,6 +112,7 @@ const SequenceBuilderScreen = () => {
           <ExecutableActionPropertiesView
             selection={selection}
             setSelection={setSelection}
+            findVariablesByType={findVariablesByType}
           />
         </Grid>
       </Grid>
