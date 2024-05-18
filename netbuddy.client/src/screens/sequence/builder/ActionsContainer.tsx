@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Button from '@mui/material/Button';
 import {Action} from "../../../api/actions/actions.ts";
 import Accordion from '@mui/material/Accordion';
@@ -32,9 +32,6 @@ const ActionsContainer = (props: {
   const [expanded, setExpanded] = useState<string | false>(false);
   
   const {actions, addAction} = props;
-  
-  useEffect(() => {
-  }, [actions]);
   
   const handleAccordionChange = (category: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     return setExpanded(isExpanded ? category : false);

@@ -10,6 +10,7 @@ const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
   const [sequenceName, setSequenceName] = useState<string>("");
   const [sequenceDescription, setSequenceDescription] = useState<string>("");
+  
   const [actionsToAdd, setActionsToAdd] = useState<Action[]>([]);
   const [executableActions, setExecutableActions] = useState<ExecutableAction[]>([]);
   
