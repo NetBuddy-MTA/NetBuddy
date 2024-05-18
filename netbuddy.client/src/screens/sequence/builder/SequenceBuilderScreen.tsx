@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
 import {ExecutableAction, Sequence} from "../../../api/sequences/sequences.ts";
 import Box from "@mui/material/Box";
+import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -13,6 +14,7 @@ const SequenceBuilderScreen = () => {
   
   const [actionsToAdd, setActionsToAdd] = useState<Action[]>([]);
   const [executableActions, setExecutableActions] = useState<ExecutableAction[]>([]);
+  const [selection, setSelection] = useState<ExecutableAction>();
   
   const [actionCatalogue, setActionCatalogue] = useState<Action[]>([]);
   const [actionStringToAction, setActionStringToAction] = useState<{[key: string]: Action}>({});
@@ -26,6 +28,11 @@ const SequenceBuilderScreen = () => {
       }, {}));
     });
   }, []);
+
+  // todo: testing only, remove once action selection works on middle screen.
+  useEffect(() => {
+    setSelection(executableActions[executableActions.length - 1]);
+  }, [executableActions]);
   
   const addAction = (action: Action) => setActionsToAdd([...actionsToAdd, action]);
   
@@ -50,6 +57,9 @@ const SequenceBuilderScreen = () => {
             actionsToAdd={actionsToAdd} setActionsToAdd={setActionsToAdd}
             executableActions={executableActions} setExecutableActions={setExecutableActions}
           />
+        </Grid>
+        <Grid item xs={3}>
+          <ExecutableActionPropertiesView selection={selection} setSelection={setSelection} />
         </Grid>
       </Grid>
     </Box>
