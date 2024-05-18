@@ -19,10 +19,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import CancelIcon from '@mui/icons-material/Cancel';
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
 
 const ExecutableActionPropertiesView = (props: {
   selection: ExecutableAction | undefined;
-  setSelection: (selection: ExecutableAction) => void;
+  setSelection: (selection: ExecutableAction | undefined) => void;
   findVariablesByType: (type: string) => Set<string>;
 }) => {
   const {selection, setSelection, findVariablesByType} = props;
@@ -105,7 +108,7 @@ const ExecutableActionPropertiesView = (props: {
       ...Array.from(findVariablesByType(variable.type)).map(name => createVariableOption(variable, name))
     ];
     return (
-      <Card elevation={4}>
+      <Card elevation={4} sx={{marginBottom: 1.5}}>
         <CardContent>
           <Typography variant="h6">{variable.originalName}</Typography>
           <Typography variant="body1">{variable.description}</Typography>
@@ -126,9 +129,22 @@ const ExecutableActionPropertiesView = (props: {
 
   return (
     <Paper elevation={4}>
-      <Typography variant="h4" p={1}>
-        Properties:
-      </Typography>
+      <Grid container direction="row" justifyContent="left" p={1}>
+        <Grid item justifySelf="flex-start" xs={4}>
+          <Typography variant="h4">
+            Properties:
+          </Typography>
+        </Grid>
+        <Grid item xs={6.5}/>
+        <Grid item xs={1}>
+          <IconButton onClick={e => {
+            e.preventDefault();
+            setSelection(undefined);
+          }}>
+            <CancelIcon/>
+          </IconButton>
+        </Grid>
+      </Grid>
       {(inputComponents ?? []).length > 0 ? (
         <Accordion>
           <AccordionSummary expandIcon={<ExpandMore/>}>
