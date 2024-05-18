@@ -3,7 +3,12 @@ import ActionsContainer from "./ActionsContainer.tsx";
 import getActions, {Action} from "../../../api/actions/actions.ts";
 import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
-import {ExecutableAction, SaveExecutableSequence, Sequence,} from "../../../api/sequences/sequences.ts";
+import {
+  ExecutableAction,
+  SaveExecutableSequence,
+  Sequence,
+  SequenceVariable
+} from "../../../api/sequences/sequences.ts";
 import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
 
@@ -40,6 +45,18 @@ const SequenceBuilderScreen = () => {
   // adds an action to the sequence
   const addAction = (action: Action) =>
     setActionsToAdd([...actionsToAdd, action]);
+
+  // finds all the variables of a certain type
+  const findVariablesByType = (type: string) =>
+    executableActions.reduce((acc: SequenceVariable[], action) => {
+      acc.push(...action.inputs, ...action.outputs);
+      return acc;
+    }, [])
+    .filter((variable) => variable.type === type)
+    .reduce((acc: Set<string>, variable) => {
+      acc.add(variable.name);
+      return acc;
+    }, new Set<string>());
 
   // builds the sequence object from the current state
   const buildSequence = () => {
