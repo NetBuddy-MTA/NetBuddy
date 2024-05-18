@@ -78,6 +78,7 @@ public class ExecutionController : ControllerBase
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
+        List<string> errors = [];
         // todo: some checks that confirm the sequence is valid :D
 
         // if the sequence already has an id that means it was edited:
@@ -106,6 +107,10 @@ public class ExecutionController : ControllerBase
 
         await session.SaveChangesAsync();
 
-        return Ok(sequence.Id);
+        return Ok(new
+        {
+            sequence.Id,
+            errors
+        });
     }
 }
