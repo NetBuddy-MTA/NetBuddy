@@ -1,9 +1,6 @@
 import Paper from "@mui/material/Paper";
-import {
-  ExecutableAction,
-  SequenceVariable,
-} from "../../../api/sequences/sequences.ts";
-import { useEffect } from "react";
+import {ExecutableAction, SequenceVariable,} from "../../../api/sequences/sequences.ts";
+import {useEffect} from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -16,9 +13,10 @@ const ExecutableActionPropertiesView = (props: {
   selection: ExecutableAction | undefined;
   setSelection: (selection: ExecutableAction) => void;
 }) => {
-  const { selection } = props;
+  const {selection} = props;
 
-  useEffect(() => {}, [selection]);
+  useEffect(() => {
+  }, [selection]);
 
   const mapVariable = (variable: SequenceVariable) => {
     return (
@@ -29,9 +27,7 @@ const ExecutableActionPropertiesView = (props: {
   };
 
   const inputComponents = selection ? selection.inputs.map(mapVariable) : null;
-  const outputComponents = selection
-    ? selection.outputs.map(mapVariable)
-    : null;
+  const outputComponents = selection ? selection.outputs.map(mapVariable) : null;
 
   return (
     <Paper elevation={4}>
@@ -40,7 +36,7 @@ const ExecutableActionPropertiesView = (props: {
       </Typography>
       {(inputComponents ?? []).length > 0 ? (
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
+          <AccordionSummary expandIcon={<ExpandMore/>}>
             <Tooltip
               title="Inputs are the data that the action needs to run."
               followCursor={true}
@@ -53,7 +49,7 @@ const ExecutableActionPropertiesView = (props: {
       ) : null}
       {(outputComponents ?? []).length > 0 ? (
         <Accordion>
-          <AccordionSummary expandIcon={<ExpandMore />}>
+          <AccordionSummary expandIcon={<ExpandMore/>}>
             <Tooltip
               title="Outputs are the data that the action produces."
               followCursor={true}

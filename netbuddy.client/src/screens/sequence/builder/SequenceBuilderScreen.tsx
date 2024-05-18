@@ -1,13 +1,9 @@
 ﻿import Grid from "@mui/material/Grid";
 import ActionsContainer from "./ActionsContainer.tsx";
-import getActions, { Action } from "../../../api/actions/actions.ts";
-import { useEffect, useState } from "react";
+import getActions, {Action} from "../../../api/actions/actions.ts";
+import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
-import {
-  ExecutableAction,
-  SaveExecutableSequence,
-  Sequence,
-} from "../../../api/sequences/sequences.ts";
+import {ExecutableAction, SaveExecutableSequence, Sequence,} from "../../../api/sequences/sequences.ts";
 import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
 
@@ -17,15 +13,12 @@ const SequenceBuilderScreen = () => {
   const [sequenceDescription, setSequenceDescription] = useState<string>("");
 
   const [actionsToAdd, setActionsToAdd] = useState<Action[]>([]);
-  const [executableActions, setExecutableActions] = useState<
-    ExecutableAction[]
-  >([]);
+  const [executableActions, setExecutableActions] = useState<ExecutableAction[]>([]);
   const [selection, setSelection] = useState<ExecutableAction>();
 
   const [actionCatalogue, setActionCatalogue] = useState<Action[]>([]);
-  const [actionStringToAction, setActionStringToAction] = useState<{
-    [key: string]: Action;
-  }>({});
+  const [actionStringToAction, setActionStringToAction] = useState<{ [key: string]: Action; }>({});
+
   useEffect(() => {
     getActions().then((actions) => {
       setActionCatalogue(actions);
@@ -73,7 +66,7 @@ const SequenceBuilderScreen = () => {
   // uploads the sequence to the server
   const uploadSequence = async () => {
     const sequence = buildSequence();
-    const { id, errors } = await SaveExecutableSequence(sequence);
+    const {id, errors} = await SaveExecutableSequence(sequence);
     if (!id && !errors) {
       alert("Failed to reach server!");
     } else if (id !== "") {
@@ -87,7 +80,7 @@ const SequenceBuilderScreen = () => {
     <Box paddingTop={3}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <ActionsContainer actions={actionCatalogue} addAction={addAction} />
+          <ActionsContainer actions={actionCatalogue} addAction={addAction}/>
         </Grid>
         <Grid item xs={6}>
           <SequenceOrder
