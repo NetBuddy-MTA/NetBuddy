@@ -14,7 +14,7 @@ public class ExecutionController : ControllerBase
 {
     private readonly IDocumentStore _store;
     private readonly UserManager<UserAccount> _userManager;
-    
+
     public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager)
     {
         _store = store;
@@ -38,17 +38,17 @@ public class ExecutionController : ControllerBase
     public async Task<IActionResult> GetAllUserSequences()
     {
         await using var session = _store.QuerySession();
-        
+
         var user = await _userManager.GetUserAsync(User);
-        
+
         var sequences = await session.Query<Sequence>()
             .Where(x => x.Owner == user)
             .Select(x => new { x.Id, x.Name, x.Description })
             .ToListAsync();
-        
+
         return Ok(sequences);
     }
-    
+
     [Authorize]
     [Route("sequences/{sequenceId?}")]
     [HttpGet]
@@ -60,12 +60,12 @@ public class ExecutionController : ControllerBase
 
         // If the sequence doesn't exist, return a 400 Bad Request
         if (sequence == null) return BadRequest();
-        
+
         var user = await _userManager.GetUserAsync(User);
-        
+
         // If the user is the owner of the sequence, return the sequence
-        if(user == sequence.Owner) return Ok(sequence);
-        
+        if (user == sequence.Owner) return Ok(sequence);
+
         // If the user is not the owner of the sequence, return a 400 Bad Request
         return BadRequest();
     }
@@ -77,7 +77,7 @@ public class ExecutionController : ControllerBase
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        
+
         // todo: some checks that confirm the sequence is valid :D
 
         // if the sequence already has an id that means it was edited:
@@ -88,10 +88,10 @@ public class ExecutionController : ControllerBase
         var user = await _userManager.GetUserAsync(User);
         // should never happen, but just in case
         if (user == null) return Unauthorized();
-        
+
         sequence.Owner = user;
-        
-        if (sequence.Id != Guid.Empty)
+
+        if (sequence.Id.ToString() != string.Empty)
         {
             var oldSequence = await session.LoadAsync<Sequence>(sequence.Id);
             if (oldSequence != null)
@@ -101,12 +101,11 @@ public class ExecutionController : ControllerBase
                 if (oldSequence.Owner != user) return BadRequest();
             }
         }
-        
+
         session.Store(sequence);
-        
+
         await session.SaveChangesAsync();
-        
+
         return Ok(sequence.Id);
     }
-    
 }
