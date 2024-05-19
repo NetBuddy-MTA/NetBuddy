@@ -11,7 +11,7 @@ import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import register from "../../api/account/register.ts";
 
-const LoginForm = () => {
+const RegisterForm = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [waiting, setWaiting] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -94,7 +94,7 @@ const LoginForm = () => {
             sx={{mt: 3, mb: 2}}
             disabled={waiting}
           >
-            Sign In
+            Sign Up
           </Button>
           <Grid container>
             <Grid item xs>
@@ -115,4 +115,4 @@ const LoginForm = () => {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
