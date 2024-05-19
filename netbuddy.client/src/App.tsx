@@ -20,7 +20,7 @@ let pageAndLinks: PageAndLink[] = [
 
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo>({});
-  
+
   return (
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
       <ThemeProvider theme={darkTheme}>
@@ -28,7 +28,7 @@ function App() {
         <BrowserRouter>
           <Box m={2}>
             <Box m={2}>
-              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} />
+              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
             </Box>
             <Box m={2}>
               <Routes>
@@ -38,14 +38,14 @@ function App() {
                     <Route path="/" element={<Navigate to="/sequences" replace={true}/>}/> :
                     <Route path="/" element={<Navigate to="/signin" replace={true}/>}/>
                 }
-    
+
                 {/*pages*/}
                 <Route path="/home" element={<Home/>}/>
                 <Route path="/signin" element={<LoginForm/>}/>
                 <Route path="/signup" element={<RegisterForm/>}/>
                 <Route path="/history" element={<History/>}/>
                 <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
-                
+
                 {/*handle any other unaccounted for route*/}
                 <Route path="*" element={<Navigate to="/" replace={true}/>}/>
               </Routes>

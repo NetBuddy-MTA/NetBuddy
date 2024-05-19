@@ -11,6 +11,7 @@ import {
 } from "../../../api/sequences/sequences.ts";
 import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
+import SequenceBuilderButtons from "./SequenceBuilderButtons.tsx";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -69,12 +70,21 @@ const SequenceBuilderScreen = () => {
   };
 
   // load a sequence from Sequence object
-  const loadSequence = (sequence: Sequence) => {
+  const loadSequence = (sequence?: Sequence) => {
+    if (!sequence) {
+      // get json of sequence from local storage if exists
+      const local = localStorage.getItem("sequence");
+      if (!local) {
+        alert("No sequence saved locally!");
+        return;
+      }
+      sequence = JSON.parse(local) as Sequence;
+    }
     setSequenceId(sequence.id);
     setSequenceName(sequence.name);
     setSequenceDescription(sequence.description);
     setExecutableActions(sequence.actions);
-  };
+  }
 
   // saves the sequence to local storage
   const saveSequenceLocally = () =>
@@ -93,9 +103,22 @@ const SequenceBuilderScreen = () => {
     }
   };
 
+  const downloadSequence = async () => {
+    
+  };
+
   return (
-    <Box paddingTop={3}>
+    <Box>
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <SequenceBuilderButtons
+            testSequence={() => console.log("Testing sequence...")}
+            saveSequence={saveSequenceLocally}
+            loadSequence={loadSequence}
+            uploadSequence={uploadSequence}
+            downloadSequence={downloadSequence}
+          />
+        </Grid>
         <Grid item xs={3}>
           <ActionsContainer actions={actionCatalogue} addAction={addAction}/>
         </Grid>
