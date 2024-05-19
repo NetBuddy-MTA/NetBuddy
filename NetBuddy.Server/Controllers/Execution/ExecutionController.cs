@@ -42,7 +42,7 @@ public class ExecutionController : ControllerBase
         var user = await _userManager.GetUserAsync(User);
 
         var sequences = await session.Query<Sequence>()
-            .Where(x => x.Owner == user)
+            .Where(x => x.Owner == null || x.Owner.Id == user!.Id)
             .Select(x => new { x.Id, x.Name, x.Description })
             .ToListAsync();
 
@@ -92,15 +92,14 @@ public class ExecutionController : ControllerBase
 
         sequence.Owner = user;
 
-        if (sequence.Id.ToString() != string.Empty)
+        if (sequence.Id != Guid.Empty)
         {
             var oldSequence = await session.LoadAsync<Sequence>(sequence.Id);
             if (oldSequence != null)
-            {
                 // if the user is not the owner of the sequence, return a 400 Bad Request
                 // this should never happen anyway
-                if (oldSequence.Owner != user) return BadRequest();
-            }
+                if (oldSequence.Owner != user)
+                    return BadRequest();
         }
 
         session.Store(sequence);
