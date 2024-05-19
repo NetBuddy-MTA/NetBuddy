@@ -1,16 +1,17 @@
-﻿import {useContext} from 'react';
+﻿import {useContext, useEffect} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DrawerControlsContext, {SideDrawerControls} from "../../contexts/DrawerControlsContext.tsx";
 import {useState} from 'react';
 import SideDrawer from "../drawer/SideDrawer.tsx";
-import ProfileMenu from '../other/ProfileMenu.tsx';
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
+import ProfileMenu from "./ProfileMenu.tsx";
+import {getUserInfo} from "../../api/account/info.ts";
 
 export type PageAndLink = {
   page: string;
@@ -23,10 +24,20 @@ type FancyNavBarProps = {
 };
 
 const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
-  const userInfoContext = useContext(UserInfoContext); // Accessing user info from context
-  const {userInfo} = userInfoContext; // Destructuring userInfo from context
+  const { userInfo, setUserInfo } = useContext(UserInfoContext); // Accessing user info from context
   const [drawerControls, setDrawerControls] = useState<SideDrawerControls>({isOpen: false});
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getUserInfo().then(info => {
+      if (setUserInfo && userInfo != info) {
+        setUserInfo(info);
+        navigate("/");
+      }
+    });
+  }, []);
+  
   return (
     <AppBar position="static" sx={{px: 0, mx: 0}}>
       <Toolbar sx={{px: 0, mx: 0}}>

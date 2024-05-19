@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import LockClosedIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import {useContext, useEffect, useState} from "react";
+import {useState} from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -11,23 +11,11 @@ import Grid from "@mui/material/Grid";
 import Link from "@mui/material/Link";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import login from "../../api/account/login.ts";
-import {getUserInfo} from "../../api/account/info.ts";
-import UserInfoContext from "../../contexts/UserInfoContext.tsx";
 
 const LoginForm = () => {
   const [locked, setLocked] = useState<boolean>(true);
   const [waiting, setWaiting] = useState<boolean>(false);
   const navigate = useNavigate();
-  const {userInfo, setUserInfo} = useContext(UserInfoContext);
-
-  useEffect(() => {
-    getUserInfo().then(info => {
-      if (setUserInfo && userInfo != info) {
-        setUserInfo(info);
-        navigate("/");
-      }
-    });
-  }, []);
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
