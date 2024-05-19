@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
 import {
   ExecutableAction,
+  GetExecutableSequence,
   SaveExecutableSequence,
   Sequence,
   SequenceVariable
@@ -12,6 +13,7 @@ import {
 import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
 import SequenceBuilderButtons from "./SequenceBuilderButtons.tsx";
+import DownloadSequencePopup from "./DownloadSequencePopup.tsx";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -25,6 +27,8 @@ const SequenceBuilderScreen = () => {
   const [actionCatalogue, setActionCatalogue] = useState<Action[]>([]);
   const [actionStringToAction, setActionStringToAction] = useState<{ [key: string]: Action; }>({});
 
+  const [open, setOpen] = useState<boolean>(false);
+
   useEffect(() => {
     getActions().then((actions) => {
       setActionCatalogue(actions);
@@ -37,6 +41,12 @@ const SequenceBuilderScreen = () => {
       );
     });
   }, []);
+
+  useEffect(() => {
+    if (sequenceId === "") return;
+    // get the sequence from the server
+    GetExecutableSequence(sequenceId).then(loadSequence);
+  }, [sequenceId]);
 
   // todo: testing only, remove once action selection works on middle screen.
   useEffect(() => {
@@ -103,15 +113,18 @@ const SequenceBuilderScreen = () => {
     }
   };
 
-  const downloadSequence = async () => {
-    
-  };
+  const downloadSequence = () => setOpen(true);
 
   return (
     <Box>
+      <DownloadSequencePopup open={open} setOpen={setOpen} setId={setSequenceId}/>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <SequenceBuilderButtons
+            sequenceDescription={sequenceDescription}
+            setSequenceDescription={setSequenceDescription}
+            sequenceName={sequenceName}
+            setSequenceName={setSequenceName}
             testSequence={() => console.log("Testing sequence...")}
             saveSequence={saveSequenceLocally}
             loadSequence={loadSequence}
