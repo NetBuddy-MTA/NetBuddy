@@ -1,4 +1,4 @@
-import {BrowserRouter, Navigate, Route, Routes, useNavigate} from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
 import FancyNavBar, {PageAndLink} from "./components/navigation/FancyNavBar";
 import logo from "./assets/logo/netbuddylogo.jpeg";
 import {ThemeProvider} from "@emotion/react";
@@ -6,13 +6,12 @@ import {darkTheme} from "./layouts/style/Themes";
 import LoginForm from "./components/forms/LoginForm.tsx";
 import CssBaseline from '@mui/material/CssBaseline';
 import RegisterForm from "./components/forms/RegisterForm.tsx";
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/other/History.tsx";
 import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
 import Box from '@mui/material/Box';
-import {getUserInfo} from "./api/account/info.ts";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
