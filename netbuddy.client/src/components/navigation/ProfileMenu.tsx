@@ -4,10 +4,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import UserInfoContext from '../../contexts/UserInfoContext.tsx';
+import logout from "../../api/account/logout.ts";
+import {useNavigate} from "react-router-dom";
 
 const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const {userInfo} = useContext(UserInfoContext);
+  const {userInfo, setUserInfo} = useContext(UserInfoContext);
 
   useEffect(() => {
   }, [userInfo]);
@@ -16,7 +18,9 @@ const ProfileMenu = () => {
     setAnchorEl(e.currentTarget);
   const switchMenuClose = () => 
     setAnchorEl(null);
-  
+
+  const navigate = useNavigate();
+
   return (
     <>
       <Button onClick={e => {
@@ -35,9 +39,19 @@ const ProfileMenu = () => {
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
         transformOrigin={{vertical: 'top', horizontal: 'right'}}
       >
-        <MenuItem onClick={e => {
+        <MenuItem onClick={async e => {
           e.preventDefault();
           switchMenuClose();
+
+          let response = await logout();
+          if (response) {
+            if (setUserInfo) {
+              setUserInfo({});
+            }
+            navigate('/login');
+          } else {
+            alert("Logout failed. Please try again later.");
+          }
         }}>
           Sign Out
         </MenuItem>
