@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {PointerEvent, useEffect} from "react";
 import {Action, Variable} from "../../../api/actions/actions.ts";
 import {ExecutableAction, SequenceVariable} from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
@@ -26,6 +26,39 @@ import {
 import {CSS} from "@dnd-kit/utilities";
 import {jsx} from "@emotion/react";
 import JSX = jsx.JSX;
+
+export class SmartPointerSensor extends PointerSensor {
+  static activators = [
+    {
+      eventName: "onPointerDown",
+      handler: ({nativeEvent: event}: PointerEvent) => {
+        return !(!event.isPrimary ||
+          event.button !== 0 ||
+          isInteractiveElement(event.target as Element));
+      },
+    },
+  ];
+}
+
+function isInteractiveElement(element: Element | null) {
+  const interactiveElements = [
+    "path",
+    "svg",
+    "button",
+    "input",
+    "textarea",
+    "select",
+    "option",
+  ];
+  if (
+    element?.tagName &&
+    interactiveElements.includes(element.tagName.toLowerCase())
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
@@ -66,7 +99,7 @@ const SequenceOrder = (props: {
   }
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(SmartPointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
