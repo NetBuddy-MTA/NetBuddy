@@ -12,13 +12,16 @@ namespace NetBuddy.Server.Controllers.Execution;
 [ApiController]
 public class ExecutionController : ControllerBase
 {
+    private readonly ILogger<ExecutionController> _logger;
     private readonly IDocumentStore _store;
     private readonly UserManager<UserAccount> _userManager;
 
-    public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager)
+    public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager,
+        ILogger<ExecutionController> logger)
     {
         _store = store;
         _userManager = userManager;
+        _logger = logger;
     }
 
     [Route("actions")]
@@ -52,22 +55,33 @@ public class ExecutionController : ControllerBase
     [Authorize]
     [Route("sequences/{sequenceId?}")]
     [HttpGet]
-    public async Task<IActionResult> GetSequence(string sequenceId)
+    public async Task<IActionResult> GetSequence([FromRoute] string sequenceId)
     {
+        Guid id;
+        try
+        {
+            id = Guid.Parse(sequenceId);
+            _logger.LogInformation("Parsed sequence id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid sequence id.");
+        }
+
         await using var session = _store.QuerySession();
 
-        var sequence = await session.LoadAsync<Sequence>(new Guid(sequenceId));
+        var sequence = await session.LoadAsync<Sequence>(id);
 
         // If the sequence doesn't exist, return a 400 Bad Request
-        if (sequence == null) return BadRequest();
+        if (sequence == default) return BadRequest("Sequence not found.");
 
         var user = await _userManager.GetUserAsync(User);
 
         // If the user is the owner of the sequence, return the sequence
-        if (user == sequence.Owner) return Ok(sequence);
+        if (sequence.Owner == null || user!.Id == sequence.Owner.Id) return Ok(sequence);
 
         // If the user is not the owner of the sequence, return a 400 Bad Request
-        return BadRequest();
+        return BadRequest("You are not the owner of this sequence.");
     }
 
     [Authorize]
