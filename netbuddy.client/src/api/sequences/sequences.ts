@@ -7,7 +7,6 @@ export type SequenceDisplay = {
 };
 
 export type SequenceVariable = {
-  id: string;
   originalName: string;
   name: string;
   description: string;
@@ -17,7 +16,6 @@ export type SequenceVariable = {
 };
 
 export type ExecutableAction = {
-  id: string;
   actionString: string;
   inputs: SequenceVariable[];
   outputs: SequenceVariable[];
