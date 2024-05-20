@@ -114,7 +114,7 @@ const ExecutableActionPropertiesView = (props: {
           <Typography variant="body1">{variable.description}</Typography>
           <Typography variant="body2">Type: {variable.type}</Typography>
           <Typography variant="body2">Required: {variable.optional ? "Yes" : "No"}</Typography>
-          <Select fullWidth value={variable.name}>
+          <Select fullWidth defaultValue={variable.name}>
             {optionsArray}
           </Select>
         </CardContent>
