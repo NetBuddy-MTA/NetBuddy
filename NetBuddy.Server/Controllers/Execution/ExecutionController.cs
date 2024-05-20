@@ -12,13 +12,16 @@ namespace NetBuddy.Server.Controllers.Execution;
 [ApiController]
 public class ExecutionController : ControllerBase
 {
+    private readonly ILogger<ExecutionController> _logger;
     private readonly IDocumentStore _store;
     private readonly UserManager<UserAccount> _userManager;
 
-    public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager)
+    public ExecutionController(IDocumentStore store, UserManager<UserAccount> userManager,
+        ILogger<ExecutionController> logger)
     {
         _store = store;
         _userManager = userManager;
+        _logger = logger;
     }
 
     [Route("actions")]
@@ -42,7 +45,7 @@ public class ExecutionController : ControllerBase
         var user = await _userManager.GetUserAsync(User);
 
         var sequences = await session.Query<Sequence>()
-            .Where(x => x.Owner == user)
+            .Where(x => x.Owner == null || x.Owner.Id == user!.Id)
             .Select(x => new { x.Id, x.Name, x.Description })
             .ToListAsync();
 
@@ -52,22 +55,33 @@ public class ExecutionController : ControllerBase
     [Authorize]
     [Route("sequences/{sequenceId?}")]
     [HttpGet]
-    public async Task<IActionResult> GetSequence(string sequenceId)
+    public async Task<IActionResult> GetSequence([FromRoute] string sequenceId)
     {
+        Guid id;
+        try
+        {
+            id = Guid.Parse(sequenceId);
+            _logger.LogInformation("Parsed sequence id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid sequence id.");
+        }
+
         await using var session = _store.QuerySession();
 
-        var sequence = await session.LoadAsync<Sequence>(new Guid(sequenceId));
+        var sequence = await session.LoadAsync<Sequence>(id);
 
         // If the sequence doesn't exist, return a 400 Bad Request
-        if (sequence == null) return BadRequest();
+        if (sequence == default) return BadRequest("Sequence not found.");
 
         var user = await _userManager.GetUserAsync(User);
 
         // If the user is the owner of the sequence, return the sequence
-        if (user == sequence.Owner) return Ok(sequence);
+        if (sequence.Owner == null || user!.Id == sequence.Owner.Id) return Ok(sequence);
 
         // If the user is not the owner of the sequence, return a 400 Bad Request
-        return BadRequest();
+        return BadRequest("You are not the owner of this sequence.");
     }
 
     [Authorize]
@@ -92,15 +106,14 @@ public class ExecutionController : ControllerBase
 
         sequence.Owner = user;
 
-        if (sequence.Id.ToString() != string.Empty)
+        if (sequence.Id != Guid.Empty)
         {
             var oldSequence = await session.LoadAsync<Sequence>(sequence.Id);
             if (oldSequence != null)
-            {
                 // if the user is not the owner of the sequence, return a 400 Bad Request
                 // this should never happen anyway
-                if (oldSequence.Owner != user) return BadRequest();
-            }
+                if (oldSequence.Owner != user)
+                    return BadRequest();
         }
 
         session.Store(sequence);
