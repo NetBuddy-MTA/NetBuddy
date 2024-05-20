@@ -6,50 +6,38 @@ import Stack from "@mui/material/Stack";
 import FileOpenRoundedIcon from '@mui/icons-material/FileOpenRounded';
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded';
-import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
+import Typography from "@mui/material/Typography";
 
 const SequenceBuilderButtons = (props: {
   sequenceName: string;
   setSequenceName: (name: string) => void;
-  sequenceDescription: string;
-  setSequenceDescription: (description: string) => void;
   testSequence: () => void;
   saveSequence: () => void;
   loadSequence: () => void;
   uploadSequence: () => void;
   downloadSequence: () => void;
+  moreDetails: () => void;
 }) => {
   const {
-    sequenceName, setSequenceName,
-    sequenceDescription, setSequenceDescription,
-    testSequence, saveSequence, loadSequence, uploadSequence, downloadSequence
+    sequenceName,
+    testSequence, saveSequence, loadSequence, uploadSequence, downloadSequence, moreDetails
   } = props;
 
   return (
-    <Grid container direction="row" spacing={4} justifyContent="center">
+    <Grid container direction="row" spacing={4} justifyContent="center" alignContent="center">
       <Grid item xs={3}>
-        <Stack direction="column">
-          <TextField
-            id="name"
-            label="Name"
-            name="name"
-            value={sequenceName}
-            onChange={e => {
+        <Stack direction="row" alignItems="center">
+          <Tooltip title="More Details" followCursor={true}>
+            <IconButton onClick={e => {
               e.preventDefault();
-              setSequenceName(e.target.value);
-            }}
-          />
-          <TextField
-            id="description"
-            label="Description"
-            name="description"
-            value={sequenceDescription}
-            onChange={e => {
-              e.preventDefault();
-              setSequenceDescription(e.target.value);
-            }}
-          />
+              moreDetails();
+            }}>
+              <MoreVertRoundedIcon/>
+            </IconButton>
+          </Tooltip>
+          <Typography variant="h5">Name: {sequenceName === "" ? "(Not Assigned)" : sequenceName}</Typography>
         </Stack>
       </Grid>
       <Grid item xs={9}>
