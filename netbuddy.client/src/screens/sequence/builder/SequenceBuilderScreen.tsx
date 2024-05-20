@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
 import SequenceBuilderButtons from "./SequenceBuilderButtons.tsx";
 import DownloadSequencePopup from "./DownloadSequencePopup.tsx";
+import SequenceDetailsPopup from "./SequenceDetailsPopup.tsx";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -27,7 +28,8 @@ const SequenceBuilderScreen = () => {
   const [actionCatalogue, setActionCatalogue] = useState<Action[]>([]);
   const [actionStringToAction, setActionStringToAction] = useState<{ [key: string]: Action; }>({});
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [openDownloadPopup, setOpenDownloadPopup] = useState<boolean>(false);
+  const [openDetailsPopup, setOpenDetailsPopup] = useState<boolean>(false);
 
   useEffect(() => {
     getActions().then((actions) => {
@@ -113,16 +115,21 @@ const SequenceBuilderScreen = () => {
     }
   };
 
-  const downloadSequence = () => setOpen(true);
+  const downloadSequence = () => setOpenDownloadPopup(true);
+
+  const showDetailsPopup = () => setOpenDetailsPopup(true);
 
   return (
     <Box>
-      <DownloadSequencePopup open={open} setOpen={setOpen} setId={setSequenceId}/>
+      <SequenceDetailsPopup
+        open={openDetailsPopup} setOpen={setOpenDetailsPopup}
+        name={sequenceName} setName={setSequenceName}
+        description={sequenceDescription} setDescription={setSequenceDescription}
+      />
+      <DownloadSequencePopup open={openDownloadPopup} setOpen={setOpenDownloadPopup} setId={setSequenceId}/>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <SequenceBuilderButtons
-            sequenceDescription={sequenceDescription}
-            setSequenceDescription={setSequenceDescription}
             sequenceName={sequenceName}
             setSequenceName={setSequenceName}
             testSequence={() => console.log("Testing sequence...")}
@@ -130,6 +137,7 @@ const SequenceBuilderScreen = () => {
             loadSequence={loadSequence}
             uploadSequence={uploadSequence}
             downloadSequence={downloadSequence}
+            moreDetails={showDetailsPopup}
           />
         </Grid>
         <Grid item xs={3}>
