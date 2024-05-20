@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Action, Variable } from "../../../api/actions/actions.ts";
 import { ExecutableAction, SequenceVariable } from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
@@ -53,7 +53,7 @@ const SequenceOrder = (props: {
     });
 
     return {
-      id: " ",
+      id: `${Math.random()}`,
       actionString: action.actionString,
       inputs: action.inputs.map(actionVariableToSequenceVariable),
       outputs: action.outputs.map(actionVariableToSequenceVariable)
@@ -76,11 +76,10 @@ const SequenceOrder = (props: {
     }
   };
 
-  const handleDelete = React.useCallback(  (action:ExecutableAction )=> {
-    console.log(action);
-   return ()=>setExecutableActions((prev:ExecutableAction[])=> [...prev].splice(prev.findIndex((item)=>item.id===action.id),1))
+  const handleDelete = useCallback(  (action:ExecutableAction )=> {
+    return ()=>setExecutableActions((prev:ExecutableAction[])=> [...prev].splice(prev.findIndex((item)=>item.id===action.id),1))
   },[]);
-  
+
   return (
     <Box m={1} p={1}>
       <Paper elevation={4}>
@@ -95,14 +94,16 @@ const SequenceOrder = (props: {
           >
             <Grid container spacing={2} direction="column">
               {executableActions.map((action, index) => (
-                <SortableItem key={`${action.id}-${index}`} id={action.id}>
+                <SortableItem key={`${action.id}-${index}`} id={action.id} >
                   <Grid item>
                     <Box m={0.5} p={0.5}>
                       <Paper elevation={12}>
-                        <IconButton onClick={handleDelete(action)}><DeleteIcon/></IconButton>
-                        <Typography variant="h5" component="span">
-                          {actionStringToAction[action.actionString].displayName}
-                        </Typography>
+                        <Grid container alignItems="center" justifyContent="space-between">
+                          <Typography variant="h5" component="span">
+                            {actionStringToAction[action.actionString].displayName}
+                          </Typography>
+                          <IconButton onClick={handleDelete(action)}><DeleteIcon/></IconButton>
+                        </Grid>
                       </Paper>
                     </Box>
                   </Grid>
