@@ -1,6 +1,6 @@
-import { useCallback, useEffect } from "react";
-import { Action, Variable } from "../../../api/actions/actions.ts";
-import { ExecutableAction, SequenceVariable } from "../../../api/sequences/sequences.ts";
+import {useEffect} from "react";
+import {Action, Variable} from "../../../api/actions/actions.ts";
+import {ExecutableAction, SequenceVariable} from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -8,8 +8,9 @@ import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -22,12 +23,16 @@ import {
   useSortable,
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import {CSS} from "@dnd-kit/utilities";
+import {jsx} from "@emotion/react";
+import JSX = jsx.JSX;
 
 const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
-  actionsToAdd: Action[], setActionsToAdd: (actions: Action[]) => void,
-  executableActions: ExecutableAction[], setExecutableActions: (actions: ExecutableAction[] | ((prev:ExecutableAction[])=>ExecutableAction[])) => void
+  actionsToAdd: Action[],
+  setActionsToAdd: (actions: Action[]) => void,
+  executableActions: ExecutableAction[],
+  setExecutableActions: (actions: ExecutableAction[] | ((prev: ExecutableAction[]) => ExecutableAction[])) => void
 }) => {
   const {
     actionStringToAction,
@@ -53,7 +58,7 @@ const SequenceOrder = (props: {
     });
 
     return {
-      id: `${Math.random()}`,
+      id: Math.random().toString(),
       actionString: action.actionString,
       inputs: action.inputs.map(actionVariableToSequenceVariable),
       outputs: action.outputs.map(actionVariableToSequenceVariable)
@@ -67,18 +72,22 @@ const SequenceOrder = (props: {
     })
   );
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (active.id !== over.id) {
+  const handleDragEnd = (event: DragEndEvent) => {
+    if (event.activatorEvent.target !== event.activatorEvent.currentTarget) return;
+    const {active, over} = event;
+    if (active.id !== over?.id) {
       const oldIndex = executableActions.findIndex(action => action.id === active.id);
-      const newIndex = executableActions.findIndex(action => action.id === over.id);
+      const newIndex = executableActions.findIndex(action => action.id === over?.id);
       setExecutableActions(arrayMove(executableActions, oldIndex, newIndex));
     }
   };
 
-  const handleDelete = useCallback(  (action:ExecutableAction )=> {
-    return ()=>setExecutableActions((prev:ExecutableAction[])=> [...prev].splice(prev.findIndex((item)=>item.id===action.id),1))
-  },[]);
+  const handleDelete = (action: ExecutableAction) => {
+    return (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setExecutableActions((actions: ExecutableAction[]) => actions.filter(item => item.id !== action.id));
+    }
+  };
 
   return (
     <Box m={1} p={1}>
@@ -94,7 +103,7 @@ const SequenceOrder = (props: {
           >
             <Grid container spacing={2} direction="column">
               {executableActions.map((action, index) => (
-                <SortableItem key={`${action.id}-${index}`} id={action.id} >
+                <SortableItem key={`${action.id}-${index}`} id={action.id}>
                   <Grid item>
                     <Box m={0.5} p={0.5}>
                       <Paper elevation={12}>
@@ -102,7 +111,7 @@ const SequenceOrder = (props: {
                           <Typography variant="h5" component="span">
                             {actionStringToAction[action.actionString].displayName}
                           </Typography>
-                          <IconButton onClick={handleDelete(action)}><DeleteIcon/></IconButton>
+                          <IconButton onClick={e => handleDelete(action)(e)}><DeleteIcon/></IconButton>
                         </Grid>
                       </Paper>
                     </Box>
@@ -117,7 +126,7 @@ const SequenceOrder = (props: {
   );
 }
 
-const SortableItem = ({ id, children }) => {
+const SortableItem = ({id, children}: { id: string, children: JSX.Element }) => {
   const {
     attributes,
     listeners,
@@ -125,7 +134,7 @@ const SortableItem = ({ id, children }) => {
     transform,
     transition,
     isDragging
-  } = useSortable({ id });
+  } = useSortable({id});
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -135,9 +144,9 @@ const SortableItem = ({ id, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <Box ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {children}
-    </div>
+    </Box>
   );
 };
 
