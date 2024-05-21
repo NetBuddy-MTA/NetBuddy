@@ -5,7 +5,7 @@ namespace NetBuddy.Server.Models.Executables.Action;
 public sealed class Selector
 {
     [Identity]
-    public string Id => Url + Name;
+    public Guid Id { get; set; }
     
     public string Url { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
