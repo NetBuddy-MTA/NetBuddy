@@ -25,10 +25,10 @@ import {
 } from "@dnd-kit/sortable";
 import {CSS} from "@dnd-kit/utilities";
 import {jsx} from "@emotion/react";
-import JSX = jsx.JSX;
 import Radio from "@mui/material/Radio";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import RadioGroup from "@mui/material/RadioGroup";
+import JSX = jsx.JSX;
 
 export class SmartPointerSensor extends PointerSensor {
   static activators = [
@@ -55,14 +55,6 @@ function isInteractiveElement(element: Element | null) {
   ];
   return element?.tagName && interactiveElements.includes(element.tagName.toLowerCase());
 }
-
-// the compiler doesn't like the use of the SmartPointerSensor class, but the compiled code works fine *shrug*
-const sensors = useSensors(
-  useSensor(SmartPointerSensor),
-  useSensor(KeyboardSensor, {
-    coordinateGetter: sortableKeyboardCoordinates,
-  })
-);
 
 const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
@@ -125,7 +117,15 @@ const SequenceOrder = (props: {
     setSelectedActionId(selectedId);
     const selectedAction = executableActions.find(action => action.id === selectedId);
   };
-  
+
+  // the compiler doesn't like the use of the SmartPointerSensor class, but the compiled code works fine *shrug*
+  const sensors = useSensors(
+    useSensor(SmartPointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   return (
     <Box m={1} p={1}>
       <Paper elevation={4}>
@@ -140,7 +140,7 @@ const SequenceOrder = (props: {
           >
             <RadioGroup
               value={selectedActionId}
-              onChange={ handleSelectionChange }
+              onChange={handleSelectionChange}
             >
               <Grid container spacing={2} direction="column">
                 {executableActions.map((action, index) => (
@@ -151,14 +151,14 @@ const SequenceOrder = (props: {
                           <Grid container alignItems="center" justifyContent="space-between">
                             <FormControlLabel
                               value={action.id}
-                              control={<Radio />}
+                              control={<Radio/>}
                               label={
                                 <Typography variant="h5" component="span">
                                   {actionStringToAction[action.actionString].displayName}
                                 </Typography>
                               }
                             />
-                            <IconButton onClick={handleDelete(action)}><DeleteIcon /></IconButton>
+                            <IconButton onClick={handleDelete(action)}><DeleteIcon/></IconButton>
                           </Grid>
                         </Paper>
                       </Box>
