@@ -43,17 +43,12 @@ const SequenceBuilderScreen = () => {
       );
     });
   }, []);
-
+  
   useEffect(() => {
     if (sequenceId === "") return;
     // get the sequence from the server
     GetExecutableSequence(sequenceId).then(loadSequence);
   }, [sequenceId]);
-
-  // todo: testing only, remove once action selection works on middle screen.
-  useEffect(() => {
-    setSelection(executableActions[executableActions.length - 1]);
-  }, [executableActions]);
 
   // adds an action to the sequence
   const addAction = (action: Action) =>
@@ -150,6 +145,7 @@ const SequenceBuilderScreen = () => {
             setActionsToAdd={setActionsToAdd}
             executableActions={executableActions}
             setExecutableActions={setExecutableActions}
+            setSelection={setSelection}
           />
         </Grid>
         <Grid item xs={3}>
