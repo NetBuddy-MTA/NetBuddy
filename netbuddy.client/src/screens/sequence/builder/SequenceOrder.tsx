@@ -1,16 +1,12 @@
-import {useState, useCallback, useEffect } from "react";
-import { Action, Variable } from "../../../api/actions/actions.ts";
-import { ExecutableAction, SequenceVariable } from "../../../api/sequences/sequences.ts";
+import {PointerEvent, useEffect, useState} from "react";
+import {Action, Variable} from "../../../api/actions/actions.ts";
+import {ExecutableAction, SequenceVariable} from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PointerSensor } from '@dnd-kit/core';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   closestCenter,
   DndContext,
@@ -30,6 +26,9 @@ import {
 import {CSS} from "@dnd-kit/utilities";
 import {jsx} from "@emotion/react";
 import JSX = jsx.JSX;
+import Radio from "@mui/material/Radio";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
 
 export class SmartPointerSensor extends PointerSensor {
   static activators = [
