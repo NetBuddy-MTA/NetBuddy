@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import {useState, useCallback, useEffect } from "react";
 import { Action, Variable } from "../../../api/actions/actions.ts";
 import { ExecutableAction, SequenceVariable } from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
@@ -12,9 +12,11 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
+  PointerSensor,
   useSensor,
   useSensors
 } from "@dnd-kit/core";
@@ -25,23 +27,49 @@ import {
   useSortable,
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import {CSS} from "@dnd-kit/utilities";
+import {jsx} from "@emotion/react";
+import JSX = jsx.JSX;
 
-class RightClickPointerSensor extends PointerSensor {
+export class SmartPointerSensor extends PointerSensor {
   static activators = [
     {
-      eventName: 'onPointerDown',
-      handler: ({ nativeEvent: event }) => {
-        return event.button === 2; // Only activate on right-click (button 2)
+      eventName: "onPointerDown",
+      handler: ({nativeEvent: event}: PointerEvent) => {
+        return !(!event.isPrimary ||
+          event.button !== 0 ||
+          isInteractiveElement(event.target as Element));
       },
     },
   ];
 }
 
+function isInteractiveElement(element: Element | null) {
+  const interactiveElements = [
+    "path",
+    "svg",
+    "button",
+    "input",
+    "textarea",
+    "select",
+    "option",
+  ];
+  if (
+    element?.tagName &&
+    interactiveElements.includes(element.tagName.toLowerCase())
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
-  actionsToAdd: Action[], setActionsToAdd: (actions: Action[]) => void,
-  executableActions: ExecutableAction[], setExecutableActions: (actions: ExecutableAction[] | ((prev:ExecutableAction[])=>ExecutableAction[])) => void
+  actionsToAdd: Action[],
+  setActionsToAdd: (actions: Action[]) => void,
+  executableActions: ExecutableAction[],
+  setExecutableActions: (actions: ExecutableAction[] | ((prev: ExecutableAction[]) => ExecutableAction[])) => void
 }) => {
   const {
     actionStringToAction,
@@ -69,7 +97,7 @@ const SequenceOrder = (props: {
     });
 
     return {
-      id: `${Math.random()}`,
+      id: Math.random().toString(),
       actionString: action.actionString,
       inputs: action.inputs.map(actionVariableToSequenceVariable),
       outputs: action.outputs.map(actionVariableToSequenceVariable)
@@ -77,39 +105,32 @@ const SequenceOrder = (props: {
   }
 
   const sensors = useSensors(
-    useSensor(RightClickPointerSensor),
+    useSensor(SmartPointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (active.id !== over.id) {
+  const handleDragEnd = (event: DragEndEvent) => {
+    if (event.activatorEvent.target !== event.activatorEvent.currentTarget) return;
+    const {active, over} = event;
+    if (active.id !== over?.id) {
       const oldIndex = executableActions.findIndex(action => action.id === active.id);
-      const newIndex = executableActions.findIndex(action => action.id === over.id);
+      const newIndex = executableActions.findIndex(action => action.id === over?.id);
       setExecutableActions(arrayMove(executableActions, oldIndex, newIndex));
     }
   };
 
-  const handleDelete = useCallback(  (action:ExecutableAction )=> {
-    return ()=>setExecutableActions((prev:ExecutableAction[])=> {
-      const newActions = [...prev];
-      newActions.splice(newActions.findIndex((item)=>item.id===action.id),1);
-      return newActions;
-    });
-  },[]);
-
+  const handleDelete = (action: ExecutableAction) => {
+    return (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setExecutableActions((actions: ExecutableAction[]) => actions.filter(item => item.id !== action.id));
+    }
+  };
   const handleSelectionChange = (event) => {
     const selectedId = event.target.value;
     setSelectedActionId(selectedId);
     const selectedAction = executableActions.find(action => action.id === selectedId);
-    if (selectedAction) {
-      // Send the selected action to another part of your application
-      // For example, you could call a prop function passed down to this component
-      // or use a context to share the data.
-      //sendSelectedAction(selectedAction);
-    }
   };
   
   return (
@@ -159,7 +180,8 @@ const SequenceOrder = (props: {
     </Box>
   );
 }
-const SortableItem = ({ id, children }) => {
+
+const SortableItem = ({id, children}: { id: string, children: JSX.Element }) => {
   const {
     attributes,
     listeners,
@@ -167,7 +189,7 @@ const SortableItem = ({ id, children }) => {
     transform,
     transition,
     isDragging
-  } = useSortable({ id });
+  } = useSortable({id});
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -177,9 +199,9 @@ const SortableItem = ({ id, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <Box ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {children}
-    </div>
+    </Box>
   );
 };
 
