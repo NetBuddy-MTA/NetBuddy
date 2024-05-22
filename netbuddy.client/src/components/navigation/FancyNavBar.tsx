@@ -1,4 +1,4 @@
-﻿import {useContext} from 'react';
+﻿import {useContext, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
@@ -7,8 +7,6 @@ import {Link} from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DrawerControlsContext, {SideDrawerControls} from "../../contexts/DrawerControlsContext.tsx";
-import {useState} from 'react';
-import SideDrawer from "../drawer/SideDrawer.tsx";
 import ProfileMenu from '../other/ProfileMenu.tsx';
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
 
@@ -62,7 +60,7 @@ const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
       </Toolbar>
       <DrawerControlsContext.Provider
         value={{sideDrawerControls: drawerControls, setSideDrawerControls: setDrawerControls}}>
-        <SideDrawer/>
+        {/*<SideDrawer/>*/}
       </DrawerControlsContext.Provider>
     </AppBar>
   );

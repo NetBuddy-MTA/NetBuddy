@@ -5,12 +5,16 @@ import {useEffect, useState} from "react";
 import SequenceOrder from "./SequenceOrder.tsx";
 import {
   ExecutableAction,
+  GetExecutableSequence,
   SaveExecutableSequence,
   Sequence,
   SequenceVariable
 } from "../../../api/sequences/sequences.ts";
 import Box from "@mui/material/Box";
 import ExecutableActionPropertiesView from "./ExecutableActionPropertiesView.tsx";
+import SequenceBuilderButtons from "./SequenceBuilderButtons.tsx";
+import DownloadSequencePopup from "./DownloadSequencePopup.tsx";
+import SequenceDetailsPopup from "./SequenceDetailsPopup.tsx";
 
 const SequenceBuilderScreen = () => {
   const [sequenceId, setSequenceId] = useState<string>("");
@@ -23,6 +27,9 @@ const SequenceBuilderScreen = () => {
 
   const [actionCatalogue, setActionCatalogue] = useState<Action[]>([]);
   const [actionStringToAction, setActionStringToAction] = useState<{ [key: string]: Action; }>({});
+
+  const [openDownloadPopup, setOpenDownloadPopup] = useState<boolean>(false);
+  const [openDetailsPopup, setOpenDetailsPopup] = useState<boolean>(false);
 
   useEffect(() => {
     getActions().then((actions) => {
@@ -37,6 +44,11 @@ const SequenceBuilderScreen = () => {
     });
   }, []);
   
+  useEffect(() => {
+    if (sequenceId === "") return;
+    // get the sequence from the server
+    GetExecutableSequence(sequenceId).then(loadSequence);
+  }, [sequenceId]);
 
   // adds an action to the sequence
   const addAction = (action: Action) =>
@@ -65,12 +77,21 @@ const SequenceBuilderScreen = () => {
   };
 
   // load a sequence from Sequence object
-  const loadSequence = (sequence: Sequence) => {
+  const loadSequence = (sequence?: Sequence) => {
+    if (!sequence) {
+      // get json of sequence from local storage if exists
+      const local = localStorage.getItem("sequence");
+      if (!local) {
+        alert("No sequence saved locally!");
+        return;
+      }
+      sequence = JSON.parse(local) as Sequence;
+    }
     setSequenceId(sequence.id);
     setSequenceName(sequence.name);
     setSequenceDescription(sequence.description);
     setExecutableActions(sequence.actions);
-  };
+  }
 
   // saves the sequence to local storage
   const saveSequenceLocally = () =>
@@ -89,9 +110,31 @@ const SequenceBuilderScreen = () => {
     }
   };
 
+  const downloadSequence = () => setOpenDownloadPopup(true);
+
+  const showDetailsPopup = () => setOpenDetailsPopup(true);
+
   return (
-    <Box paddingTop={3}>
+    <Box>
+      <SequenceDetailsPopup
+        open={openDetailsPopup} setOpen={setOpenDetailsPopup}
+        name={sequenceName} setName={setSequenceName}
+        description={sequenceDescription} setDescription={setSequenceDescription}
+      />
+      <DownloadSequencePopup open={openDownloadPopup} setOpen={setOpenDownloadPopup} setId={setSequenceId}/>
       <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <SequenceBuilderButtons
+            sequenceName={sequenceName}
+            setSequenceName={setSequenceName}
+            testSequence={() => console.log("Testing sequence...")}
+            saveSequence={saveSequenceLocally}
+            loadSequence={loadSequence}
+            uploadSequence={uploadSequence}
+            downloadSequence={downloadSequence}
+            moreDetails={showDetailsPopup}
+          />
+        </Grid>
         <Grid item xs={3}>
           <ActionsContainer actions={actionCatalogue} addAction={addAction}/>
         </Grid>
