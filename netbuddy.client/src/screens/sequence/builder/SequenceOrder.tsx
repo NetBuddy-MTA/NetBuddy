@@ -54,15 +54,17 @@ function isInteractiveElement(element: Element | null) {
     "select",
     "option",
   ];
-  if (
-    element?.tagName &&
-    interactiveElements.includes(element.tagName.toLowerCase())
-  ) {
-    return true;
-  }
-
-  return false;
+  return !!(element?.tagName &&
+    interactiveElements.includes(element.tagName.toLowerCase()));
 }
+
+// the compiler doesn't like the use of the SmartPointerSensor class, but the compiled code works fine *shrug*
+const sensors = useSensors(
+  useSensor(SmartPointerSensor),
+  useSensor(KeyboardSensor, {
+    coordinateGetter: sortableKeyboardCoordinates,
+  })
+);
 
 const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
@@ -103,13 +105,6 @@ const SequenceOrder = (props: {
       outputs: action.outputs.map(actionVariableToSequenceVariable)
     };
   }
-
-  const sensors = useSensors(
-    useSensor(SmartPointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const handleDragEnd = (event: DragEndEvent) => {
     if (event.activatorEvent.target !== event.activatorEvent.currentTarget) return;
