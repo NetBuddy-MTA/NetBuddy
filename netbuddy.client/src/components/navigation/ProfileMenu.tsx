@@ -6,10 +6,8 @@ import Button from "@mui/material/Button";
 import UserInfoContext from '../../contexts/UserInfoContext.tsx';
 import logout from "../../api/account/logout.ts";
 import {useNavigate} from "react-router-dom";
-import {Dialog, DialogContent} from '@mui/material';
-import DialogTitle from "@mui/material/DialogTitle";
-import UserPreferences, { Preferences } from "../other/UserPrefrences.tsx";
-import { useTheme } from '../../contexts/ThemeContext';
+import UserPreferences, {Preferences} from "../other/UserPrefrences.tsx";
+import {useTheme} from '../../contexts/ThemeContext';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 
@@ -17,21 +15,16 @@ const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const {userInfo, setUserInfo} = useContext(UserInfoContext);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
-  const { theme, toggleTheme, onThemeChange } = useTheme();
+  const {theme, toggleTheme, onThemeChange} = useTheme();
 
   useEffect(() => {
   }, [userInfo]);
-  
-  const switchMenuOpen = (e: React.MouseEvent<HTMLElement>) => 
-    setAnchorEl(e.currentTarget);
-  const switchMenuClose = () => 
-    setAnchorEl(null);
 
-  const openPreferences = () => setPreferencesOpen(true);
-  const closePreferences = () => setPreferencesOpen(false);
+  const switchMenuOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
+  const switchMenuClose = () => setAnchorEl(null);
 
   const navigate = useNavigate();
-  
+
   // todo: don't need to be here?
   const preferences: Preferences[] = [
     {
@@ -51,7 +44,7 @@ const ProfileMenu = () => {
       type: 'buttonGroup',
       onChange: onThemeChange,
       value: theme,
-      options: [{ text: "light", icon: <LightModeIcon />}, { text: "dark",  icon: <DarkModeIcon /> }],
+      options: [{text: "light", icon: <LightModeIcon/>}, {text: "dark", icon: <DarkModeIcon/>}],
     },
     {
       label: "number",
@@ -62,10 +55,9 @@ const ProfileMenu = () => {
       label: "family members",
       type: 'select',
       onChange: (value: string) => console.log(value),
-      options: [{ text: "Shirley", value: 1 }, { text: "Dana", value: 2 }, { text: "Robin", value: 3 }]
+      options: [{text: "Shirley", value: 1}, {text: "Dana", value: 2}, {text: "Robin", value: 3}]
     },
   ];
-  // todo: add more types
 
   return (
     <>
@@ -77,7 +69,7 @@ const ProfileMenu = () => {
           {userInfo?.username!.charAt(0).toUpperCase()}
         </Avatar>
       </Button>
-      
+
       <Menu
         anchorEl={anchorEl}
         open={anchorEl !== null}
@@ -105,32 +97,15 @@ const ProfileMenu = () => {
         <MenuItem onClick={e => {
           e.preventDefault();
           switchMenuClose();
-          openPreferences();
+          setPreferencesOpen(true);
         }}>
           Preferences
         </MenuItem>
       </Menu>
 
-      <Dialog open={preferencesOpen} onClose={closePreferences} fullWidth={true}>
-        <DialogTitle sx={{ textAlign: 'center' }}>
-          User Preferences
-        </DialogTitle>
-        <DialogContent>
-          <UserPreferences preferences={preferences} />
-        </DialogContent>
-      </Dialog>
+      <UserPreferences preferences={preferences} isOpen={preferencesOpen} setIsOpen={setPreferencesOpen}/>
     </>
   );
 };
-
-/*
-in case we want a close button
-import CloseIcon from '@mui/icons-material/Close';
-<IconButton
-  aria-label="close" onClick={closePreferences}
-  sx={{ position: 'absolute', right: 5, top: 5}} >
-    <CloseIcon />
-</IconButton>
-*/
 
 export default ProfileMenu;
