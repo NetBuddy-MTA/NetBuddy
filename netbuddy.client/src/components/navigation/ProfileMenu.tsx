@@ -6,10 +6,18 @@ import Button from "@mui/material/Button";
 import UserInfoContext from '../../contexts/UserInfoContext.tsx';
 import logout from "../../api/account/logout.ts";
 import {useNavigate} from "react-router-dom";
+import {Dialog, DialogContent} from '@mui/material';
+import DialogTitle from "@mui/material/DialogTitle";
+import UserPreferences, { Preferences } from "../other/UserPrefrences.tsx";
+import { useTheme } from '../../contexts/ThemeContext';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const {userInfo, setUserInfo} = useContext(UserInfoContext);
+  const [preferencesOpen, setPreferencesOpen] = useState(false);
+  const { theme, toggleTheme, onThemeChange } = useTheme();
 
   useEffect(() => {
   }, [userInfo]);
@@ -19,7 +27,45 @@ const ProfileMenu = () => {
   const switchMenuClose = () => 
     setAnchorEl(null);
 
+  const openPreferences = () => setPreferencesOpen(true);
+  const closePreferences = () => setPreferencesOpen(false);
+
   const navigate = useNavigate();
+  
+  // todo: don't need to be here?
+  const preferences: Preferences[] = [
+    {
+      label: "the best input in the whole world",
+      type: 'text',
+      onChange: (value: React.ChangeEvent<HTMLInputElement>) => console.log(value.target.value),
+      defaultValue: ''
+    },
+    {
+      label: "theme",
+      type: 'boolean',
+      onChange: toggleTheme,
+      value: theme !== 'light'
+    },
+    {
+      label: "theme",
+      type: 'buttonGroup',
+      onChange: onThemeChange,
+      value: theme,
+      options: [{ text: "light", icon: <LightModeIcon />}, { text: "dark",  icon: <DarkModeIcon /> }],
+    },
+    {
+      label: "number",
+      type: 'number',
+      onChange: (value: React.ChangeEvent<HTMLInputElement>) => console.log(value.target.value),
+    },
+    {
+      label: "family members",
+      type: 'select',
+      onChange: (value: string) => console.log(value),
+      options: [{ text: "Shirley", value: 1 }, { text: "Dana", value: 2 }, { text: "Robin", value: 3 }]
+    },
+  ];
+  // todo: add more types
 
   return (
     <>
@@ -59,12 +105,32 @@ const ProfileMenu = () => {
         <MenuItem onClick={e => {
           e.preventDefault();
           switchMenuClose();
+          openPreferences();
         }}>
           Preferences
         </MenuItem>
       </Menu>
+
+      <Dialog open={preferencesOpen} onClose={closePreferences} fullWidth={true}>
+        <DialogTitle sx={{ textAlign: 'center' }}>
+          User Preferences
+        </DialogTitle>
+        <DialogContent>
+          <UserPreferences preferences={preferences} />
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
+
+/*
+in case we want a close button
+import CloseIcon from '@mui/icons-material/Close';
+<IconButton
+  aria-label="close" onClick={closePreferences}
+  sx={{ position: 'absolute', right: 5, top: 5}} >
+    <CloseIcon />
+</IconButton>
+*/
 
 export default ProfileMenu;
