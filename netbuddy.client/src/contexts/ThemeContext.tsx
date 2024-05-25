@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, FC, ReactNode } from 'react';
-import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
-import { lightTheme, darkTheme } from '../layouts/style/Themes';
+import {createContext, FC, ReactNode, useContext, useState} from 'react';
+import {ThemeProvider as MuiThemeProvider} from '@mui/material/styles';
+import {darkTheme, lightTheme} from '../layouts/style/Themes';
 
 type Theme = 'light' | 'dark';
 
@@ -12,8 +12,8 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+export const ThemeProvider: FC<{ children: ReactNode }> = ({children}) => {
+  const [theme, setTheme] = useState<Theme>('dark');
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
@@ -22,9 +22,9 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const onThemeChange = (theme: Theme) => {
     setTheme(theme);
   }
-  
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, onThemeChange }}>
+    <ThemeContext.Provider value={{theme, toggleTheme, onThemeChange}}>
       <MuiThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
         {children}
       </MuiThemeProvider>
