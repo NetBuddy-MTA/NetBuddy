@@ -7,7 +7,6 @@ export type SequenceDisplay = {
 };
 
 export type SequenceVariable = {
-  id: string;
   originalName: string;
   name: string;
   description: string;
@@ -17,7 +16,6 @@ export type SequenceVariable = {
 };
 
 export type ExecutableAction = {
-  id: string;
   actionString: string;
   inputs: SequenceVariable[];
   outputs: SequenceVariable[];
@@ -41,7 +39,10 @@ export async function GetExecutableSequence(id: string) {
 
 export async function SaveExecutableSequence(sequence: Sequence) {
   return await agent
-  .put("/execution/sequences", JSON.stringify(sequence))
+  .put("/execution/sequences", JSON.stringify({
+    ...sequence,
+    id: sequence.id === "" ? "00000000-0000-0000-0000-000000000000" : sequence.id
+  }))
   .catch((error) => console.log(error.error))
   .then((response) => response?.data as { id: string; errors: string[] });
 }
