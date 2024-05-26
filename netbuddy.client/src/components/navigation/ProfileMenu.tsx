@@ -10,6 +10,7 @@ import UserPreferences, {Preferences} from "../preferences/UserPrefrences.tsx";
 import {useTheme} from '../../contexts/ThemeContext';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import {ExitToApp, Settings} from "@mui/icons-material";
 
 const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -91,6 +92,7 @@ const ProfileMenu = () => {
             alert("Logout failed. Please try again later.");
           }
         }}>
+          <ExitToApp style={{ marginRight: 8 }} />
           Sign Out
         </MenuItem>
 
@@ -99,6 +101,7 @@ const ProfileMenu = () => {
           switchMenuClose();
           setPreferencesOpen(true);
         }}>
+          <Settings style={{ marginRight: 8 }} />
           Preferences
         </MenuItem>
       </Menu>
