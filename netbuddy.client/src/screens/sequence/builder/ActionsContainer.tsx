@@ -7,6 +7,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
 
 function groupByCategory(items:Action[]) {
   // Use reduce to group the items by category
@@ -42,9 +43,10 @@ const ActionsContainer = (props: {
   return (
     <Paper elevation={4}>
       <Typography variant="h4" p={1}>Action Menu:</Typography>
-      {grouped.map(actionGroup=> (
-        <Accordion 
-          expanded={expanded === actionGroup[0].category} 
+      {grouped.map(actionGroup => (
+        <Accordion
+          key={actionGroup[0].category}
+          expanded={expanded === actionGroup[0].category}
           onChange={handleAccordionChange(actionGroup[0].category)}
         >
           <AccordionSummary
@@ -53,18 +55,21 @@ const ActionsContainer = (props: {
             {actionGroup[0].category}
           </AccordionSummary>
           <AccordionDetails>
-            { 
-              actionGroup.map(action => {
-                return (
-                  <Button onClick={e => {
-                    e.preventDefault();
-                    addAction(action);
-                  }}>
+            <Grid container spacing={1}>
+              {actionGroup.map(action => (
+                <Grid item xs={12}>
+                  <Button
+                    fullWidth
+                    onClick={e => {
+                      e.preventDefault();
+                      addAction(action);
+                    }}
+                  >
                     {action.displayName}
                   </Button>
-                )
-              })
-            }
+                </Grid>
+              ))}
+            </Grid>
           </AccordionDetails>
         </Accordion>
       ))}

@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import LockClosedIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useState} from "react";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
@@ -19,15 +19,6 @@ const LoginForm = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
   const navigate = useNavigate();
   const {userInfo, setUserInfo} = useContext(UserInfoContext);
-
-  useEffect(() => {
-    getUserInfo().then(info => {
-      if (setUserInfo && userInfo != info) {
-        setUserInfo(info);
-        navigate("/");
-      }
-    });
-  }, []);
   
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
@@ -41,6 +32,12 @@ const LoginForm = () => {
     let response = await login(data.get('email') as string, data.get('password') as string);
     // check for response and validate it
     if (response) {
+      getUserInfo().then(info => {
+        if (setUserInfo && userInfo != info) {
+          setUserInfo(info);
+          navigate("/");
+        }
+      });
       // unlock
       setLocked(false);
       // go to default page
