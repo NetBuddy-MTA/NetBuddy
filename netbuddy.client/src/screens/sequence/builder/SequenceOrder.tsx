@@ -72,7 +72,14 @@ const SequenceOrder = (props: {
     selection, setSelection
   } = props;
 
-  const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string>("");
+
+  useEffect(() => {
+    if (selection)
+      setSelectedId(selection.id!);
+    else
+      setSelectedId("");
+  }, [selection]);
 
   useEffect(() => {
     const action = actionsToAdd.shift();
@@ -126,7 +133,6 @@ const SequenceOrder = (props: {
 
   const handleSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedId = event.target.value;
-    setSelectedActionId(selectedId);
     const selectedAction = sequence.actions.find(action => action.id === selectedId);
     setSelection(selectedAction);
   };
@@ -152,7 +158,7 @@ const SequenceOrder = (props: {
             strategy={verticalListSortingStrategy}
           >
             <RadioGroup
-              value={selectedActionId}
+              value={selectedId}
               onChange={handleSelectionChange}
             >
               <Grid container spacing={2} direction="column">
