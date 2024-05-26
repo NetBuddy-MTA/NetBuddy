@@ -62,13 +62,14 @@ const SequenceOrder = (props: {
   setActionsToAdd: (actions: Action[]) => void,
   sequence: Sequence,
   setSequence: React.Dispatch<React.SetStateAction<Sequence>>,
+  selection: ExecutableAction | undefined,
   setSelection: (action: ExecutableAction | undefined) => void
 }) => {
   const {
     actionStringToAction,
     actionsToAdd, setActionsToAdd,
     sequence, setSequence,
-    setSelection
+    selection, setSelection
   } = props;
 
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
@@ -119,6 +120,7 @@ const SequenceOrder = (props: {
         ...sequence,
         actions: sequence.actions.filter(item => item.id !== action.id)
       });
+      selection && action.id === selection.id && setSelection(undefined);
     }
   };
 

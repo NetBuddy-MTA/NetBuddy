@@ -134,7 +134,8 @@ const SequenceBuilderScreen = () => {
             setActionsToAdd={setActionsToAdd}
             sequence={sequence}
             setSequence={setSequence}
-            setSelection={setSelection}
+            selection={selection}
+            setSelection={setCurrentSelection}
           />
         </Grid>
         <Grid item xs={3}>
