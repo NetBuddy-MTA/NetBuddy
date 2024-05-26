@@ -7,8 +7,8 @@ import {Link} from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DrawerControlsContext, {SideDrawerControls} from "../../contexts/DrawerControlsContext.tsx";
-import ProfileMenu from '../other/ProfileMenu.tsx';
 import UserInfoContext from "../../contexts/UserInfoContext.tsx";
+import ProfileMenu from "./ProfileMenu.tsx";
 
 export type PageAndLink = {
   page: string;
@@ -44,12 +44,15 @@ const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
                 </Typography>
               </Stack>
             </Link>
-            {pageAndLinks?.map(pageAndLink => (
-              <Button key={pageAndLink.link} component={Link} to={pageAndLink.link} variant="text"
-                      sx={{fontWeight: '600'}}>
-                {pageAndLink.page}
-              </Button>
-            ))}
+            {userInfo?.username
+              ? pageAndLinks?.map(pageAndLink => (
+                <Button key={pageAndLink.link} component={Link} to={pageAndLink.link} variant="text"
+                        sx={{fontWeight: '600'}}>
+                  {pageAndLink.page}
+                </Button>
+              ))
+              : null
+            }
           </Stack>
           {userInfo?.username && (
             <Stack direction="row" alignItems="center" spacing={2}>

@@ -7,7 +7,7 @@ import RegisterForm from "./components/forms/RegisterForm.tsx";
 import {useState} from 'react';
 import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
-import History from "./components/other/History.tsx";
+import History from "./components/history/History.tsx";
 import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
 import Box from '@mui/material/Box';
 import {ThemeProvider} from "./contexts/ThemeContext.tsx";

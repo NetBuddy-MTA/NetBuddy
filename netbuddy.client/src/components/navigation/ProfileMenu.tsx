@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import UserInfoContext from '../../contexts/UserInfoContext.tsx';
 import logout from "../../api/account/logout.ts";
 import {useNavigate} from "react-router-dom";
-import UserPreferences, {Preferences} from "../other/UserPrefrences.tsx";
+import UserPreferences, {Preferences} from "../preferences/UserPrefrences.tsx";
 import {useTheme} from '../../contexts/ThemeContext';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
