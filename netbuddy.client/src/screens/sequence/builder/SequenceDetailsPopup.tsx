@@ -9,25 +9,24 @@ import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlin
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import {Sequence} from "../../../api/sequences/sequences.ts";
 
 const SequenceDetailsPopup = (props: {
   open: boolean, setOpen: (open: boolean) => void,
-  name: string, setName: (name: string) => void,
-  description: string, setDescription: (description: string) => void,
+  sequence: Sequence, setSequence: React.Dispatch<React.SetStateAction<Sequence>>
 }) => {
   const {
     open, setOpen,
-    name, setName,
-    description, setDescription
+    sequence, setSequence
   } = props;
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [editName, setEditName] = useState<string>(name);
-  const [editDescription, setEditDescription] = useState<string>(description);
+  const [editName, setEditName] = useState<string>(sequence.name);
+  const [editDescription, setEditDescription] = useState<string>(sequence.description);
 
   useEffect(() => {
     setEditMode(false);
-    setEditName(name);
-    setEditDescription(description);
+    setEditName(sequence.name);
+    setEditDescription(sequence.description);
   }, [open]);
 
   return (
@@ -71,11 +70,10 @@ const SequenceDetailsPopup = (props: {
             e.preventDefault();
             if (editMode) {
               setEditMode(false);
-              setName(editName);
-              setDescription(editDescription);
+              setSequence({...sequence, name: editName, description: editDescription});
             } else {
-              setEditName(name);
-              setEditDescription(description);
+              setEditName(sequence.name);
+              setEditDescription(sequence.description);
               setEditMode(true);
             }
           }}>

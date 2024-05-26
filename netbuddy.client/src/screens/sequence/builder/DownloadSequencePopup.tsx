@@ -1,5 +1,10 @@
 ﻿import Dialog from "@mui/material/Dialog";
-import {GetSequencesDisplay, SequenceDisplay} from "../../../api/sequences/sequences.ts";
+import {
+  GetExecutableSequence,
+  GetSequencesDisplay,
+  Sequence,
+  SequenceDisplay
+} from "../../../api/sequences/sequences.ts";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Card from "@mui/material/Card";
@@ -15,9 +20,9 @@ import Stack from "@mui/material/Stack";
 
 const DownloadSequencePopup = (props: {
   open: boolean, setOpen: (open: boolean) => void,
-  setId: (id: string) => void,
+  setSequence: React.Dispatch<React.SetStateAction<Sequence>>,
 }) => {
-  const {open, setOpen, setId} = props;
+  const {open, setOpen, setSequence} = props;
   const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
 
   useEffect(() => {
@@ -27,7 +32,10 @@ const DownloadSequencePopup = (props: {
 
   const createHandler = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setId(id);
+    GetExecutableSequence(id).then(sequence => {
+      sequence.actions.forEach((action, index) => action.id = index.toString());
+      setSequence(sequence);
+    });
     setOpen(false);
   };
 

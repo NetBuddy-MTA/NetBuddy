@@ -1,6 +1,6 @@
 import {PointerEvent, useEffect, useState} from "react";
 import {Action, Variable} from "../../../api/actions/actions.ts";
-import {ExecutableAction, SequenceVariable} from "../../../api/sequences/sequences.ts";
+import {ExecutableAction, Sequence, SequenceVariable} from "../../../api/sequences/sequences.ts";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -60,14 +60,14 @@ const SequenceOrder = (props: {
   actionStringToAction: { [key: string]: Action },
   actionsToAdd: Action[],
   setActionsToAdd: (actions: Action[]) => void,
-  executableActions: ExecutableAction[],
-  setExecutableActions: (actions: ExecutableAction[] | ((prev: ExecutableAction[]) => ExecutableAction[])) => void,
+  sequence: Sequence,
+  setSequence: React.Dispatch<React.SetStateAction<Sequence>>,
   setSelection: (action: ExecutableAction | undefined) => void
 }) => {
   const {
     actionStringToAction,
     actionsToAdd, setActionsToAdd,
-    executableActions, setExecutableActions,
+    sequence, setSequence,
     setSelection
   } = props;
 
@@ -76,13 +76,15 @@ const SequenceOrder = (props: {
   useEffect(() => {
     const action = actionsToAdd.shift();
     if (!action) return;
-    setExecutableActions([...executableActions, actionToExecutable(action)]);
+    setSequence({
+      ...sequence,
+      actions: [...sequence.actions, actionToExecutable(action)]
+    });
     setActionsToAdd([...actionsToAdd]);
   }, [actionsToAdd]);
 
   function actionToExecutable(action: Action): ExecutableAction {
     const actionVariableToSequenceVariable = (actVar: Variable): SequenceVariable => ({
-      id: "",
       name: "",
       originalName: actVar.name,
       description: actVar.description,
@@ -91,7 +93,7 @@ const SequenceOrder = (props: {
     });
 
     return {
-      id: Math.random().toString(),
+      id: (Math.max(0, ...sequence.actions.map(action => parseInt(action.id!))) + 1).toString(),
       actionString: action.actionString,
       inputs: action.inputs.map(actionVariableToSequenceVariable),
       outputs: action.outputs.map(actionVariableToSequenceVariable)
@@ -99,27 +101,32 @@ const SequenceOrder = (props: {
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
-    if (event.activatorEvent.target !== event.activatorEvent.currentTarget) return;
     const {active, over} = event;
-    if (active.id !== over?.id) {
-      const oldIndex = executableActions.findIndex(action => action.id === active.id);
-      const newIndex = executableActions.findIndex(action => action.id === over?.id);
-      setExecutableActions(arrayMove(executableActions, oldIndex, newIndex));
+    if (over && active.id !== over.id) {
+      const oldIndex = sequence.actions.findIndex(action => action.id === active.id);
+      const newIndex = sequence.actions.findIndex(action => action.id === over.id);
+      setSequence({
+        ...sequence,
+        actions: arrayMove(sequence.actions, oldIndex, newIndex)
+      });
     }
   };
 
   const handleDelete = (action: ExecutableAction) => {
     return (event: React.MouseEvent) => {
       event.stopPropagation();
-      setExecutableActions((actions: ExecutableAction[]) => actions.filter(item => item.id !== action.id));
+      setSequence({
+        ...sequence,
+        actions: sequence.actions.filter(item => item.id !== action.id)
+      });
     }
   };
+
   const handleSelectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedId = event.target.value;
     setSelectedActionId(selectedId);
-    const selectedAction = executableActions.find(action => action.id === selectedId);
+    const selectedAction = sequence.actions.find(action => action.id === selectedId);
     setSelection(selectedAction);
-    
   };
 
   // the compiler doesn't like the use of the SmartPointerSensor class, but the compiled code works fine *shrug*
@@ -139,7 +146,7 @@ const SequenceOrder = (props: {
           onDragEnd={handleDragEnd}
         >
           <SortableContext
-            items={executableActions.map(action => action.id)}
+            items={sequence.actions.map(action => action.id!)}
             strategy={verticalListSortingStrategy}
           >
             <RadioGroup
@@ -147,14 +154,14 @@ const SequenceOrder = (props: {
               onChange={handleSelectionChange}
             >
               <Grid container spacing={2} direction="column">
-                {executableActions.map((action, index) => (
-                  <SortableItem key={`${action.id}-${index}`} id={action.id}>
+                {sequence.actions.map((action, index) => (
+                  <SortableItem key={`${action.id!}-${index}`} id={action.id!}>
                     <Grid item>
                       <Box m={0.5} p={0.5}>
                         <Paper elevation={12}>
                           <Grid container alignItems="center" justifyContent="space-between">
                             <FormControlLabel
-                              value={action.id}
+                              value={action.id!}
                               control={<Radio/>}
                               label={
                                 <Typography variant="h5" component="span">
