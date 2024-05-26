@@ -43,7 +43,7 @@ const SequenceBuilderScreen = () => {
       );
     });
   }, []);
-  
+
   useEffect(() => {
     if (sequenceId === "") return;
     // get the sequence from the server
@@ -145,6 +145,7 @@ const SequenceBuilderScreen = () => {
             setActionsToAdd={setActionsToAdd}
             executableActions={executableActions}
             setExecutableActions={setExecutableActions}
+            selection={selection}
             setSelection={setSelection}
           />
         </Grid>
