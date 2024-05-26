@@ -62,13 +62,13 @@ const SequenceOrder = (props: {
   setActionsToAdd: (actions: Action[]) => void,
   executableActions: ExecutableAction[],
   setExecutableActions: (actions: ExecutableAction[] | ((prev: ExecutableAction[]) => ExecutableAction[])) => void,
-  setSelection: (action: ExecutableAction | undefined) => void
+  selection: ExecutableAction | undefined, setSelection: (action: ExecutableAction | undefined) => void
 }) => {
   const {
     actionStringToAction,
     actionsToAdd, setActionsToAdd,
     executableActions, setExecutableActions,
-    setSelection
+    selection, setSelection
   } = props;
 
   const [selectedActionId, setSelectedActionId] = useState<string | null>(null);
@@ -111,6 +111,7 @@ const SequenceOrder = (props: {
   const handleDelete = (action: ExecutableAction) => {
     return (event: React.MouseEvent) => {
       event.stopPropagation();
+      action === selection && setSelection(undefined);
       setExecutableActions((actions: ExecutableAction[]) => actions.filter(item => item.id !== action.id));
     }
   };
@@ -119,7 +120,7 @@ const SequenceOrder = (props: {
     setSelectedActionId(selectedId);
     const selectedAction = executableActions.find(action => action.id === selectedId);
     setSelection(selectedAction);
-    
+
   };
 
   // the compiler doesn't like the use of the SmartPointerSensor class, but the compiled code works fine *shrug*
