@@ -16,6 +16,7 @@ export type SequenceVariable = {
 };
 
 export type ExecutableAction = {
+  id?: string;
   actionString: string;
   inputs: SequenceVariable[];
   outputs: SequenceVariable[];

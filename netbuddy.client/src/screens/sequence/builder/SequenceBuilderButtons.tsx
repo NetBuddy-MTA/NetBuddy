@@ -9,10 +9,10 @@ import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded';
 import Grid from "@mui/material/Grid";
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import Typography from "@mui/material/Typography";
+import {Sequence} from "../../../api/sequences/sequences.ts";
 
 const SequenceBuilderButtons = (props: {
-  sequenceName: string;
-  setSequenceName: (name: string) => void;
+  sequence: Sequence;
   testSequence: () => void;
   saveSequence: () => void;
   loadSequence: () => void;
@@ -21,7 +21,7 @@ const SequenceBuilderButtons = (props: {
   moreDetails: () => void;
 }) => {
   const {
-    sequenceName,
+    sequence,
     testSequence, saveSequence, loadSequence, uploadSequence, downloadSequence, moreDetails
   } = props;
 
@@ -37,7 +37,7 @@ const SequenceBuilderButtons = (props: {
               <MoreVertRoundedIcon/>
             </IconButton>
           </Tooltip>
-          <Typography variant="h5">Name: {sequenceName === "" ? "(Not Assigned)" : sequenceName}</Typography>
+          <Typography variant="h5">Name: {sequence.name === "" ? "(Not Assigned)" : sequence.name}</Typography>
         </Stack>
       </Grid>
       <Grid item xs={9}>

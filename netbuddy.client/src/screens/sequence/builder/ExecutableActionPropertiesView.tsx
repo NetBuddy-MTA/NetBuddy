@@ -113,7 +113,7 @@ const ExecutableActionPropertiesView = (props: {
           <Typography variant="h6">{variable.originalName}</Typography>
           <Typography variant="body1">{variable.description}</Typography>
           <Typography variant="body2">Type: {variable.type}</Typography>
-          <Typography variant="body2">Required: {variable.optional ? "Yes" : "No"}</Typography>
+          <Typography variant="body2">Required: {variable.optional ? "No" : "Yes"}</Typography>
           <Select fullWidth defaultValue={variable.name}>
             {optionsArray}
           </Select>
