@@ -43,7 +43,7 @@ public class SelectorController : ControllerBase
         return Ok(urls);
     }
 
-    [HttpGet]
+    [HttpPost]
     public async Task<IActionResult> GetSelectorsForUrl([FromBody] string url)
     {
         var user = await _userManager.GetUserAsync(User);
@@ -55,6 +55,25 @@ public class SelectorController : ControllerBase
 
         var selectors = await session.Query<Selector>()
             .Where(x => (x.Owner == null || x.Owner.Id == user.Id) && x.Url == url)
+            .Select(x => x.Dto)
+            .ToListAsync();
+
+        return Ok(selectors);
+    }
+
+    [HttpGet]
+    [Route("all")]
+    public async Task<IActionResult> GetAllSelectors()
+    {
+        var user = await _userManager.GetUserAsync(User);
+
+        // should never happen
+        if (user == null) return Unauthorized();
+
+        await using var session = _store.QuerySession();
+
+        var selectors = await session.Query<Selector>()
+            .Where(x => x.Owner == null || x.Owner.Id == user.Id)
             .Select(x => x.Dto)
             .ToListAsync();
 
@@ -94,7 +113,7 @@ public class SelectorController : ControllerBase
         return Ok(guid);
     }
 
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> SaveSelector([FromBody] Selector selector)
     {
         // validate the model state
