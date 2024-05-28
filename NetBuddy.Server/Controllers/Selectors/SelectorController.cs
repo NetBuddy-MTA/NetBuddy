@@ -106,9 +106,6 @@ public class SelectorController : ControllerBase
 
         selector.Owner = user;
 
-        // todo: consider adding validations on the actual xpath and css selector
-        List<string> errors = [];
-
         await using var session = _store.LightweightSession();
 
         if (selector.Id != Guid.Empty)
@@ -121,10 +118,6 @@ public class SelectorController : ControllerBase
 
         await session.SaveChangesAsync();
 
-        return Ok(new
-        {
-            selector.Id,
-            errors
-        });
+        return Ok(selector.Id);
     }
 }
