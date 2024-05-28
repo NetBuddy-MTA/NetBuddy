@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NetBuddy.Server.Models.Executables.Action;
+using NetBuddy.Server.Models.Executables.Selector;
 using NetBuddy.Server.Models.User;
 
 namespace NetBuddy.Server.Controllers.Selectors;
