@@ -1,4 +1,5 @@
 ﻿using Marten.Schema;
+using NetBuddy.Server.DTOs.Selector;
 using NetBuddy.Server.Models.User;
 
 namespace NetBuddy.Server.Models.Executables.Selector;
@@ -14,11 +15,26 @@ public sealed class Selector
 
     public UserAccount? Owner { get; set; }
 
-    public dynamic Dto => new
+    public static Selector FromDto(SelectorDto dto, UserAccount userAccount)
     {
-        Id,
-        Url,
-        Name,
-        Stages
-    };
+        return new Selector
+        {
+            Id = Guid.Parse(dto.Id),
+            Url = dto.Url,
+            Name = dto.Name,
+            Stages = dto.Stages,
+            Owner = userAccount
+        };
+    }
+
+    public SelectorDto Dto()
+    {
+        return new SelectorDto
+        {
+            Id = Id.ToString(),
+            Url = Url,
+            Name = Name,
+            Stages = Stages
+        };
+    }
 }
