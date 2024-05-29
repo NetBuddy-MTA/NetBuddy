@@ -9,12 +9,14 @@ import UserInfoContext, {UserInfo} from "./contexts/UserInfoContext.tsx";
 import Home from "./screens/Home.tsx";
 import History from "./components/history/History.tsx";
 import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
+import SequenceExecutionScreen from "./screens/sequence/execution/SequenceExecutionScreen.tsx";
 import Box from '@mui/material/Box';
 import {ThemeProvider} from "./contexts/ThemeContext.tsx";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
   {page: "Sequences", link: "/sequences"},
+  {page: "Execute", link: "/execute"}
 ];
 
 function App() {
@@ -45,7 +47,8 @@ function App() {
                 <Route path="/signup" element={<RegisterForm/>}/>
                 <Route path="/history" element={<History/>}/>
                 <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
-
+                <Route path="/execute" element={<SequenceExecutionScreen/>}/>
+                
                 {/*handle any other unaccounted for route*/}
                 <Route path="*" element={<Navigate to="/" replace={true}/>}/>
               </Routes>
