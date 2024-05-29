@@ -7,8 +7,8 @@ import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
 import Tooltip from "@mui/material/Tooltip";
-import StageItem from "./StageItem.tsx";
 import AttributeList from "./AttributeList.tsx";
+import StageItem from "./StageItem.tsx";
 
 export type SelectorViewProps = {
   save: boolean;
@@ -40,12 +40,12 @@ const SelectorView = (props: SelectorViewProps) => {
 
   return (
     <Grid container direction="column" spacing={2} paddingTop={1}>
-      <Grid item key="identifier">
+      <Grid item key="identifier" justifyItems="center" justifyContent="center">
         <Paper elevation={2}>
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" justifyItems="center" justifyContent="center" spacing={1}>
             <TextField
-              label="Name"
               fullWidth
+              label="Name"
               sx={{input: {textAlign: "center"}}}
               value={selectorEdit?.name}
               onChange={e => selectorEdit ? setSelectorEdit({...selectorEdit, name: e.target.value}) : null}
@@ -67,9 +67,9 @@ const SelectorView = (props: SelectorViewProps) => {
           null
       }
       <Grid item key="editor">
-        <Grid container direction="row">
-          <Grid item key="stages" xs={4}>
-            <Paper elevation={2} style={{overflow: "auto"}}>
+        <Grid container direction="row" spacing={1}>
+          <Grid item key="stages" xs={4} maxHeight={350} overflow="auto" sx={{direction: "rtl"}}>
+            <Paper elevation={2} sx={{direction: "ltr"}}>
               {
                 selector?.stages.map((stage, index) =>
                   <StageItem
@@ -82,19 +82,19 @@ const SelectorView = (props: SelectorViewProps) => {
                       })
                     }}
                   />
-                )
+                ).reverse()
               }
             </Paper>
           </Grid>
-          <Grid item key="attributes" xs={8}>
-            <Paper elevation={2} style={{overflow: "auto"}}>
+          <Grid item key="attributes" xs={8} maxHeight={350} overflow="auto" sx={{direction: "rtl"}}>
+            <Paper elevation={2} sx={{direction: "ltr"}}>
               <AttributeList stageIndex={stageIndex} selector={selectorEdit} setSelector={setSelectorEdit}/>
             </Paper>
           </Grid>
         </Grid>
       </Grid>
     </Grid>
-  );
+  )
 };
 
 export default SelectorView;
