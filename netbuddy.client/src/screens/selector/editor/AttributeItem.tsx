@@ -18,8 +18,6 @@ const AttributeItem = (props: AttributeItemProps) => {
 
   const [used, setUsed] = useState<boolean>(inUse);
 
-  console.log(name);
-
   return (
     <Stack direction="row" justifyItems="center" alignItems="center">
       <Checkbox checked={used} onClick={() => {
