@@ -68,7 +68,7 @@ const SelectorScreen = (props: SelectorScreenProps) => {
           mode === "view" ?
             <>
               <Tooltip title="Save">
-                <IconButton onClick={() => setSave(true)}>
+                <IconButton disabled={save} onClick={() => setSave(true)}>
                   <CheckCircleOutlineRoundedIcon/>
                 </IconButton>
               </Tooltip>

@@ -27,15 +27,15 @@ const SelectorView = (props: SelectorViewProps) => {
   const [stageIndex, setStageIndex] = useState<number | undefined>(selector?.stages.length);
 
   useEffect(() => {
-    setSelectorEdit(selector);
     setStageIndex(undefined);
+    setAdvanced(false);
   }, [selector]);
 
   useEffect(() => {
     if (!save) return;
-    setSelector(selectorEdit);
-    selector && SaveSelector(selector).then();
     setSave(false);
+    selectorEdit !== undefined && SaveSelector(selectorEdit).then();
+    selectorEdit !== undefined && setSelector({...selectorEdit});
   }, [save]);
 
   return (
