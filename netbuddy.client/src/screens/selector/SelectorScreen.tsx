@@ -32,6 +32,7 @@ const SelectorScreen = (props: SelectorScreenProps) => {
 
   useEffect(() => {
     if (!refresh && !open) return;
+    setMode("list");
     setSelector(undefined);
     GetAllSelectors().then(setSelectors);
     setRefresh(false);
