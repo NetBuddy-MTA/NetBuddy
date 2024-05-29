@@ -108,7 +108,7 @@ public class SelectorController : ControllerBase
         var selector = await session.LoadAsync<Selector>(guid);
 
         if (selector == null) return NotFound(guid);
-        if (selector.Owner != user) return Unauthorized();
+        if (selector.Owner.Email != user.Email) return Unauthorized();
         session.Delete(selector);
         await session.SaveChangesAsync();
         return Ok(guid);
