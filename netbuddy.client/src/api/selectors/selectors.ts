@@ -67,6 +67,6 @@ export async function DeleteSelector(id: string) {
 
 export async function SaveSelector(selector: Selector) {
   return await agent
-  .put<string>("/selectors", selector)
+  .put<string>("/selectors", JSON.stringify(selector))
   .then(resp => resp.data);
 }
