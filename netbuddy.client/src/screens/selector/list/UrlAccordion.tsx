@@ -6,9 +6,11 @@ import {jsx} from "@emotion/react";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import JSX = jsx.JSX;
 
-const UrlAccordion = ({url, children}: { url: string, children: JSX.Element }) => {
+const UrlAccordion = ({url, open, setOpen, children}: {
+  url: string, open?: string, setOpen: (open?: string) => void, children: JSX.Element
+}) => {
   return (
-    <Accordion>
+    <Accordion expanded={open === url} onChange={() => setOpen(open === url ? undefined : url)}>
       <AccordionSummary expandIcon={<ExpandMore/>}>
         <Typography variant="h6">
           {url}

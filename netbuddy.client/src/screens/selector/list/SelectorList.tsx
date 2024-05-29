@@ -2,6 +2,7 @@
 import {Selector} from "../../../api/selectors/selectors.ts";
 import UrlAccordion from "./UrlAccordion.tsx";
 import SelectorOption from "./SelectorOption.tsx";
+import {useState} from "react";
 
 export type SelectorListProps = {
   urls: string[];
@@ -14,12 +15,15 @@ const SelectorList = (props: SelectorListProps) => {
   const {
     urls, selectors, choice, setChoice
   } = props;
+
+  const [open, setOpen] = useState<string>();
+
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" minWidth={300} spacing={1}>
       {
         urls.map(url =>
           <Grid item key={url}>
-            <UrlAccordion url={url}>
+            <UrlAccordion url={url} open={open} setOpen={setOpen}>
               <>
                 {
                   selectors
