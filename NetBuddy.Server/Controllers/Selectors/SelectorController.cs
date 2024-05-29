@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NetBuddy.Server.DTOs.Selector;
 using NetBuddy.Server.Models.Executables.Selector;
 using NetBuddy.Server.Models.User;
 
@@ -55,10 +56,10 @@ public class SelectorController : ControllerBase
 
         var selectors = await session.Query<Selector>()
             .Where(x => (x.Owner == null || x.Owner.Id == user.Id) && x.Url == url)
-            .Select(x => x.Dto)
             .ToListAsync();
+        var dtos = selectors.Select(x => x.Dto());
 
-        return Ok(selectors);
+        return Ok(dtos);
     }
 
     [HttpGet]
@@ -74,10 +75,10 @@ public class SelectorController : ControllerBase
 
         var selectors = await session.Query<Selector>()
             .Where(x => x.Owner == null || x.Owner.Id == user.Id)
-            .Select(x => x.Dto)
             .ToListAsync();
+        var dtos = selectors.Select(x => x.Dto());
 
-        return Ok(selectors);
+        return Ok(dtos);
     }
 
     [HttpDelete]
@@ -114,7 +115,7 @@ public class SelectorController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> SaveSelector([FromBody] Selector selector)
+    public async Task<IActionResult> SaveSelector([FromBody] SelectorDto selectorDto)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -123,14 +124,15 @@ public class SelectorController : ControllerBase
         // should never happen, but just in case
         if (user == null) return Unauthorized();
 
-        selector.Owner = user;
+        var selector = Selector.FromDto(selectorDto, user);
 
         await using var session = _store.LightweightSession();
 
+        _logger.LogInformation($"Selector with id {selector.Id.ToString()}");
         if (selector.Id != Guid.Empty)
         {
             var oldSelector = await session.LoadAsync<Selector>(selector.Id);
-            if (oldSelector != null && oldSelector.Owner != user) return BadRequest();
+            if (oldSelector != null && oldSelector.Owner.Email != user.Email) return BadRequest();
         }
 
         session.Store(selector);
