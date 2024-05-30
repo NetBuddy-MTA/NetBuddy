@@ -23,8 +23,8 @@ function App() {
   return (
     <UserInfoContext.Provider value={{userInfo, setUserInfo}}>
       {/*<ThemeProvider theme={darkTheme}>*/}
-      <ThemeProvider >
-        <CssBaseline/>
+      <ThemeProvider>
+        <CssBaseline enableColorScheme/>
         <BrowserRouter>
           <Box m={2}>
             <Box m={2}>
