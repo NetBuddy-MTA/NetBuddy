@@ -13,6 +13,8 @@ public sealed class Selector
 
     public SelectorStage[] Stages { get; set; } = [];
 
+    public string Base64Image { get; set; } = string.Empty;
+
     public UserAccount? Owner { get; set; }
 
     public static Selector FromDto(SelectorDto dto, UserAccount userAccount)
@@ -23,6 +25,7 @@ public sealed class Selector
             Url = dto.Url,
             Name = dto.Name,
             Stages = dto.Stages,
+            Base64Image = dto.Base64Image,
             Owner = userAccount
         };
     }
@@ -34,7 +37,8 @@ public sealed class Selector
             Id = Id.ToString(),
             Url = Url,
             Name = Name,
-            Stages = Stages
+            Stages = Stages,
+            Base64Image = Base64Image
         };
     }
 }

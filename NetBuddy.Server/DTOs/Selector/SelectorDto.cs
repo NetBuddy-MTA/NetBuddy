@@ -11,4 +11,6 @@ public sealed class SelectorDto
     public string Name { get; set; } = string.Empty;
 
     public SelectorStage[] Stages { get; set; } = [];
+
+    public string Base64Image { get; set; } = string.Empty;
 }
