@@ -12,15 +12,17 @@ import SelectorView from "./editor/SelectorView.tsx";
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 
 export type SelectorScreenProps = {
   open: boolean;
   onClose: () => void;
+  setSelection?: (selector?: Selector) => void;
 };
 
 const SelectorScreen = (props: SelectorScreenProps) => {
   const {
-    open, onClose
+    open, onClose, setSelection
   } = props;
 
   const [selector, setSelector] = useState<Selector>();
@@ -95,6 +97,14 @@ const SelectorScreen = (props: SelectorScreenProps) => {
                 </IconButton>
               </Tooltip>
             </>
+        }
+        {
+          setSelection !== undefined &&
+            <Tooltip title="Select">
+                <IconButton onClick={() => setSelection(selector)}>
+                    <DoneOutlineIcon/>
+                </IconButton>
+            </Tooltip>
         }
       </DialogActions>
     </Dialog>
