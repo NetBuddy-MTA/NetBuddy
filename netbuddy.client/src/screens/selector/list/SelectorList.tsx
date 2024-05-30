@@ -28,7 +28,8 @@ const SelectorList = (props: SelectorListProps) => {
                 {
                   selectors
                   .filter(selector => selector.url === url)
-                  .map(selector => <SelectorOption selector={selector} choice={choice} setChoice={setChoice}/>)
+                  .map(selector => <SelectorOption key={selector.id} selector={selector} choice={choice}
+                                                   setChoice={setChoice}/>)
                 }
               </>
             </UrlAccordion>

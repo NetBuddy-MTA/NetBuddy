@@ -9,9 +9,9 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 
-function groupByCategory(items:Action[]) {
+function groupByCategory(items: Action[]) {
   // Use reduce to group the items by category
-  const grouped = items.reduce((acc:{[key:string]:Action[]}, item) => {
+  const grouped = items.reduce((acc: { [key: string]: Action[] }, item) => {
     // If the category hasn't been seen before, initialize it with an empty array
     if (!acc[item.category]) {
       acc[item.category] = [];
@@ -31,15 +31,15 @@ const ActionsContainer = (props: {
   addAction: (action: Action) => void
 }) => {
   const [expanded, setExpanded] = useState<string | false>(false);
-  
+
   const {actions, addAction} = props;
-  
+
   const handleAccordionChange = (category: string) => (_event: React.SyntheticEvent, isExpanded: boolean) => {
     return setExpanded(isExpanded ? category : false);
   };
-  
+
   const grouped = groupByCategory(actions);
-  
+
   return (
     <Paper elevation={4}>
       <Typography variant="h4" p={1}>Action Menu:</Typography>
@@ -50,14 +50,14 @@ const ActionsContainer = (props: {
           onChange={handleAccordionChange(actionGroup[0].category)}
         >
           <AccordionSummary
-            expandIcon={<ExpandMore />}
+            expandIcon={<ExpandMore/>}
           >
             {actionGroup[0].category}
           </AccordionSummary>
           <AccordionDetails>
             <Grid container spacing={1}>
               {actionGroup.map(action => (
-                <Grid item xs={12}>
+                <Grid item xs={12} key={action.displayName}>
                   <Button
                     fullWidth
                     onClick={e => {

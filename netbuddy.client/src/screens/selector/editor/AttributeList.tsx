@@ -39,6 +39,7 @@ const AttributeList = (props: AttributeListProps) => {
             const stage = selector.stages[stageIndex];
             return (
               <AttributeItem
+                key={key}
                 name={key}
                 value={stage.attributes[key]}
                 inUse={stage.useAttributes[key]}
