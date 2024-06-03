@@ -103,7 +103,7 @@ const ExecutionScreen: FC = () => {
                     <Typography>{action.actionString}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Accordion>
+                    {action.inputs?.length ? <Accordion>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls={`panel-inputs-${action.id}-content`}
@@ -113,18 +113,18 @@ const ExecutionScreen: FC = () => {
                       </AccordionSummary>
                       <AccordionDetails>
                         <Stack spacing={2}>
-                          {Object.keys(action.inputs).map((key, i) => (
-                            <TextField
-                              key={i}
-                              label={key}
-                              defaultValue={action.inputs[key]}
+                          {action.inputs.map((input) => (
+                            <TextField required={!input.optional}
+                              key={input.originalName}
+                              label={input.originalName}
+                              defaultValue={input.defaultValue}
                               fullWidth
                             />
                           ))}
                         </Stack>
                       </AccordionDetails>
-                    </Accordion>
-                  </AccordionDetails>
+                    </Accordion> : null}
+                  </AccordionDetails> 
                 </Accordion>
               ))}
             </CardContent>
