@@ -15,35 +15,48 @@ import IconButton from "@mui/material/IconButton";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import {FC, useEffect, useState} from "react";
+import { FC, useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TextField from '@mui/material/TextField';
 
 const ExecutionScreen: FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
   const [sequence, setSequence] = useState<Sequence | null>(null);
+  //const [inputs, setInputs] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!open) return;
+    if (!isOpen) return;
     GetSequencesDisplay().then(setDisplaySequences);
-  }, [open]);
+  }, [isOpen]);
 
   const createHandler = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     GetExecutableSequence(id).then(sequence => {
       sequence.actions.forEach((action, index) => action.id = index.toString());
       setSequence(sequence);
+      //const extractedInputs = sequence.actions.map(action => action.inputs);
+      //setInputs(extractedInputs);
     });
     setOpen(false);
   };
+
+  function handleExecute() {
+    // todo implement execution
+    console.log("Executing sequence...");
+  }
 
   return (
     <div>
       <Box display="flex" justifyContent="center" justifyItems="center" alignItems="center" mb={2}>
         <Typography variant="body1" mr={1}>Selected Sequence: {sequence?.name}</Typography>
-        <Button onClick={() => setOpen(true)}>Click me im pretty🐱‍👤</Button>
+        <Button onClick={() => setOpen(true)}>Click me I'm pretty🐱‍👤</Button>
       </Box>
       <Dialog open={isOpen} onClose={() => setOpen(false)}>
         <DialogTitle>Choose Sequence to Load:</DialogTitle>
@@ -58,7 +71,7 @@ const ExecutionScreen: FC = () => {
                   </CardContent>
                   <CardActions>
                     <IconButton type="submit" onClick={createHandler(info.id)}>
-                      <CheckCircleOutlineRoundedIcon/>
+                      <CheckCircleOutlineRoundedIcon />
                     </IconButton>
                   </CardActions>
                 </Card>
@@ -76,18 +89,50 @@ const ExecutionScreen: FC = () => {
         </DialogActions>
       </Dialog>
       {sequence && (
-        <Paper elevation={3} sx={{ mt: 2 }}>
+        <Paper elevation={4} sx={{ mt: 2 }}>
           <Card>
             <CardContent>
-              <Typography variant="h5">{sequence.name}</Typography>
-              <Typography variant="body2">{sequence.description}</Typography>
               <Typography variant="h6">Actions:</Typography>
               {sequence.actions?.map(action => (
-                <Typography key={action.id} variant="body2">
-                  {action.id}
-                </Typography>
+                <Accordion key={action.id}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${action.id}-content`}
+                    id={`panel${action.id}-header`}
+                  >
+                    <Typography>{action.actionString}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls={`panel-inputs-${action.id}-content`}
+                        id={`panel-inputs-${action.id}-header`}
+                      >
+                        <Typography>Inputs</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Stack spacing={2}>
+                          {Object.keys(action.inputs).map((key, i) => (
+                            <TextField
+                              key={i}
+                              label={key}
+                              defaultValue={action.inputs[key]}
+                              fullWidth
+                            />
+                          ))}
+                        </Stack>
+                      </AccordionDetails>
+                    </Accordion>
+                  </AccordionDetails>
+                </Accordion>
               ))}
             </CardContent>
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <Button variant="contained" color="primary" size="large" onClick={handleExecute}>
+                Execute
+              </Button>
+            </CardActions>
           </Card>
         </Paper>
       )}
