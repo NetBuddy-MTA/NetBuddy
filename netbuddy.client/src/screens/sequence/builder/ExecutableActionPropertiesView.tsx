@@ -30,10 +30,7 @@ const ExecutableActionPropertiesView = (props: {
 }) => {
   const {selection, setSelection, findVariablesByType} = props;
   const [open, setOpen] = useState<string | false>(false);
-
-  useEffect(() => {
-  }, [selection]);
-
+  
   const createCreateVariableOption = (variable: SequenceVariable) => {
     const item = (
       <MenuItem onClick={(e) => {
@@ -90,11 +87,12 @@ const ExecutableActionPropertiesView = (props: {
     );
     return {item, dialog};
   };
-  const createVariableOption = (variable: SequenceVariable, name: string) => {
+  const createVariableOption = (variable: SequenceVariable, name: string, key: "inputs" | "outputs") => {
     return (
       <MenuItem value={name} onClick={e => {
         e.preventDefault();
-        variable.name = name;
+        // @ts-ignore
+        setSelection({...selection, [key]:[...(selection[key] || []) ,{...variable}]});
       }}>
         <Typography variant="body2">{name}</Typography>
       </MenuItem>
