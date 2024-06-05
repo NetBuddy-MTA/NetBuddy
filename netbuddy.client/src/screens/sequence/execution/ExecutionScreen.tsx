@@ -93,7 +93,7 @@ const ExecutionScreen: FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h6">Actions:</Typography>
-              {sequence.actions?.map(action => (
+              {sequence.actions?.filter(action => action.inputs?.length > 0).map(action => (
                 <Accordion key={action.id}>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
