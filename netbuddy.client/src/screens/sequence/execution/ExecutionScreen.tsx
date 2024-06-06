@@ -29,8 +29,9 @@ const ExecutionScreen: FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
   const [sequence, setSequence] = useState<Sequence | null>(null);
-  //const [inputs, setInputs] = useState<any[]>([]);
 
+  let mySet: Set<string> = new Set<string>();
+  
   useEffect(() => {
     if (!isOpen) return;
     GetSequencesDisplay().then(setDisplaySequences);
@@ -41,12 +42,24 @@ const ExecutionScreen: FC = () => {
     GetExecutableSequence(id).then(sequence => {
       sequence.actions.forEach((action, index) => action.id = index.toString());
       setSequence(sequence);
-      //const extractedInputs = sequence.actions.map(action => action.inputs);
-      //setInputs(extractedInputs);
+      collectInputs();
     });
     setOpen(false);
   };
 
+  function collectInputs() {
+    sequence?.actions?.forEach((action) => {
+      action.inputs?.forEach(input => {
+        if (!mySet.has(input.originalName)) {
+          mySet.add(input.originalName);
+        }
+      });
+      action.outputs?.forEach(output => {
+        mySet.add(output.originalName);
+      });
+    });
+  }
+  
   function handleExecute() {
     // todo implement execution
     console.log("Executing sequence...");
@@ -54,9 +67,10 @@ const ExecutionScreen: FC = () => {
 
   return (
     <div>
-      <Box display="flex" justifyContent="center" justifyItems="center" alignItems="center" mb={2}>
+      <Box display="flex" flexDirection="column" justifyContent="center" justifyItems="center" alignItems="center" mb={2}>
+        <Button onClick={() => setOpen(true)}>Select sequence🐱‍👤</Button>
         <Typography variant="body1" mr={1}>Selected Sequence: {sequence?.name}</Typography>
-        <Button onClick={() => setOpen(true)}>Click me I'm pretty🐱‍👤</Button>
+        <Typography variant="body1" mr={1}>{sequence?.description}</Typography>
       </Box>
       <Dialog open={isOpen} onClose={() => setOpen(false)}>
         <DialogTitle>Choose Sequence to Load:</DialogTitle>
@@ -103,18 +117,13 @@ const ExecutionScreen: FC = () => {
                     <Typography>{action.actionString}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {action.inputs?.length ? <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls={`panel-inputs-${action.id}-content`}
-                        id={`panel-inputs-${action.id}-header`}
-                      >
-                        <Typography>Inputs</Typography>
-                      </AccordionSummary>
-                      <AccordionDetails>
+                    {action.inputs?.length > 0 && (
+                      <>
+                        <Typography variant="body2">Inputs:</Typography>
                         <Stack spacing={2}>
-                          {action.inputs.map((input) => (
-                            <TextField required={!input.optional}
+                          {action.inputs.map(input => (
+                            <TextField
+                              required={!input.optional}
                               key={input.originalName}
                               label={input.originalName}
                               defaultValue={input.defaultValue}
@@ -122,9 +131,9 @@ const ExecutionScreen: FC = () => {
                             />
                           ))}
                         </Stack>
-                      </AccordionDetails>
-                    </Accordion> : null}
-                  </AccordionDetails> 
+                      </>
+                    )}
+                  </AccordionDetails>
                 </Accordion>
               ))}
             </CardContent>
@@ -139,5 +148,15 @@ const ExecutionScreen: FC = () => {
     </div>
   );
 };
+
+// function getNeededInputs(sequence: Sequence) {
+//   //return sequence.actions.map(action => action.inputs);
+//   const allInputs = sequence?.actions?.flatMap(action => action.inputs || []);
+//   console.log(allInputs);
+//   const allOutputs = sequence?.actions?.flatMap(action => action.outputs || []);
+//   const neededInputs = allInputs?.filter(input => !allOutputs?.some(output => output.originalName === input.originalName));
+//   return neededInputs;
+// }
+
 
 export default ExecutionScreen;
