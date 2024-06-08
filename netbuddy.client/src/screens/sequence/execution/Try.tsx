@@ -23,29 +23,8 @@ import TextField from '@mui/material/TextField';
 
 const Try: FC = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
-  const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
-  const [sequence, setSequence] = useState<Sequence | null>(null);
-  //const [inputs, setInputs] = useState<any[]>([]);
-
-  let inputsToFill: SequenceVariable[] = [];
-  let mySet: Set<string> = new Set<string>();
-
-  useEffect(() => {
-    if (!isOpen) return;
-    GetSequencesDisplay().then(setDisplaySequences);
-  }, [isOpen]);
-
-  const createHandler = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    GetExecutableSequence(id).then(sequence => {
-      sequence.actions.forEach((action, index) => action.id = index.toString());
-      setSequence(sequence);
-      collectInputs();
-      //const extractedInputs = sequence.actions.map(action => action.inputs);
-      //setInputs(extractedInputs);
-    });
-    setOpen(false);
-  };
+  const [sequence, setSequence] = useState<Sequence>();
+  const [values, setValues] = useState<Record<string, any>>({});
 
   function collectInputs() {
     const typesUserCanFill = ["String", "number", "url"];
@@ -66,6 +45,10 @@ const Try: FC = () => {
     // todo implement execution
     console.log("Executing sequence...");
   }
+  const handleSequenceSelect = (sequence: Sequence) => {
+    setSequence(sequence);
+    setOpen(false);
+  }
 
   return (
     <div>
@@ -74,37 +57,8 @@ const Try: FC = () => {
         <Typography variant="body1" mr={1}>Selected Sequence: {sequence?.name}</Typography>
         <Typography variant="body1" mr={1}>{sequence?.description}</Typography>
       </Box>
-      <Dialog open={isOpen} onClose={() => setOpen(false)}>
-        <DialogTitle>Choose Sequence to Load:</DialogTitle>
-        <DialogContent>
-          <Stack direction="column" spacing={1}>
-            {displaySequences.map(info => {
-              return (
-                <Card key={info.id}>
-                  <CardContent>
-                    <Typography variant="h5">{info.name}</Typography>
-                    <Typography variant="body2">{info.description}</Typography>
-                  </CardContent>
-                  <CardActions>
-                    <IconButton type="submit" onClick={createHandler(info.id)}>
-                      <CheckCircleOutlineRoundedIcon />
-                    </IconButton>
-                  </CardActions>
-                </Card>
-              );
-            })}
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button key="cancel" onClick={e => {
-            e.preventDefault();
-            setOpen(false);
-          }}>
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {sequence && inputsToFill.length > 0 && (
+      <DownloadSequencePopup open={isOpen} setOpen={setOpen} setSequence={handleSequenceSelect} />
+      {sequence && (
         <Paper elevation={4} sx={{ mt: 2 }}>
           <Card>
             <CardContent>
