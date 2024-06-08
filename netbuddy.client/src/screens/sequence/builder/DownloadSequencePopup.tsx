@@ -17,6 +17,8 @@ import Button from "@mui/material/Button";
 import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import {useEffect, useState} from "react";
 import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import {CircularProgress} from "@mui/material";
 
 const DownloadSequencePopup = (props: {
   open: boolean, setOpen: (open: boolean) => void,
@@ -24,10 +26,22 @@ const DownloadSequencePopup = (props: {
 }) => {
   const {open, setOpen, setSequence} = props;
   const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (!open) return;
-    GetSequencesDisplay().then(setDisplaySequences);
+    
+    const getSequencesDisplay = async () => {
+      try {
+        setIsLoading(true);
+        const displaySequences =  await GetSequencesDisplay();
+        setDisplaySequences(displaySequences);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    
+    getSequencesDisplay();
   }, [open]);
 
   const createHandler = (id: string) => (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -47,7 +61,9 @@ const DownloadSequencePopup = (props: {
       <DialogTitle>Choose Sequence to Load:</DialogTitle>
       <DialogContent>
         <Stack direction="column" spacing={1}>
-          {displaySequences.map(info => {
+          {isLoading ? <Box sx={{ display: 'flex', justifyContent: "center" }}>
+              <CircularProgress />
+            </Box> : displaySequences.map(info => {
             return (
               <Card key={info.id}>
                 <CardContent>
