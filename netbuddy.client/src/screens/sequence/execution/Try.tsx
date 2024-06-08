@@ -19,9 +19,38 @@ import { FC, useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import TextField from '@mui/material/TextField';
+import DownloadSequencePopup from "../builder/DownloadSequencePopup.tsx";
+import {InputProps, InputType} from "./inputs/types.ts";
+import {UrlInput} from "./inputs/UrlInput.tsx";
+import {NumberInput} from "./inputs/NumberInput.tsx";
+import {StringInput} from "./inputs/StringInput.tsx";
+import {BooleanInput} from "./inputs/BooleanInput.tsx";
 
-const Try: FC = () => {
+const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => React.ReactNode> = {
+  string: StringInput,
+  number: NumberInput,
+  url: UrlInput,
+  //boolean: () => <input type="checkbox" />,
+  boolean: BooleanInput,
+  unknown: () => null,
+}
+
+const MAP_SQ_VAR_TO_INPUT:Record<SequenceVariableType, (props: InputProps) => React.ReactNode> = {
+  "String": MAP_TYPE_TO_INPUT.string,
+  "Number": MAP_TYPE_TO_INPUT.number,
+  "URL": MAP_TYPE_TO_INPUT.url,
+  "Boolean": MAP_TYPE_TO_INPUT.boolean,
+  "?": MAP_TYPE_TO_INPUT.unknown,
+  "Element":  MAP_TYPE_TO_INPUT.unknown,
+  "Element[]": MAP_TYPE_TO_INPUT.unknown,
+  "Selector": MAP_TYPE_TO_INPUT.unknown,
+  "Variable": MAP_TYPE_TO_INPUT.unknown,
+  "HttpResponse": MAP_TYPE_TO_INPUT.unknown,
+  "Tab": MAP_TYPE_TO_INPUT.unknown,
+  "Window": MAP_TYPE_TO_INPUT.unknown,
+}
+
+const Try = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
