@@ -1,21 +1,13 @@
-import Dialog from "@mui/material/Dialog";
 import {
-  GetExecutableSequence,
-  GetSequencesDisplay,
   Sequence,
-  SequenceDisplay, SequenceVariable
+  SequenceVariableType
 } from "../../../api/sequences/sequences.ts";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
-import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -59,6 +51,7 @@ const Try = () => {
     // todo implement execution
     console.log("Executing sequence...");
   }
+  
   const handleSequenceSelect = (sequence: Sequence) => {
     setSequence(sequence);
     setOpen(false);
