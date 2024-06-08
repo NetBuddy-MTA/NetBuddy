@@ -6,11 +6,14 @@ export type SequenceDisplay = {
   description: string;
 };
 
+export type SequenceVariableType = "Tab" | "Window" | "URL" | "String" | "HttpResponse" | "Variable" | 
+    "?" | "Boolean" |"Element" | "Number" | "Element[]" | "Selector" ;
+
 export type SequenceVariable = {
   originalName: string;
   name: string;
   description: string;
-  type: string;
+  type: SequenceVariableType;
   optional: boolean;
   defaultValue?: string;
 };
