@@ -111,14 +111,4 @@ const Try = () => {
   );
 };
 
-// function getNeededInputs(sequence: Sequence) {
-//   //return sequence.actions.map(action => action.inputs);
-//   const allInputs = sequence?.actions?.flatMap(action => action.inputs || []);
-//   console.log(allInputs);
-//   const allOutputs = sequence?.actions?.flatMap(action => action.outputs || []);
-//   const neededInputs = allInputs?.filter(input => !allOutputs?.some(output => output.originalName === input.originalName));
-//   return neededInputs;
-// }
-
-
 export default Try;
