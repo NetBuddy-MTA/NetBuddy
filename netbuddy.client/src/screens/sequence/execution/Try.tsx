@@ -26,22 +26,7 @@ const Try: FC = () => {
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
 
-  function collectInputs() {
-    const typesUserCanFill = ["String", "number", "url"];
-    sequence?.actions?.forEach((action) => {
-      action.inputs?.forEach(input => {
-        if (!mySet.has(input.originalName) && typesUserCanFill.includes(input.type)) {
-          inputsToFill.push(input);
-          mySet.add(input.originalName);
-        }
-      });
-      action.outputs?.forEach(output => {
-        mySet.add(output.originalName);
-      });
-    });
-  }
-
-  function handleExecute() {
+  const handleExecute =() => {
     // todo implement execution
     console.log("Executing sequence...");
   }
