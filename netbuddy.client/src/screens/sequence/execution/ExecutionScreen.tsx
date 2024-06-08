@@ -42,7 +42,7 @@ const MAP_SQ_VAR_TO_INPUT:Record<SequenceVariableType, (props: InputProps) => Re
   "Window": MAP_TYPE_TO_INPUT.unknown,
 }
 
-const Try = () => {
+const ExecutionScreen = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
@@ -111,4 +111,4 @@ const Try = () => {
   );
 };
 
-export default Try;
+export default ExecutionScreen;
