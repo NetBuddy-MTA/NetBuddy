@@ -56,6 +56,15 @@ const Try = () => {
     setSequence(sequence);
     setOpen(false);
   }
+  
+  const onValueChange = (field: string, value: number | string | boolean) => {
+    setValues({...values, [field]: value});
+    // setValues({...values, [action]: {...values.action, [inputstring]: value}});
+  }
+  
+  useEffect(() => {
+      console.log("Values changed", values)
+  }, [values])
 
   return (
     <div>
@@ -71,15 +80,23 @@ const Try = () => {
             <CardContent>
               <Typography variant="h6">Inputs to Fill:</Typography>
               <Stack spacing={2}>
-                {inputsToFill.map(input => (
-                  <TextField
-                    required={!input.optional}
-                    key={input.originalName}
-                    name={input.originalName}
-                    label={input.originalName}
-                    defaultValue={input.defaultValue}
-                    fullWidth
-                  />
+                {sequence.actions.map(action => (
+                  <Card key={action.id}>
+                    <CardContent>
+                      <Typography variant="h5">{action.actionString}</Typography>
+                      {action.inputs.map(input => {
+                        const InputComponent = MAP_SQ_VAR_TO_INPUT[input.type];
+                        return <InputComponent 
+                          key={action.actionString + "|" +input.originalName} 
+                          /*TODO: Change this*/
+                          field={action.actionString + "|" +input.originalName} 
+                          title={input.originalName} 
+                          defaultValue={input.defaultValue} 
+                          required={!input.optional} 
+                          onChange={onValueChange} />
+                      })}
+                    </CardContent>
+                  </Card>
                 ))}
               </Stack>
             </CardContent>
