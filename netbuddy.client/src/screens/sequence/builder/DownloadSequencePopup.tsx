@@ -20,7 +20,7 @@ import Stack from "@mui/material/Stack";
 
 const DownloadSequencePopup = (props: {
   open: boolean, setOpen: (open: boolean) => void,
-  setSequence: React.Dispatch<React.SetStateAction<Sequence>>,
+  setSequence: (sequence: Sequence) => void,  
 }) => {
   const {open, setOpen, setSequence} = props;
   const [displaySequences, setDisplaySequences] = useState<SequenceDisplay[]>([]);
