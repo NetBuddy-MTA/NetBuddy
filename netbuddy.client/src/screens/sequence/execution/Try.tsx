@@ -71,7 +71,6 @@ const Try = () => {
       <Box display="flex" flexDirection="column" justifyContent="center" justifyItems="center" alignItems="center" mb={2}>
         <Button onClick={() => setOpen(true)}>Select sequence🐱‍👤</Button>
         <Typography variant="body1" mr={1}>Selected Sequence: {sequence?.name}</Typography>
-        <Typography variant="body1" mr={1}>{sequence?.description}</Typography>
       </Box>
       <DownloadSequencePopup open={isOpen} setOpen={setOpen} setSequence={handleSequenceSelect} />
       {sequence && (
