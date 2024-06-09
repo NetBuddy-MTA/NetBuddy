@@ -53,8 +53,7 @@ const SequenceBuilderScreen = () => {
   }, []);
 
   // adds an action to the sequence
-  const addAction = (action: Action) =>
-    setActionsToAdd([...actionsToAdd, action]);
+  const addAction = (action: Action) => setActionsToAdd([...actionsToAdd, action]);
 
   // finds all the variables of a certain type
   const findVariablesByType = (type: string) =>

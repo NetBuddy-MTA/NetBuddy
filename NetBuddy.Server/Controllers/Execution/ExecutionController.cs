@@ -109,11 +109,8 @@ public class ExecutionController : ControllerBase
         if (sequence.Id != Guid.Empty)
         {
             var oldSequence = await session.LoadAsync<Sequence>(sequence.Id);
-            if (oldSequence != null)
-                // if the user is not the owner of the sequence, return a 400 Bad Request
-                // this should never happen anyway
-                if (oldSequence.Owner != user)
-                    return BadRequest();
+            if (oldSequence?.Owner != null && oldSequence.Owner.Email != user.Email)
+                return BadRequest();
         }
 
         session.Store(sequence);

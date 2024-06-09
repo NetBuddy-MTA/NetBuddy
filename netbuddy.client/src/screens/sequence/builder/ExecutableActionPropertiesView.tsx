@@ -1,6 +1,6 @@
 import Paper from "@mui/material/Paper";
 import {ExecutableAction, SequenceVariable,} from "../../../api/sequences/sequences.ts";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -30,10 +30,10 @@ const ExecutableActionPropertiesView = (props: {
 }) => {
   const {selection, setSelection, findVariablesByType} = props;
   const [open, setOpen] = useState<string | false>(false);
-  
-  const createCreateVariableOption = (variable: SequenceVariable) => {
+
+  const createCreateVariableOption = (variable: SequenceVariable, type: "inputs" | "outputs") => {
     const item = (
-      <MenuItem onClick={(e) => {
+      <MenuItem key={variable.originalName + " Create New Name"} onClick={(e) => {
         e.preventDefault();
         setOpen(variable.originalName);
       }}>
@@ -51,7 +51,13 @@ const ExecutableActionPropertiesView = (props: {
             e.preventDefault();
             const formData = new FormData(e.currentTarget);
             const formJson = Object.fromEntries((formData as any).entries());
-            variable.name = formJson[variable.originalName];
+            selection && setSelection({
+              ...selection,
+              [type]: [...(type === "inputs" ? selection.inputs : selection.outputs).filter(item => item.originalName !== variable.originalName), {
+                ...variable,
+                name: formJson[variable.originalName]
+              }]
+            });
             setOpen(false);
           }
         }}
@@ -87,32 +93,37 @@ const ExecutableActionPropertiesView = (props: {
     );
     return {item, dialog};
   };
-  const createVariableOption = (variable: SequenceVariable, name: string, key: "inputs" | "outputs") => {
+  const createVariableOption = (variable: SequenceVariable, name: string, type: "inputs" | "outputs") => {
     return (
-      <MenuItem value={name} onClick={e => {
+      <MenuItem value={name} key={name} onClick={e => {
         e.preventDefault();
-        // @ts-ignore
-        setSelection({...selection, [key]:[...(selection[key] || []) ,{...variable}]});
+        selection && setSelection({
+          ...selection,
+          [type]: [...(type === "inputs" ? selection.inputs : selection.outputs).filter(item => item.originalName !== variable.originalName), {
+            ...variable,
+            name
+          }]
+        });
       }}>
         <Typography variant="body2">{name}</Typography>
       </MenuItem>
     );
   }
 
-  const mapVariable = (variable: SequenceVariable) => {
-    const {item, dialog} = createCreateVariableOption(variable);
+  const mapVariable = (variable: SequenceVariable, type: "inputs" | "outputs") => {
+    const {item, dialog} = createCreateVariableOption(variable, type);
     const optionsArray = [
       item,
-      ...Array.from(findVariablesByType(variable.type)).map(name => createVariableOption(variable, name))
+      ...Array.from(findVariablesByType(variable.type)).map(name => createVariableOption(variable, name, type))
     ];
     return (
-      <Card elevation={4} sx={{marginBottom: 1.5}}>
+      <Card elevation={4} sx={{marginBottom: 1.5}} key={variable.originalName}>
         <CardContent>
-          <Typography variant="h6">{variable.originalName}</Typography>
-          <Typography variant="body1">{variable.description}</Typography>
-          <Typography variant="body2">Type: {variable.type}</Typography>
-          <Typography variant="body2">Required: {variable.optional ? "No" : "Yes"}</Typography>
-          <Select fullWidth defaultValue={variable.name}>
+          <Typography variant="h6" key="original">{variable.originalName}</Typography>
+          <Typography variant="body1" key="description">{variable.description}</Typography>
+          <Typography variant="body2" key="type">Type: {variable.type}</Typography>
+          <Typography variant="body2" key="required">Required: {variable.optional ? "No" : "Yes"}</Typography>
+          <Select fullWidth value={variable.name} key="selection">
             {optionsArray}
           </Select>
         </CardContent>
@@ -121,8 +132,8 @@ const ExecutableActionPropertiesView = (props: {
     );
   };
 
-  const inputComponents = selection ? selection.inputs.map(mapVariable) : null;
-  const outputComponents = selection ? selection.outputs.map(mapVariable) : null;
+  const inputComponents = selection ? selection.inputs.map(input => mapVariable(input, "inputs")) : null;
+  const outputComponents = selection ? selection.outputs.map(output => mapVariable(output, "outputs")) : null;
   if (!selection || (!inputComponents && !outputComponents)) return null;
 
   return (
