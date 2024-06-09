@@ -1,6 +1,6 @@
 import Paper from "@mui/material/Paper";
 import {ExecutableAction, SequenceVariable,} from "../../../api/sequences/sequences.ts";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -30,12 +30,6 @@ const ExecutableActionPropertiesView = (props: {
 }) => {
   const {selection, setSelection, findVariablesByType} = props;
   const [open, setOpen] = useState<string | false>(false);
-
-  useEffect(() => {
-    const prev = open;
-    setOpen(false);
-    setOpen(prev);
-  }, [selection]);
 
   const createCreateVariableOption = (variable: SequenceVariable, type: "inputs" | "outputs") => {
     const item = (
