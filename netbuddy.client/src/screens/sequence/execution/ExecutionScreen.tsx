@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import { useEffect, useState } from "react";
+import {ReactNode, useEffect, useState} from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -18,7 +18,7 @@ import {NumberInput} from "./inputs/NumberInput.tsx";
 import {StringInput} from "./inputs/StringInput.tsx";
 import {BooleanInput} from "./inputs/BooleanInput.tsx";
 
-const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => React.ReactNode> = {
+const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => ReactNode> = {
   string: StringInput,
   number: NumberInput,
   url: UrlInput,
@@ -27,7 +27,7 @@ const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => React.ReactNode
   unknown: () => null,
 }
 
-const MAP_SQ_VAR_TO_INPUT:Record<SequenceVariableType, (props: InputProps) => React.ReactNode> = {
+const MAP_SQ_VAR_TO_INPUT:Record<SequenceVariableType, (props: InputProps) => ReactNode> = {
   "String": MAP_TYPE_TO_INPUT.string,
   "Number": MAP_TYPE_TO_INPUT.number,
   "URL": MAP_TYPE_TO_INPUT.url,
