@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const StringInput: FC<InputProps<string>>  = ({field, defaultValue,onChange, title}) => {
+export const StringInput: FC<InputProps<string>>  = ({field, defaultValue,onChange, title, required}) => {
   const [value, setValue] = useState<string>(defaultValue);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +23,8 @@ export const StringInput: FC<InputProps<string>>  = ({field, defaultValue,onChan
         type="string"
         value={value}
         onChange={handleOnChange}
+        required={required}
+        defaultValue={defaultValue}
         fullWidth
         variant="outlined"
       />

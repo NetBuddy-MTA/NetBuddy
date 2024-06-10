@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const UrlInput: FC<InputProps<string>>  = ({field, defaultValue,onChange, title}) => {
+export const UrlInput: FC<InputProps<string>>  = ({field, defaultValue,onChange, title, required}) => {
   const [value, setValue] = useState<string>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +38,8 @@ export const UrlInput: FC<InputProps<string>>  = ({field, defaultValue,onChange,
         onChange={handleOnChange}
         error={!!error}
         helperText={error}
+        required={required}
+        defaultValue={defaultValue}
         fullWidth
         variant="outlined"
       />

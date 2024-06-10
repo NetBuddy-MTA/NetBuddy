@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const NumberInput: FC<InputProps<number>>  = ({field, defaultValue,onChange, title}) => {
+export const NumberInput: FC<InputProps<number>>  = ({field, defaultValue,onChange, title, required}) => {
   const [value, setValue] = useState<number>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,6 +32,8 @@ export const NumberInput: FC<InputProps<number>>  = ({field, defaultValue,onChan
         onChange={handleOnChange}
         error={!!error}
         helperText={error}
+        required={required}
+        defaultValue={defaultValue}
         fullWidth
         variant="outlined"
       />

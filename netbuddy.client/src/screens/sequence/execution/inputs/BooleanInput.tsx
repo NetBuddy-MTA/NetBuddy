@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-export const BooleanInput: FC<InputProps<boolean>>  = ({field, defaultValue, onChange, title}) => {
+export const BooleanInput: FC<InputProps<boolean>>  = ({field, defaultValue, onChange, title, required}) => {
   const [value, setValue] = useState<boolean>(defaultValue);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +21,7 @@ export const BooleanInput: FC<InputProps<boolean>>  = ({field, defaultValue, onC
           <Checkbox
             checked={value}
             onChange={handleOnChange}
+            required={required}
             color="primary"
           />
         }
