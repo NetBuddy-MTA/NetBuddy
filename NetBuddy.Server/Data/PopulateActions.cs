@@ -253,31 +253,6 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
-        // Set a variable
-        new Action
-        {
-            DisplayName = "Set Variable",
-            ActionString = "SetVariable",
-            Description = "Sets a variable to the provided value",
-            Category = "Variables",
-            Inputs = [
-                new Variable
-                {
-                    Name = "Variable",
-                    Description = "The variable to set",
-                    Type = "Variable"
-                },
-                new Variable
-                {
-                    Name = "Value",
-                    Description = "The value to set the variable to",
-                    Type = "?"
-                }
-            ],
-            Outputs = [
-            ]
-        },
-        // 
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
