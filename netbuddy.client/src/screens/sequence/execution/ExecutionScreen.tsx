@@ -1,46 +1,17 @@
 import {
   Sequence,
-  SequenceVariableType
 } from "../../../api/sequences/sequences.ts";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import {ReactNode, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import DownloadSequencePopup from "../builder/DownloadSequencePopup.tsx";
-import {InputProps, InputType} from "./inputs/types.ts";
-import {UrlInput} from "./inputs/UrlInput.tsx";
-import {NumberInput} from "./inputs/NumberInput.tsx";
-import {StringInput} from "./inputs/StringInput.tsx";
-import {BooleanInput} from "./inputs/BooleanInput.tsx";
-
-const mapTypeToInput:Record<InputType, (props: InputProps) => ReactNode> = {
-  string: StringInput,
-  number: NumberInput,
-  url: UrlInput,
-  //boolean: () => <input type="checkbox" />,
-  boolean: BooleanInput,
-  unknown: () => null,
-}
-
-const mapSequenceVarToInput:Record<SequenceVariableType, (props: InputProps) => ReactNode> = {
-  "String": mapTypeToInput.string,
-  "Number": mapTypeToInput.number,
-  "URL": mapTypeToInput.url,
-  "Boolean": mapTypeToInput.boolean,
-  "?": mapTypeToInput.unknown,
-  "Element":  mapTypeToInput.unknown,
-  "Element[]": mapTypeToInput.unknown,
-  "Selector": mapTypeToInput.unknown,
-  "Variable": mapTypeToInput.unknown,
-  "HttpResponse": mapTypeToInput.unknown,
-  "Tab": mapTypeToInput.unknown,
-  "Window": mapTypeToInput.unknown,
-}
+import mapSequenceVarToInput from "./inputs/inputMappings.ts";
 
 const ExecutionScreen = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
