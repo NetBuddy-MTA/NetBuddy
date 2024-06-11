@@ -18,7 +18,7 @@ import {NumberInput} from "./inputs/NumberInput.tsx";
 import {StringInput} from "./inputs/StringInput.tsx";
 import {BooleanInput} from "./inputs/BooleanInput.tsx";
 
-const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => ReactNode> = {
+const mapTypeToInput:Record<InputType, (props: InputProps) => ReactNode> = {
   string: StringInput,
   number: NumberInput,
   url: UrlInput,
@@ -27,26 +27,26 @@ const MAP_TYPE_TO_INPUT:Record<InputType, (props: InputProps) => ReactNode> = {
   unknown: () => null,
 }
 
-const MAP_SQ_VAR_TO_INPUT:Record<SequenceVariableType, (props: InputProps) => ReactNode> = {
-  "String": MAP_TYPE_TO_INPUT.string,
-  "Number": MAP_TYPE_TO_INPUT.number,
-  "URL": MAP_TYPE_TO_INPUT.url,
-  "Boolean": MAP_TYPE_TO_INPUT.boolean,
-  "?": MAP_TYPE_TO_INPUT.unknown,
-  "Element":  MAP_TYPE_TO_INPUT.unknown,
-  "Element[]": MAP_TYPE_TO_INPUT.unknown,
-  "Selector": MAP_TYPE_TO_INPUT.unknown,
-  "Variable": MAP_TYPE_TO_INPUT.unknown,
-  "HttpResponse": MAP_TYPE_TO_INPUT.unknown,
-  "Tab": MAP_TYPE_TO_INPUT.unknown,
-  "Window": MAP_TYPE_TO_INPUT.unknown,
+const mapSequenceVarToInput:Record<SequenceVariableType, (props: InputProps) => ReactNode> = {
+  "String": mapTypeToInput.string,
+  "Number": mapTypeToInput.number,
+  "URL": mapTypeToInput.url,
+  "Boolean": mapTypeToInput.boolean,
+  "?": mapTypeToInput.unknown,
+  "Element":  mapTypeToInput.unknown,
+  "Element[]": mapTypeToInput.unknown,
+  "Selector": mapTypeToInput.unknown,
+  "Variable": mapTypeToInput.unknown,
+  "HttpResponse": mapTypeToInput.unknown,
+  "Tab": mapTypeToInput.unknown,
+  "Window": mapTypeToInput.unknown,
 }
 
 const ExecutionScreen = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
-
+  
   const handleExecute =() => {
     // todo implement execution
     console.log("Executing sequence...");
@@ -56,6 +56,34 @@ const ExecutionScreen = () => {
     setSequence(sequence);
     setOpen(false);
   }
+  
+  // const getInputsToFill = (sequence: Sequence) => {
+  //   const inputsToFill = new Set<String>();
+  //  
+  //   sequence.actions.forEach(action => {
+  //     action.inputs.forEach(input => {
+  //       if (!inputsToFill.has(input.name)) {
+  //         inputsToFill.add(input.name);
+  //       }
+  //     });
+  //
+  //     action.outputs.forEach(output => {
+  //       if (!inputsToFill.has(output.name)) {
+  //         inputsToFill.add(output.name);
+  //       }
+  //     });
+  //   });
+  //
+  //   return inputsToFill;
+  // };
+
+  const getInputsToFill = (sequence: Sequence) => {
+    return sequence.actions.reduce((inputsToFill, action) => {
+      action.inputs.forEach(input => inputsToFill.add(input.name));
+      action.outputs.forEach(output => inputsToFill.add(output.name));
+      return inputsToFill;
+    }, new Set<String>());
+  };
   
   const onValueChange = (field: string, value: number | string | boolean) => {
     setValues({...values, [field]: value});
@@ -84,7 +112,7 @@ const ExecutionScreen = () => {
                     <CardContent>
                       <Typography variant="h5">{action.actionString}</Typography>
                       {action.inputs.map(input => {
-                        const InputComponent = MAP_SQ_VAR_TO_INPUT[input.type];
+                        const InputComponent = mapSequenceVarToInput[input.type];
                         return <InputComponent 
                           key={action.actionString + "|" +input.originalName} 
                           /*TODO: Change this*/
