@@ -16,12 +16,11 @@ export const UrlInput: FC<InputProps<string>>  = ({field, defaultValue,onChange,
       setError(null)
       return
     }
-    
-    if (value && value.match(/^(http|https):\/\/[^ "]+$/)) {
+    try {
+     const url = new URL(value);
       onChange(field, value);
       setError(null)
-    }
-    else {
+    } catch (e) {
       setError("Invalid URL")
     }
   }
