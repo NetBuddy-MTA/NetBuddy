@@ -6,8 +6,10 @@ export type InputProps<T = any> = {
   onChange: (field: string, value: T) => void;
   // onChange: (action: string, inputString: string, value: T) => void;
   required: boolean;
-  defaultValue: T;
+  defaultValue?: T;
   field: string;
+  options: string[];
+  disabled: boolean;
 
   // action: string;
   // inputString: string
