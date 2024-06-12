@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import mapSequenceVarToInput from "./inputs/inputMappings.ts";
 import Card from "@mui/material/Card";
 import {useMemo} from "react";
+import Grid from "@mui/material/Grid";
 
 type ActionProps = {
   actions: ExecutableAction[];
@@ -33,19 +34,24 @@ export const Action = ({actions, action, onChange}: ActionProps) => {
     <Card key={action.id}>
       <CardContent>
         <Typography variant="h5">{action.actionString}</Typography>
-        {action.inputs.map(input => {
+        <Grid container spacing={2}>
+          {action.inputs.map(input => {
           const InputComponent = mapSequenceVarToInput[input.type];
-          return <InputComponent
-            key={action.actionString + "|" +input.originalName}
-            field={action.actionString + "|" +input.originalName}
-            title={input.originalName}
-            defaultValue={input.name}
-            required={!input.optional}
-            onChange={onChange} 
-            options={getOptions(input)}
-            disabled={isDisabled(input)}
-          />
+          return (
+            <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
+              <InputComponent
+                key={action.actionString + "|" +input.originalName}
+                field={action.actionString + "|" +input.originalName}
+                title={input.originalName}
+                defaultValue={input.name}
+                required={!input.optional}
+                onChange={onChange} 
+                options={getOptions(input)}
+                disabled={isDisabled(input)} />
+            </Grid>
+          );
         })}
+        </Grid>
       </CardContent>
     </Card>
   );
