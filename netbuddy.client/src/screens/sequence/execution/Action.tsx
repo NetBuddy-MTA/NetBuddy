@@ -42,7 +42,7 @@ export const Action = ({actions, action, onChange}: ActionProps) => {
             defaultValue={input.name}
             required={!input.optional}
             onChange={onChange} 
-            options={getOptions}
+            options={getOptions(input)}
             disabled={isDisabled(input)}
           />
         })}
