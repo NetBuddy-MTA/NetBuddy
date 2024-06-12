@@ -33,7 +33,9 @@ export const Action = ({actions, action, onChange}: ActionProps) => {
   return (
     <Card key={action.id}>
       <CardContent>
-        <Typography variant="h5">{action.actionString}</Typography>
+        <Typography variant="h5" style={{ marginBottom: '16px' }}>
+          {action.actionString}
+        </Typography>
         <Grid container spacing={2}>
           {action.inputs.map(input => {
           const InputComponent = mapSequenceVarToInput[input.type];
