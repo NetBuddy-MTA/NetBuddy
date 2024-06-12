@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import DownloadSequencePopup from "../builder/DownloadSequencePopup.tsx";
-import mapSequenceVarToInput from "./inputs/inputMappings.ts";
+import {Action} from "./Action.tsx";
 
 const ExecutionScreen = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
@@ -79,22 +79,7 @@ const ExecutionScreen = () => {
               <Typography variant="h6">Inputs to Fill:</Typography>
               <Stack spacing={2}>
                 {sequence.actions.map(action => (
-                  <Card key={action.id}>
-                    <CardContent>
-                      <Typography variant="h5">{action.actionString}</Typography>
-                      {action.inputs.map(input => {
-                        const InputComponent = mapSequenceVarToInput[input.type];
-                        return <InputComponent 
-                          key={action.actionString + "|" +input.originalName} 
-                          /*TODO: Change this*/
-                          field={action.actionString + "|" +input.originalName} 
-                          title={input.originalName} 
-                          defaultValue={input.defaultValue} 
-                          required={!input.optional} 
-                          onChange={onValueChange} />
-                      })}
-                    </CardContent>
-                  </Card>
+                  <Action key={action.id} actions={sequence.actions} action={action} onChange={onValueChange}/>
                 ))}
               </Stack>
             </CardContent>
