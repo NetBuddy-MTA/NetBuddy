@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, ChangeEvent} from 'react';
 import {InputProps} from "./types.ts";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,7 +8,7 @@ export const UrlInput = ({field, defaultValue, onChange, title, required}: Input
   const [value, setValue] = useState<string | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setValue(value)
     

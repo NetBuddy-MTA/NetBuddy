@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, ChangeEvent} from 'react';
 import {InputProps} from "./types.ts";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,7 +8,7 @@ export const NumberInput = ({field, defaultValue, onChange, title, required}: In
   const [value, setValue] = useState<number | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     setValue(value)
     if (value && !isNaN(value)) {
