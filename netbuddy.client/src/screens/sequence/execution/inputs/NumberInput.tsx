@@ -1,11 +1,11 @@
-import {FC, useState} from 'react';
+import {useState} from 'react';
 import {InputProps} from "./types.ts";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const NumberInput: FC<InputProps<number>>  = ({field, defaultValue,onChange, title, required}) => {
-  const [value, setValue] = useState<number>(defaultValue);
+export const NumberInput = ({field, defaultValue, onChange, title, required}: InputProps) => {
+  const [value, setValue] = useState<number | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,11 +1,11 @@
-import {FC, useState} from 'react';
+import {useState} from 'react';
 import {InputProps} from "./types.ts";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const UrlInput: FC<InputProps<string>>  = ({field, defaultValue,onChange, title, required}) => {
-  const [value, setValue] = useState<string>(defaultValue);
+export const UrlInput = ({field, defaultValue, onChange, title, required}: InputProps) => {
+  const [value, setValue] = useState<string | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
