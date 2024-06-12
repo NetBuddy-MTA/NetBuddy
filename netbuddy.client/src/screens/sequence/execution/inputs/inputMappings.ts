@@ -6,6 +6,7 @@ import { NumberInput } from "./NumberInput.tsx";
 import { StringInput } from "./StringInput.tsx";
 import { BooleanInput } from "./BooleanInput.tsx";
 import { UnknownInput } from "./UnknownInput.tsx";
+import {OptionsInput} from "./OptionsInput.tsx";
 
 const mapSequenceVarToInput: Record<SequenceVariableType, (props: InputProps) => ReactNode> = {
   "String": StringInput,
@@ -18,8 +19,8 @@ const mapSequenceVarToInput: Record<SequenceVariableType, (props: InputProps) =>
   "Selector": UnknownInput,
   "Variable": UnknownInput,
   "HttpResponse": UnknownInput,
-  "Tab": UnknownInput,
-  "Window": UnknownInput,
+  "Tab": OptionsInput,
+  "Window": OptionsInput,
 };
 
 export default mapSequenceVarToInput;
