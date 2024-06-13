@@ -9,7 +9,7 @@ export const BooleanInput = ({field, defaultValue, onChange, title, required}: I
   const [value, setValue] = useState<boolean>(defaultValue);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Boolean(e.target.value);
+    const value = e.target.checked;
     onChange(field, value);
     setValue(value);
   }
