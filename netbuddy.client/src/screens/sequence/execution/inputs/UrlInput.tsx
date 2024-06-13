@@ -16,11 +16,13 @@ export const UrlInput = ({field, defaultValue, onChange, title, required}: Input
       setError(null)
       return
     }
-    try {
-     const url = new URL(value);
+    
+    const urlPattern = /^(http|https):\/\/[^ "]+$/;
+    if (value.match(urlPattern)) {
       onChange(field, value);
       setError(null)
-    } catch (e) {
+    }
+    else {
       setError("Invalid URL")
     }
   }
