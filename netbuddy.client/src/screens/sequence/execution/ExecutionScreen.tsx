@@ -12,16 +12,12 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import DownloadSequencePopup from "../builder/DownloadSequencePopup.tsx";
 import {Action} from "./Action.tsx";
+import {ExecutionButton} from "./ExecutionButton.tsx";
 
 const ExecutionScreen = () => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
-  
-  const handleExecute =() => {
-    // todo implement execution
-    console.log("Executing sequence...");
-  }
   
   const handleSequenceSelect = (sequence: Sequence) => {
     setSequence(sequence);
@@ -84,9 +80,7 @@ const ExecutionScreen = () => {
               </Stack>
             </CardContent>
             <CardActions sx={{ justifyContent: 'flex-end' }}>
-              <Button variant="contained" color="primary" size="large" onClick={handleExecute}>
-                Execute
-              </Button>
+              <ExecutionButton sequence={sequence} values={values} />
             </CardActions>
           </Card>
         </Paper>
