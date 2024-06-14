@@ -20,18 +20,21 @@ export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
         <Grid container spacing={2}>
           {
             inputsToFill.map(input => {
-              const InputComponent = mapSequenceVarToInput[input.type];
+              const [t]=input.type.split("[]", 1);
+              console.log(t, input.type);
+              const InputComponent = mapSequenceVarToInput[t];
               return (
                 <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
                   <InputComponent
                     key={action.actionString + "|" + input.originalName}
                     field={action.actionString + "|" + input.originalName}
                     title={input.originalName}
-                    defaultValue={input.name}
+                    defaultValue={input.defaultValue}
                     required={!input.optional}
                     onChange={onChange}
                     options={[]}
-                    disabled={false}/>
+                    disabled={false}
+                    isArr={t===input.type}/>
                 </Grid>
               );
             })

@@ -10,6 +10,7 @@ export type InputProps<T = any> = {
   field: string;
   options: string[];
   disabled: boolean;
+  isArr: boolean;
 
   // action: string;
   // inputString: string
