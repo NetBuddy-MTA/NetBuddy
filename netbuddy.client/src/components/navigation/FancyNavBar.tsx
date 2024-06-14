@@ -47,7 +47,7 @@ const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
             {userInfo?.username
               ? pageAndLinks?.map(pageAndLink => (
                 <Button key={pageAndLink.link} component={Link} to={pageAndLink.link} variant="text"
-                        sx={{fontWeight: '600'}}>
+                        sx={{fontWeight: '600', color: 'inherit'}}>
                   {pageAndLink.page}
                 </Button>
               ))
