@@ -20,8 +20,7 @@ export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
         <Grid container spacing={2}>
           {
             inputsToFill.map(input => {
-              const [t]=input.type.split("[]", 1);
-              console.log(t, input.type);
+              const [t] = input.type.split("[]", 1);
               const InputComponent = mapSequenceVarToInput[t];
               return (
                 <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
@@ -34,7 +33,7 @@ export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
                     onChange={onChange}
                     options={[]}
                     disabled={false}
-                    isArr={t===input.type}/>
+                    isArr={t === input.type}/>
                 </Grid>
               );
             })

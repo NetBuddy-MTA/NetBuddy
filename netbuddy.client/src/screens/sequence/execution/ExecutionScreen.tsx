@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -51,17 +51,13 @@ const ExecutionScreen = () => {
     // setValues({...values, [action]: {...values.action, [inputstring]: value}});
   }
 
-  useEffect(() => {
-    console.log("Values changed", values)
-  }, [values])
-
   const actionElements = actionElementsToShow();
 
   return (
     <div>
       <Box display="flex" flexDirection="column" justifyContent="center" justifyItems="center" alignItems="center"
            mb={2}>
-        <Button onClick={() => setOpen(true)}>Select sequence🐱‍👤</Button>
+        <Button onClick={() => setOpen(true)}>Select sequence</Button>
         <Typography variant="body1" mr={1}>Selected Sequence: {sequence?.name}</Typography>
       </Box>
       <DownloadSequencePopup open={isOpen} setOpen={setOpen} setSequence={handleSequenceSelect}/>
