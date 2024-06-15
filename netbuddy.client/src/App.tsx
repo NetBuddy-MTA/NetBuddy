@@ -30,7 +30,7 @@ function App() {
         <BrowserRouter>
           <Box m={2}>
             <Box m={2}>
-              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
+              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} userInfo={userInfo} setUserInfo={setUserInfo}/>
             </Box>
             <Box m={2}>
               <Routes>
@@ -47,8 +47,8 @@ function App() {
                 <Route path="/signup" element={<RegisterForm/>}/>
                 <Route path="/history" element={<History/>}/>
                 <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
-                <Route path="/execute" element={<ExecutionScreen />}/>
-                
+                <Route path="/execute" element={<ExecutionScreen/>}/>
+
                 {/*handle any other unaccounted for route*/}
                 <Route path="*" element={<Navigate to="/" replace={true}/>}/>
               </Routes>
