@@ -33,7 +33,7 @@ export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
                     onChange={onChange}
                     options={[]}
                     disabled={false}
-                    isArr={t === input.type}/>
+                    isArr={t !== input.type}/>
                 </Grid>
               );
             })
