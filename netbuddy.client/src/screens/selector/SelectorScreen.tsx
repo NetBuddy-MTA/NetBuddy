@@ -13,6 +13,8 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import AddIcon from '@mui/icons-material/Add';
 
 export type SelectorScreenProps = {
   open: boolean;
@@ -101,11 +103,28 @@ const SelectorScreen = (props: SelectorScreenProps) => {
         {
           setSelection !== undefined &&
             <Tooltip title="Select">
-                <IconButton onClick={() => setSelection(selector)}>
+                <IconButton onClick={() => {
+                  setSelection(selector);
+                  onClose();
+                }}>
                     <DoneOutlineIcon/>
                 </IconButton>
             </Tooltip>
         }
+        {
+          mode === "list" ?
+            <Tooltip title="Refresh">
+              <IconButton onClick={() => setRefresh(true)}>
+                <RefreshIcon/>
+              </IconButton>
+            </Tooltip> :
+            null
+        }
+        <Tooltip title="Create New Selector">
+          <IconButton>
+            <AddIcon/>
+          </IconButton>
+        </Tooltip>
       </DialogActions>
     </Dialog>
   );
