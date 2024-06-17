@@ -121,7 +121,7 @@ const SelectorScreen = (props: SelectorScreenProps) => {
             null
         }
         <Tooltip title="Create New Selector">
-          <IconButton>
+          <IconButton id="CreateNewSelectorButton">
             <AddIcon/>
           </IconButton>
         </Tooltip>
