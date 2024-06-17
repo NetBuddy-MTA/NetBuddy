@@ -1,14 +1,15 @@
-import {useContext, useState} from 'react';
+import {useEffect, useState} from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import MenuIcon from '@mui/icons-material/Menu';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import DrawerControlsContext, {SideDrawerControls} from "../../contexts/DrawerControlsContext.tsx";
-import UserInfoContext from "../../contexts/UserInfoContext.tsx";
+import {UserInfo} from "../../contexts/UserInfoContext.tsx";
 import ProfileMenu from "./ProfileMenu.tsx";
+import {getUserInfo} from "../../api/account/info.ts";
 
 export type PageAndLink = {
   page: string;
@@ -18,12 +19,19 @@ export type PageAndLink = {
 type FancyNavBarProps = {
   logo?: string;
   pageAndLinks?: Array<PageAndLink>;
+  userInfo: UserInfo;
+  setUserInfo: (userInfo: UserInfo) => void;
 };
 
-const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
-  const userInfoContext = useContext(UserInfoContext); // Accessing user info from context
-  const {userInfo} = userInfoContext; // Destructuring userInfo from context
+const FancyNavBar = ({logo, pageAndLinks, userInfo, setUserInfo}: FancyNavBarProps) => {
   const [drawerControls, setDrawerControls] = useState<SideDrawerControls>({isOpen: false});
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+    if (userInfo.username === undefined || userInfo.email === undefined)
+      getUserInfo().then(setUserInfo).catch(() => navigate("/signin"));
+  }, [userInfo]);
 
   return (
     <AppBar position="static" sx={{px: 0, mx: 0}}>
@@ -47,7 +55,7 @@ const FancyNavBar = ({logo, pageAndLinks}: FancyNavBarProps) => {
             {userInfo?.username
               ? pageAndLinks?.map(pageAndLink => (
                 <Button key={pageAndLink.link} component={Link} to={pageAndLink.link} variant="text"
-                        sx={{fontWeight: '600'}}>
+                        sx={{fontWeight: '600', color: 'inherit'}}>
                   {pageAndLink.page}
                 </Button>
               ))

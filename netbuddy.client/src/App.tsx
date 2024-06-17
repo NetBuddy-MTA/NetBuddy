@@ -11,10 +11,12 @@ import History from "./components/history/History.tsx";
 import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScreen.tsx";
 import Box from '@mui/material/Box';
 import {ThemeProvider} from "./contexts/ThemeContext.tsx";
+import ExecutionScreen from "./screens/sequence/execution/ExecutionScreen.tsx";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
   {page: "Sequences", link: "/sequences"},
+  {page: "Execute", link: "/execute"}
 ];
 
 function App() {
@@ -28,7 +30,7 @@ function App() {
         <BrowserRouter>
           <Box m={2}>
             <Box m={2}>
-              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks}/>
+              <FancyNavBar logo={logo} pageAndLinks={pageAndLinks} userInfo={userInfo} setUserInfo={setUserInfo}/>
             </Box>
             <Box m={2}>
               <Routes>
@@ -45,6 +47,7 @@ function App() {
                 <Route path="/signup" element={<RegisterForm/>}/>
                 <Route path="/history" element={<History/>}/>
                 <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
+                <Route path="/execute" element={<ExecutionScreen/>}/>
 
                 {/*handle any other unaccounted for route*/}
                 <Route path="*" element={<Navigate to="/" replace={true}/>}/>
