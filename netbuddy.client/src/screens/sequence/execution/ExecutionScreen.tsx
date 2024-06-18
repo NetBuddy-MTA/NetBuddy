@@ -50,12 +50,15 @@ const ExecutionScreen = () => {
     }, {components, inputs}) ?? {components, inputs};
   };
 
-  const onValueChange = (field: string, value: number | string | boolean) => {
-    setValues({...values, [field]: value});
-    // setValues({...values, [action]: {...values.action, [inputstring]: value}});
+  const onValueChange = (field: string, value?: number | string | boolean) => {
+    if (value !== undefined) setValues({...values, [field]: value});
+    else {
+      const {[field]: _, ...rest} = values;
+      setValues(rest);
+    }
   }
 
-  const actionElements = actionElementsToShow();
+  const {components, inputs} = actionElementsToShow();
 
   return (
     <div>
@@ -69,16 +72,16 @@ const ExecutionScreen = () => {
         <Paper elevation={4} sx={{mt: 2}}>
           <Card>
             {
-              actionElements.length > 0 &&
+              components.length > 0 &&
                 <CardContent>
                     <Typography variant="h6">Inputs to Fill:</Typography>
                     <Stack spacing={2}>
-                      {actionElements}
+                      {components}
                     </Stack>
                 </CardContent>
             }
             <CardActions sx={{justifyContent: 'flex-end'}}>
-              <ExecutionButton sequence={sequence} values={values}/>
+              <ExecutionButton sequence={sequence} values={values} inputs={inputs}/>
             </CardActions>
           </Card>
         </Paper>
