@@ -1,6 +1,7 @@
 import Button from "@mui/material/Button";
 import {useMemo} from "react";
-import {Sequence} from "../../../api/sequences/sequences.ts";
+import {Sequence, SequenceVariable} from "../../../api/sequences/sequences.ts";
+import mapSequenceVarToInput from "./inputs/inputMappings.ts";
 
 type Props = {
   sequence: Sequence;
@@ -10,19 +11,25 @@ type Props = {
 export const ExecutionButton = ({sequence, values}: Props) => {
   const handleExecute =() => {
     // todo implement execution
-    console.log("Executing sequence...");
   }
   
   const requiredFields = useMemo(() => {
-    if (!sequence)
-      return new Set<string>();
+    if (!sequence) return new Set<string>();
+    const seen = new Set<string>();
     const requiredFields = new Set<string>();
+
     sequence.actions.forEach(action => {
-      action.inputs.forEach(input => {
+      const relevant = (input: SequenceVariable) =>
+        !seen.has(input.name) && input.type.split("[]", 1).some(t => t in mapSequenceVarToInput);
+      const relevantInputs = action.inputs.filter(relevant);
+
+      relevantInputs.forEach(input => {
         if (!input.optional) {
           requiredFields.add(action.actionString + "|" + input.originalName);
+          seen.add(input.name);
         }
       });
+      action.outputs.forEach(output => seen.add(output.name));
     });
     return requiredFields;
   }, [sequence]);
