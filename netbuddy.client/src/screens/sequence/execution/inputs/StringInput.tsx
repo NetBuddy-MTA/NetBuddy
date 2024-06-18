@@ -9,32 +9,32 @@ import {InputAdornment} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export const StringInput = ({ field, defaultValue, onChange, title, required, isArr }: InputProps) => {
-  const [value, setValue] = useState<string | undefined>(defaultValue);
-  const [values, setValues] = useState<string[]>(defaultValue ? [defaultValue as string] : ['']);
+export const StringInput = ({defaultValue, setValue, title, required, isArr }: InputProps) => {
+  const [localValue, setLocalValue] = useState<string | undefined>(defaultValue);
+  const [localValues, setLocalValues] = useState<string[]>(defaultValue ? [defaultValue as string] : ['']);
 
   const handleSingleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    onChange(field, newValue);
     setValue(newValue);
+    setLocalValue(newValue);
   };
 
   const handleArrayChange = (index: number) => (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    const updatedValues = [...values];
+    const updatedValues = [...localValues];
     updatedValues[index] = newValue;
-    setValues(updatedValues);
-    onChange(field, updatedValues);
+    setLocalValues(updatedValues);
+    setValue(updatedValues);
   };
 
   const handleAddField = () => {
-    setValues([...values, '']);
+    setLocalValues([...localValues, '']);
   };
 
   const handleRemoveField = (index: number) => () => {
-    const updatedValues = values.filter((_, i) => i !== index);
-    setValues(updatedValues);
-    onChange(field, updatedValues);
+    const updatedValues = localValues.filter((_, i) => i !== index);
+    setLocalValues(updatedValues);
+    setValue(updatedValues);
   };
 
   return (
@@ -46,7 +46,7 @@ export const StringInput = ({ field, defaultValue, onChange, title, required, is
         <TextField
           id="string-input"
           type="string"
-          value={value}
+          value={localValue}
           onChange={handleSingleChange}
           required={required}
           fullWidth
@@ -54,7 +54,7 @@ export const StringInput = ({ field, defaultValue, onChange, title, required, is
         />
       ) : (
         <>
-          {values.map((value, index) => (
+          {localValues.map((value, index) => (
             <TextField
               key={index}
               id={`string-input-${index}`}

@@ -4,18 +4,19 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const NumberInput = ({field, defaultValue, onChange, title, required}: InputProps) => {
-  const [value, setValue] = useState<number | undefined>(defaultValue);
+export const NumberInput = ({defaultValue, setValue, title, required}: InputProps) => {
+  const [localValue, setLocalValue] = useState<number | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setValue(value)
-    if (value && !isNaN(value)) {
-      onChange(field, value);
+    const val = Number(e.target.value);
+    setLocalValue(val)
+    if (val && !isNaN(val)) {
+      setValue(val);
       setError(null)
     }
     else {
+      setValue(undefined);
       setError("Invalid number")
     }
   }
@@ -28,7 +29,7 @@ export const NumberInput = ({field, defaultValue, onChange, title, required}: In
       <TextField
         id="number-input"
         type="number"
-        value={value}
+        value={localValue}
         onChange={handleOnChange}
         error={!!error}
         helperText={error}
