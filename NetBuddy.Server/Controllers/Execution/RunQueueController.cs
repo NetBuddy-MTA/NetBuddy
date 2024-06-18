@@ -26,6 +26,36 @@ public class RunQueueController : ControllerBase
     }
 
     [HttpGet]
+    [Route("first")]
+    public async Task<IActionResult> GetFirst()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        // should never happen, but just in case
+        if (user == null) return Unauthorized();
+
+        await using var session = _store.QuerySession();
+
+        // try and find the user's queue
+        var queue = await session.LoadAsync<RunQueue>(user.Id);
+
+        // if queue doesn't exist initial one and store it
+        if (queue != null)
+        {
+            var match = queue.ToRun.FirstOrDefault(pipeline => pipeline is { IsRunning: false, IsFinished: false });
+            if (match != default) return Ok(match);
+            return NotFound();
+        }
+
+        await using var write = _store.LightweightSession();
+
+        queue = new RunQueue { UserId = user.Id };
+        write.Store(queue);
+        await write.SaveChangesAsync();
+
+        return NotFound();
+    }
+
+    [HttpGet]
     [Route("all")]
     public async Task<IActionResult> GetAll()
     {

@@ -8,9 +8,9 @@ import Grid from "@mui/material/Grid";
 type ActionProps = {
   inputsToFill: SequenceVariable[];
   action: ExecutableAction;
-  onChange: (field: string, value: number | string | boolean) => void;
+  createSetValue: (field: string) => (value?: any) => void;
 }
-export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
+export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
   return (
     <Card key={action.id}>
       <CardContent>
@@ -30,7 +30,7 @@ export const Action = ({inputsToFill, action, onChange}: ActionProps) => {
                     title={input.originalName}
                     defaultValue={input.defaultValue}
                     required={!input.optional}
-                    onChange={onChange}
+                    setValue={createSetValue(input.name)}
                     options={[]}
                     disabled={false}
                     isArr={t !== input.type}/>
