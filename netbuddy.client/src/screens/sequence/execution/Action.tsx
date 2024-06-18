@@ -26,7 +26,6 @@ export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
                 <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
                   <InputComponent
                     key={action.actionString + "|" + input.originalName}
-                    field={action.actionString + "|" + input.originalName}
                     title={input.originalName}
                     defaultValue={input.defaultValue}
                     required={!input.optional}
