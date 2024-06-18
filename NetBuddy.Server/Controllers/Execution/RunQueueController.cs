@@ -111,7 +111,7 @@ public class RunQueueController : ControllerBase
             update.Store(queue);
             await update.SaveChangesAsync();
 
-            return Ok(match);
+            return Ok(match.Id);
         }
 
         await using var write = _store.LightweightSession();
