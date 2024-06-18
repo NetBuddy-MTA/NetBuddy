@@ -81,7 +81,7 @@ const ExecutionScreen = () => {
                 </CardContent>
             }
             <CardActions sx={{justifyContent: 'flex-end'}}>
-              <ExecutionButton sequence={sequence} values={values} inputs={inputs}/>
+              <ExecutionButton values={values} inputs={inputs}/>
             </CardActions>
           </Card>
         </Paper>

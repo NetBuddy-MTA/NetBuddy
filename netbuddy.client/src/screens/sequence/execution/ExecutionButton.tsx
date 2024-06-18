@@ -1,14 +1,12 @@
 import Button from "@mui/material/Button";
 import {useMemo} from "react";
-import {Sequence} from "../../../api/sequences/sequences.ts";
 
 type Props = {
-  sequence: Sequence;
   values: Record<string, any>;
   inputs: string[];
 }
 
-export const ExecutionButton = ({sequence, values, inputs}: Props) => {
+export const ExecutionButton = ({values, inputs}: Props) => {
   const handleExecute = () => {
     // todo implement execution
   }
