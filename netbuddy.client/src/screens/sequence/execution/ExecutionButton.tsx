@@ -18,7 +18,8 @@ export const ExecutionButton = ({sequence, values, inputs}: Props) => {
   }, [values, inputs]);
 
   return (
-    <Button variant="contained" color="primary" size="large" onClick={handleExecute}
+    <Button id="ExecuteSequenceButton"
+            variant="contained" color="primary" size="large" onClick={handleExecute}
             disabled={!allRequiredFieldsFilled}>
       Execute
     </Button>
