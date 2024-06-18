@@ -13,6 +13,7 @@ import {Action} from "./Action.tsx";
 import {ExecutionButton} from "./ExecutionButton.tsx";
 import mapSequenceVarToInput from "./inputs/inputMappings.ts";
 import {jsx} from "@emotion/react";
+import {PutPipeline} from "../../../api/pipelines/pipelines.ts";
 import JSX = jsx.JSX;
 
 const ExecutionScreen = () => {
@@ -81,7 +82,15 @@ const ExecutionScreen = () => {
                 </CardContent>
             }
             <CardActions sx={{justifyContent: 'flex-end'}}>
-              <ExecutionButton values={values} inputs={inputs}/>
+              <ExecutionButton values={values} inputs={inputs} onClick={async () => {
+                await PutPipeline({
+                  id: "",
+                  sequence,
+                  context: values,
+                  isFinished: false,
+                  isRunning: false
+                });
+              }}/>
             </CardActions>
           </Card>
         </Paper>
