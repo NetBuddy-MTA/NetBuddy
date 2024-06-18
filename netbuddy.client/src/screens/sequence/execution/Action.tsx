@@ -30,8 +30,6 @@ export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
                     defaultValue={input.defaultValue}
                     required={!input.optional}
                     setValue={createSetValue(input.name)}
-                    options={[]}
-                    disabled={false}
                     isArr={t !== input.type}/>
                 </Grid>
               );

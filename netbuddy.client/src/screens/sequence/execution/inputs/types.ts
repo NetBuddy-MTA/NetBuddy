@@ -3,7 +3,5 @@ export type InputProps<T = any> = {
   setValue: (value: T) => void;
   required: boolean;
   defaultValue?: T;
-  options: string[];
-  disabled: boolean;
   isArr: boolean;
 }
