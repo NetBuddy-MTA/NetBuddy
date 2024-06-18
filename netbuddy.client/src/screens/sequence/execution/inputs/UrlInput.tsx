@@ -4,25 +4,21 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 
-export const UrlInput = ({field, defaultValue, onChange, title, required}: InputProps) => {
-  const [value, setValue] = useState<string | undefined>(defaultValue);
+export const UrlInput = ({defaultValue, setValue, title, required}: InputProps) => {
+  const [localValue, setLocalValue] = useState<string | undefined>(defaultValue);
   const [error, setError] = useState<string | null>(null);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setValue(value)
-    
-    if(!value) {
-      setError(null)
-      return
-    }
+    const val = e.target.value;
+    setLocalValue(val);
     
     const urlPattern = /^(http|https):\/\/[^ "]+$/;
-    if (value.match(urlPattern)) {
-      onChange(field, value);
+    if (val.match(urlPattern)) {
+      setValue(val);
       setError(null)
     }
     else {
+      setValue(undefined);
       setError("Invalid URL")
     }
   }
@@ -35,7 +31,7 @@ export const UrlInput = ({field, defaultValue, onChange, title, required}: Input
       <TextField
         id="url-input"
         type="url"
-        value={value}
+        value={localValue}
         onChange={handleOnChange}
         error={!!error}
         helperText={error}

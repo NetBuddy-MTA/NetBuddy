@@ -5,13 +5,13 @@ import Typography from "@mui/material/Typography";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 
-export const BooleanInput = ({field, defaultValue, onChange, title, required}: InputProps) => {
-  const [value, setValue] = useState<boolean>(defaultValue);
+export const BooleanInput = ({defaultValue, setValue, title, required}: InputProps) => {
+  const [localValue, setLocalValue] = useState<boolean>(defaultValue);
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.checked;
-    onChange(field, value);
-    setValue(value);
+    const val = e.target.checked;
+    setValue(val);
+    setLocalValue(val);
   }
 
   return (
@@ -19,7 +19,7 @@ export const BooleanInput = ({field, defaultValue, onChange, title, required}: I
       <FormControlLabel
         control={
           <Checkbox
-            checked={value}
+            checked={localValue}
             onChange={handleOnChange}
             required={required}
             color="primary"
