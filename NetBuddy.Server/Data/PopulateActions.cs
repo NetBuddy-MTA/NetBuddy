@@ -16,9 +16,11 @@ public sealed class PopulateActions : IInitialData
             ActionString = "CreateWindow",
             Description = "Creates a new browser window",
             Category = "Browser",
-            Inputs = [
+            Inputs =
+            [
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Window",
@@ -34,7 +36,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "CloseWindow",
             Description = "Closes the provided window",
             Category = "Browser",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Window",
@@ -42,7 +45,8 @@ public sealed class PopulateActions : IInitialData
                     Type = "Window"
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
             ]
         },
         // Create a new tab action
@@ -52,7 +56,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "CreateTab",
             Description = "Creates a new tab in the browser",
             Category = "Browser",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Window",
@@ -67,7 +72,8 @@ public sealed class PopulateActions : IInitialData
                     Optional = true
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Tab",
@@ -83,7 +89,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "NavigateToURL",
             Description = "Navigates to a URL in the provided tab",
             Category = "Browser",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Tab",
@@ -97,7 +104,8 @@ public sealed class PopulateActions : IInitialData
                     Type = "URL"
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Tab",
@@ -113,7 +121,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "FindElementsBySelector",
             Description = "Finds all elements matching the given selector in the tab",
             Category = "Extraction",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Selector",
@@ -127,7 +136,8 @@ public sealed class PopulateActions : IInitialData
                     Type = "Tab"
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Elements",
@@ -142,6 +152,38 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
+        // Get element by selector
+        new Action
+        {
+            DisplayName = "Find Element by Selector",
+            ActionString = "FindElementBySelector",
+            Description = "Finds the first element matching the given selector in the tab",
+            Category = "Extraction",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Selector",
+                    Description = "The selector that the elements will be matched against",
+                    Type = "Selector"
+                },
+                new Variable
+                {
+                    Name = "Tab",
+                    Description = "The tab to be searched",
+                    Type = "Tab"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Element",
+                    Description = "The first element in the tab that matches the selector",
+                    Type = "Element"
+                }
+            ]
+        },
         // Click element
         new Action
         {
@@ -149,7 +191,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "ClickElement",
             Description = "Clicks the provided element",
             Category = "Interactions",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Element",
@@ -157,7 +200,8 @@ public sealed class PopulateActions : IInitialData
                     Type = "Element"
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
             ]
         },
         // Reads text from element
@@ -167,15 +211,17 @@ public sealed class PopulateActions : IInitialData
             ActionString = "ReadElementText",
             Description = "Reads the text from the provided element",
             Category = "Extraction",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Element",
                     Description = "The element to read from",
                     Type = "Element"
-                }                
+                }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Element Text",
@@ -191,12 +237,19 @@ public sealed class PopulateActions : IInitialData
             ActionString = "WriteElementText",
             Description = "Writes the provided text to the provided element",
             Category = "Interactions",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
-                    Name = "Element",
-                    Description = "The element to write to",
-                    Type = "Element"
+                    Name = "Selector",
+                    Description = "The selector to try and match",
+                    Type = "Selector"
+                },
+                new Variable
+                {
+                    Name = "Index",
+                    Description = "The index in the match list to interact with",
+                    Type = "Number"
                 },
                 new Variable
                 {
@@ -205,7 +258,8 @@ public sealed class PopulateActions : IInitialData
                     Type = "String"
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Is Input",
@@ -221,7 +275,8 @@ public sealed class PopulateActions : IInitialData
             ActionString = "HttpRequest",
             Description = "Performs an HTTP(S) request",
             Category = "Requests",
-            Inputs = [
+            Inputs =
+            [
                 new Variable
                 {
                     Name = "Url",
@@ -244,7 +299,8 @@ public sealed class PopulateActions : IInitialData
                     Optional = true
                 }
             ],
-            Outputs = [
+            Outputs =
+            [
                 new Variable
                 {
                     Name = "Response",
@@ -252,7 +308,7 @@ public sealed class PopulateActions : IInitialData
                     Type = "HttpResponse"
                 }
             ]
-        },
+        }
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
