@@ -33,7 +33,7 @@ public class RunQueueController : ControllerBase
         // should never happen, but just in case
         if (user == null) return Unauthorized();
 
-        await using var session = _store.QuerySession();
+        await using var session = _store.LightweightSession();
 
         // try and find the user's queue
         var queue = await session.LoadAsync<RunQueue>(user.Id);
@@ -41,16 +41,18 @@ public class RunQueueController : ControllerBase
         // if queue doesn't exist initial one and store it
         if (queue != null)
         {
-            var match = queue.ToRun.FirstOrDefault(pipeline => pipeline is { IsRunning: false, IsFinished: false });
-            if (match != default) return Ok(match);
-            return NotFound();
+            _logger.LogCritical("All pipelines in queue:");
+            foreach (var guid in queue.ToRun) _logger.LogCritical($"Guid: {guid}");
+            var pipelines = await session.LoadManyAsync<Pipeline>(queue.ToRun);
+            var match = pipelines.FirstOrDefault(pipeline =>
+                pipeline.Owner!.Id == user.Id && pipeline is { IsFinished: false, IsRunning: false });
+            if (match == default) return NotFound();
+            return Ok(new { match.Id, match.Sequence, match.IsRunning, match.IsFinished, match.Context });
         }
 
-        await using var write = _store.LightweightSession();
-
         queue = new RunQueue { UserId = user.Id };
-        write.Store(queue);
-        await write.SaveChangesAsync();
+        session.Store(queue);
+        await session.SaveChangesAsync();
 
         return NotFound();
     }
@@ -71,7 +73,7 @@ public class RunQueueController : ControllerBase
         var queue = await session.LoadAsync<RunQueue>(user.Id);
 
         // if queue doesn't exist initial one and store it
-        if (queue != null) return Ok(queue.ToRun);
+        if (queue != null) return Ok(await session.LoadManyAsync<Pipeline>(queue.ToRun));
 
         await using var write = _store.LightweightSession();
 
@@ -83,7 +85,7 @@ public class RunQueueController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{confirmationId}")]
+    [Route("confirmation/{confirmationId}")]
     public async Task<IActionResult> GetConfirmation([FromRoute] string confirmationId)
     {
         // get confirmation before running the pipeline in case 2 clients got the same sequence at the same time
@@ -100,15 +102,17 @@ public class RunQueueController : ControllerBase
         // if queue doesn't exist initial one and store it
         if (queue != null)
         {
-            if (queue.ToRun.IsEmpty())
-                return NotFound();
-            var match = queue.ToRun.FirstOrDefault(x => x.Id.ToString() == confirmationId && !x.IsRunning);
-            if (match == null)
+            if (queue.ToRun.IsEmpty()) return NotFound();
+            var pipelines = await session.LoadManyAsync<Pipeline>(queue.ToRun);
+
+            var match = pipelines.FirstOrDefault(pipeline =>
+                pipeline.Id == Guid.Parse(confirmationId) && !pipeline.IsRunning);
+            if (match == default)
                 return NotFound();
             match.IsRunning = true;
 
             await using var update = _store.LightweightSession();
-            update.Store(queue);
+            update.Store(match);
             await update.SaveChangesAsync();
 
             return Ok(match.Id);
@@ -127,6 +131,7 @@ public class RunQueueController : ControllerBase
     public async Task<IActionResult> PutPipeline([FromBody] Pipeline pipeline)
     {
         // add a pipeline to the queue
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var user = await _userManager.GetUserAsync(User);
         // should never happen, but just in case
@@ -134,10 +139,15 @@ public class RunQueueController : ControllerBase
 
         await using var session = _store.LightweightSession();
 
+        // save the pipeline to the database
+        pipeline.Owner = user;
+        session.Store(pipeline);
+        await session.SaveChangesAsync();
+
         // try and find the user's queue
         var queue = await session.LoadAsync<RunQueue>(user.Id) ?? new RunQueue { UserId = user.Id };
 
-        queue.ToRun.Enqueue(pipeline);
+        queue.ToRun = [..queue.ToRun, pipeline.Id];
 
         session.Store(queue);
         await session.SaveChangesAsync();

@@ -1,5 +1,4 @@
 ﻿using Marten.Schema;
-using NetBuddy.Server.Models.Executables;
 
 namespace NetBuddy.Server.Models.Run.RunQueue;
 
@@ -9,5 +8,5 @@ public sealed class RunQueue
     [Identity] public string UserId { get; set; } = string.Empty;
 
     // the queue itself
-    public Queue<Pipeline> ToRun { get; } = [];
+    public Guid[] ToRun { get; set; } = [];
 }
