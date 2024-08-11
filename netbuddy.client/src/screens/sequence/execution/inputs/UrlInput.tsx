@@ -11,20 +11,19 @@ export const UrlInput = ({defaultValue, setValue, title, required}: InputProps) 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setLocalValue(val);
-    
+
     const urlPattern = /^(http|https):\/\/[^ "]+$/;
     if (val.match(urlPattern)) {
       setValue(val);
       setError(null)
-    }
-    else {
+    } else {
       setValue(undefined);
       setError("Invalid URL")
     }
   }
-  
+
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{mb: 2}}>
       <Typography variant="body1" mr={1}>
         {title}
       </Typography>
@@ -36,7 +35,6 @@ export const UrlInput = ({defaultValue, setValue, title, required}: InputProps) 
         error={!!error}
         helperText={error}
         required={required}
-        defaultValue={defaultValue}
         fullWidth
         variant="outlined"
       />

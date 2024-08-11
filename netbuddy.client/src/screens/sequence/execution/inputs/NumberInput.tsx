@@ -34,7 +34,6 @@ export const NumberInput = ({defaultValue, setValue, title, required}: InputProp
         error={!!error}
         helperText={error}
         required={required}
-        defaultValue={defaultValue}
         fullWidth
         variant="outlined"
       />
