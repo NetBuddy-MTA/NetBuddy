@@ -1,10 +1,12 @@
-﻿using Marten;
+﻿using AutoFixture;
+using Marten;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NetBuddy.Server.Controllers.Execution;
 using NetBuddy.Server.Models.History;
 using NetBuddy.Server.Models.User;
+using ActionResult = NetBuddy.Server.Models.History.ActionResult;
 using Range = NetBuddy.Server.DTOs.Range.Range;
 
 namespace NetBuddy.Server.Controllers.History;
@@ -45,11 +47,28 @@ public class RunHistoryController : ControllerBase
         await using var session = _store.QuerySession();
 
         // get the requested range
-        var sequenceResults = session.Query<SequenceResult>()
+        var sequenceResults = await session.Query<SequenceResult>()
             .OrderByDescending("EndAt")
             .Skip(range.From)
             .Take(range.To - range.From)
             .ToListAsync();
+
+        // todo: remove this clause, this is a placeholder for testing only!
+        if (sequenceResults.IsEmpty())
+        {
+            var fixture = new Fixture();
+            var actionResult = fixture.Create<ActionResult>();
+
+            var seqResult = fixture.Build<SequenceResult>()
+                .With(x => x.Owner, user)
+                .With(x => x.Id, Guid.NewGuid)
+                .With(x => x.StartAt, DateTime.Today)
+                .With(x => x.EndAt, DateTime.Now)
+                .With(x => x.Results, [actionResult])
+                .Create();
+            _logger.LogInformation(seqResult.ToString());
+            sequenceResults = [seqResult];
+        }
 
         return Ok(sequenceResults);
     }
