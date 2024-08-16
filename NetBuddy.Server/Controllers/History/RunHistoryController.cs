@@ -30,13 +30,13 @@ public class RunHistoryController : ControllerBase
 
     [Route("range")]
     [HttpGet]
-    public async Task<IActionResult> GetByRange(Range range)
+    public async Task<IActionResult> GetByRange([FromQuery] int from, [FromQuery] int to)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         // validate the range
-        if (range.From > range.To) return BadRequest("The query range cannot be negative!");
+        if (from > to) return BadRequest("The query range cannot be negative!");
 
         // get the user
         var user = await _userManager.GetUserAsync(User);
@@ -48,26 +48,37 @@ public class RunHistoryController : ControllerBase
 
         // get the requested range
         var sequenceResults = await session.Query<SequenceResult>()
-            .OrderByDescending("EndAt")
-            .Skip(range.From)
-            .Take(range.To - range.From)
+            // .OrderByDescending("EndAt") //todo: throws an error, fix
+            .Skip(from)
+            .Take(to - from)
             .ToListAsync();
 
         // todo: remove this clause, this is a placeholder for testing only!
+        // todo: add total count to sent to the client
         if (sequenceResults.IsEmpty())
         {
-            var fixture = new Fixture();
-            var actionResult = fixture.Create<ActionResult>();
+            var sequenceResults2 = new List<SequenceResult>();
 
-            var seqResult = fixture.Build<SequenceResult>()
-                .With(x => x.Owner, user)
-                .With(x => x.Id, Guid.NewGuid)
-                .With(x => x.StartAt, DateTime.Today)
-                .With(x => x.EndAt, DateTime.Now)
-                .With(x => x.Results, [actionResult])
-                .Create();
-            _logger.LogInformation(seqResult.ToString());
-            sequenceResults = [seqResult];
+            for (var i = 0; i < to - from; i++)
+            {
+                var fixture = new Fixture();
+                var actionResult = fixture.Create<ActionResult>();
+                var seqResult = fixture.Build<SequenceResult>()
+                    .With(x => x.Owner, user)
+                    .With(x => x.Id, Guid.NewGuid())
+                    .With(x => x.StartAt, DateTime.Today)
+                    .With(x => x.EndAt, DateTime.Now)
+                    .With(x => x.Results, new List<ActionResult>() { actionResult })
+                    .Create();
+                _logger.LogInformation(seqResult.ToString());
+                sequenceResults2.Add(seqResult);
+            }
+            
+            return Ok(new HistoryRangeResponse<SequenceResult>
+            {
+                TotalCount = 100,
+                Results = sequenceResults2.ToArray()
+            });
         }
 
         return Ok(sequenceResults);
@@ -133,4 +144,10 @@ public class RunHistoryController : ControllerBase
 
         return Ok();
     }
+}
+
+public class HistoryRangeResponse<T>
+{
+    public int TotalCount { get; set; }
+    public T[] Results { get; set; }
 }
