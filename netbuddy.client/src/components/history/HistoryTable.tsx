@@ -23,7 +23,6 @@ const HistoryTable: React.FC<SequenceTableProps> = ({
        rowsPerPage,
        totalCount,
        onPageChange,
-       onRowsPerPageChange,
        onRowClick, 
        isLoading
      }) => {
@@ -64,7 +63,7 @@ const HistoryTable: React.FC<SequenceTableProps> = ({
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
+        rowsPerPageOptions={[]}
       />
     </TableContainer>
   );
