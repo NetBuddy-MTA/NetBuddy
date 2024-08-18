@@ -1,17 +1,15 @@
-﻿using AutoFixture;
-using Marten;
+﻿using Marten;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NetBuddy.Server.Controllers.Execution;
 using NetBuddy.Server.Models.History;
 using NetBuddy.Server.Models.User;
-using ActionResult = NetBuddy.Server.Models.History.ActionResult;
 using Range = NetBuddy.Server.DTOs.Range.Range;
 
 namespace NetBuddy.Server.Controllers.History;
 
-[Route("History")]
+[Route("history")]
 [ApiController]
 [Authorize]
 public class RunHistoryController : ControllerBase
@@ -48,27 +46,10 @@ public class RunHistoryController : ControllerBase
 
         // get the requested range
         var sequenceResults = await session.Query<SequenceResult>()
-            .OrderByDescending("EndAt")
+            .OrderByDescending(x => x.EndAt)
             .Skip(range.From)
             .Take(range.To - range.From)
             .ToListAsync();
-
-        // todo: remove this clause, this is a placeholder for testing only!
-        if (sequenceResults.IsEmpty())
-        {
-            var fixture = new Fixture();
-            var actionResult = fixture.Create<ActionResult>();
-
-            var seqResult = fixture.Build<SequenceResult>()
-                .With(x => x.Owner, user)
-                .With(x => x.Id, Guid.NewGuid)
-                .With(x => x.StartAt, DateTime.Today)
-                .With(x => x.EndAt, DateTime.Now)
-                .With(x => x.Results, [actionResult])
-                .Create();
-            _logger.LogInformation(seqResult.ToString());
-            sequenceResults = [seqResult];
-        }
 
         return Ok(sequenceResults);
     }
@@ -76,6 +57,7 @@ public class RunHistoryController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> PutResult([FromBody] SequenceResult result)
     {
+        _logger.LogCritical(result.ToString());
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -132,5 +114,26 @@ public class RunHistoryController : ControllerBase
         await session.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [Route("count")]
+    [HttpGet]
+    public async Task<IActionResult> GetResultCount()
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        // get the user
+        var user = await _userManager.GetUserAsync(User);
+        // null check
+        if (user == null) return Unauthorized();
+
+        await using var session = _store.QuerySession();
+
+        var count = await session.Query<SequenceResult>()
+            .Where(x => x.Owner != null && x.Owner.Email == user.Email)
+            .CountAsync();
+
+        return Ok(new { count });
     }
 }
