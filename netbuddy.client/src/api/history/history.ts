@@ -28,4 +28,9 @@ export async function GetResultCount() {
   return await agent
   .get<{ count: number }>("history/count")
   .then(response => response?.data.count);
-} 
+}
+
+export const formatToIsraelTime = (date: string | number | Date): string => {
+  const dateObj = new Date(date);
+  return dateObj.toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' });
+};
