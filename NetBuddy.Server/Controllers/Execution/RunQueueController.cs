@@ -113,6 +113,9 @@ public class RunQueueController : ControllerBase
 
             await using var update = _store.LightweightSession();
             update.Store(match);
+
+            queue.ToRun.Remove(match.Id);
+            update.Store(queue);
             await update.SaveChangesAsync();
 
             return Ok(match.Id);
@@ -147,7 +150,7 @@ public class RunQueueController : ControllerBase
         // try and find the user's queue
         var queue = await session.LoadAsync<RunQueue>(user.Id) ?? new RunQueue { UserId = user.Id };
 
-        queue.ToRun = [..queue.ToRun, pipeline.Id];
+        queue.ToRun.Add(pipeline.Id);
 
         session.Store(queue);
         await session.SaveChangesAsync();
