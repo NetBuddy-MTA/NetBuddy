@@ -12,6 +12,7 @@ import SequenceBuilderScreen from "./screens/sequence/builder/SequenceBuilderScr
 import Box from '@mui/material/Box';
 import {ThemeProvider} from "./contexts/ThemeContext.tsx";
 import ExecutionScreen from "./screens/sequence/execution/ExecutionScreen.tsx";
+import SequenceHistory from "./components/history/SequenceHistory.tsx";
 
 let pageAndLinks: PageAndLink[] = [
   {page: "History", link: "/history"},
@@ -46,6 +47,7 @@ function App() {
                 <Route path="/signin" element={<LoginForm/>}/>
                 <Route path="/signup" element={<RegisterForm/>}/>
                 <Route path="/history" element={<History/>}/>
+                <Route path="/history/:id" element={<SequenceHistory/>}/>
                 <Route path="/sequences" element={<SequenceBuilderScreen/>}/>
                 <Route path="/execute" element={<ExecutionScreen/>}/>
 
