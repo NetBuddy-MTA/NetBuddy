@@ -5,6 +5,8 @@ namespace NetBuddy.Server.Models.History;
 
 public sealed class ActionResult
 {
+    public DateTime StartAt { get; set; }
+
     public DateTime EndAt { get; set; }
 
     public Action Action { get; set; }
