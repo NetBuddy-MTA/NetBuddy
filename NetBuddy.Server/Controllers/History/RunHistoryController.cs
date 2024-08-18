@@ -29,7 +29,7 @@ public class RunHistoryController : ControllerBase
 
     [Route("range")]
     [HttpGet]
-    public async Task<IActionResult> GetByRange(Range range)
+    public async Task<IActionResult> GetByRange([FromBody] Range range)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
