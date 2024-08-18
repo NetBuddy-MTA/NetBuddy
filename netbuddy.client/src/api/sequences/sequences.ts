@@ -47,3 +47,24 @@ export async function SaveExecutableSequence(sequence: Sequence) {
   .catch((error) => console.log(error.error))
   .then((response) => response?.data as { id: string; errors: string[] });
 }
+
+export type PastSequenceDetails = {
+  id: string;
+  owner: {
+    id: string;
+    userName: string;
+  };
+  sequenceId: string;
+  startAt: string;
+  endAt: string;
+};
+
+type HistoryItemAction = {
+    endAt: string;
+    action: any;
+    actionContext: any;
+    actionLogs: any;
+    actionOutputs: any;
+}
+
+export type PastSequence = PastSequenceDetails & { actions: HistoryItemAction[] }; // ExecutableAction
