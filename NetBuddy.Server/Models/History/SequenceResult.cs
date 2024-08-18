@@ -6,13 +6,13 @@ namespace NetBuddy.Server.Models.History;
 public class SequenceResult
 {
     // End time
-    public DateTime EndAt;
+    public DateTime EndAt { get; set; }
 
     // List of Action results
-    public List<ActionResult> Results;
+    public List<ActionResult> Results { get; set; }
 
     // Start time
-    public DateTime StartAt;
+    public DateTime StartAt { get; set; }
 
     // Id is the primary key
     [Identity] public Guid Id { get; set; }
