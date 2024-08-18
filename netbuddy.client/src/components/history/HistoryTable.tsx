@@ -10,7 +10,7 @@ import {
   TablePagination,
   TableRow
 } from '@mui/material';
-import {SequenceResult} from "../../api/history/history.ts";
+import {formatToIsraelTime, SequenceResult} from "../../api/history/history.ts";
 import {GetExecutableSequence, Sequence} from "../../api/sequences/sequences.ts";
 
 interface SequenceTableProps {
@@ -72,8 +72,8 @@ const HistoryTable = ({
               style={{cursor: 'pointer'}}
             >
               <TableCell>{sequence.name}</TableCell>
-              <TableCell>{sequence.startAt.toLocaleString()}</TableCell>
-              <TableCell>{sequence.endAt.toLocaleString()}</TableCell>
+              <TableCell>{formatToIsraelTime(sequence.startAt)}</TableCell>
+              <TableCell>{formatToIsraelTime(sequence.endAt)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
