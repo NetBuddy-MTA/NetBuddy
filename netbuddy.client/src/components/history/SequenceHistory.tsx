@@ -1,17 +1,13 @@
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Button, Container, Paper, Typography} from '@mui/material';
-import {PastSequence} from "../../api/sequences/sequences.ts";
-
-interface Action {
-  id: string;
-  name: string;
-  succeeded: boolean;
-}
+import {Button, Container, Paper} from '@mui/material';
+import {SequenceResult} from "../../api/history/history.ts";
+import SequenceDetailsTable from "./SequenceDetailsTable.tsx";
+import Divider from "@mui/material/Divider";
 
 const SequenceHistory: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const sequenceDetails: PastSequence = location.state;
+  const sequenceDetails: SequenceResult = location.state;
   console.log(sequenceDetails)
 
   const goBack = () => {
@@ -25,7 +21,11 @@ const SequenceHistory: React.FC = () => {
   return (
     <Container>
       <Paper elevation={4} style={{padding: '16px'}}>
-        <Typography>{sequenceDetails.owner.userName}</Typography>
+        <SequenceDetailsTable
+          actions={sequenceDetails.results}
+          onRowClick={(actionString) => console.log(`Action clicked: ${actionString}`)}
+        />
+        <Divider style={{ marginTop: '24px', marginBottom: '16px' }} />
         <Button variant="contained" color="secondary" onClick={goBack}>
           Back to History
         </Button>
