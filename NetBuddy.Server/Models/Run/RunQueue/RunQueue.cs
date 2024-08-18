@@ -8,5 +8,5 @@ public sealed class RunQueue
     [Identity] public string UserId { get; set; } = string.Empty;
 
     // the queue itself
-    public Guid[] ToRun { get; set; } = [];
+    public List<Guid> ToRun { get; set; } = [];
 }
