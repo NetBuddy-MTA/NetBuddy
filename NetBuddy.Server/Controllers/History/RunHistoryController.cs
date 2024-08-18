@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NetBuddy.Server.Controllers.Execution;
+using NetBuddy.Server.Models.Executables;
 using NetBuddy.Server.Models.History;
 using NetBuddy.Server.Models.User;
 using Range = NetBuddy.Server.DTOs.Range.Range;
@@ -57,7 +58,6 @@ public class RunHistoryController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> PutResult([FromBody] SequenceResult result)
     {
-        _logger.LogCritical(result.ToString());
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
@@ -70,6 +70,10 @@ public class RunHistoryController : ControllerBase
 
         // get query session
         await using var session = _store.LightweightSession();
+
+        // get the sequence id from the pipeline
+        var pipeline = await session.LoadAsync<Pipeline>(result.Id);
+        if (pipeline != null) result.SequenceId = pipeline.Sequence.Id;
 
         // insert the new result and update database
         session.Store(result);
