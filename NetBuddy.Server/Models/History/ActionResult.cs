@@ -9,9 +9,9 @@ public sealed class ActionResult
 
     public Action Action { get; set; }
 
-    public Dictionary<Variable, object> ActionContext { get; set; }
+    public Dictionary<Variable, string> ActionContext { get; set; }
 
     public List<KeyValuePair<string, string>> ActionLogs { get; set; }
 
-    public Dictionary<Variable, object> ActionOutputs { get; set; }
+    public Dictionary<Variable, string> ActionOutputs { get; set; }
 }
