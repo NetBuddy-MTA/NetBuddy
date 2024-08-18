@@ -6,7 +6,6 @@ using NetBuddy.Server.Controllers.Execution;
 using NetBuddy.Server.Models.Executables;
 using NetBuddy.Server.Models.History;
 using NetBuddy.Server.Models.User;
-using Range = NetBuddy.Server.DTOs.Range.Range;
 
 namespace NetBuddy.Server.Controllers.History;
 
@@ -29,13 +28,13 @@ public class RunHistoryController : ControllerBase
 
     [Route("range")]
     [HttpGet]
-    public async Task<IActionResult> GetByRange([FromBody] Range range)
+    public async Task<IActionResult> GetByRange([FromQuery] int from, [FromQuery] int to)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         // validate the range
-        if (range.From > range.To) return BadRequest("The query range cannot be negative!");
+        if (from > to) return BadRequest("The query range cannot be negative!");
 
         // get the user
         var user = await _userManager.GetUserAsync(User);
@@ -48,8 +47,8 @@ public class RunHistoryController : ControllerBase
         // get the requested range
         var sequenceResults = await session.Query<SequenceResult>()
             .OrderByDescending(x => x.EndAt)
-            .Skip(range.From)
-            .Take(range.To - range.From)
+            .Skip(from)
+            .Take(to - from)
             .ToListAsync();
 
         return Ok(sequenceResults);

@@ -1,54 +1,37 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {SequenceResult} from "../../api/history/history.ts";
 
-type Pagination<T> = {
-  totalCount: number;
-  results: T[];
-}
-
-export function usePagination<T>(
-  fetchRequest: (from: number, to: number) => Promise<Pagination<T>>,
+export function usePagination(
+  getResults: (from: number, to: number) => Promise<SequenceResult[]>,
+  getCount: () => Promise<number>,
   pageSize: number = 10,
-  firstPage: number = 0,
-  parseResult?: (value: any) => Promise<T> | T,
-  filterResult?: (result: T) => boolean,
+  firstPage: number = 0
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const [results, setResults] = useState<T[]>([]);
-  const [totalCount, setTotalCount] = useState<number>(0)
-  
+  const [results, setResults] = useState<SequenceResult[]>([]);
+  const [count, setCount] = useState<number>(0)
+
   const isDataFetched = useRef(false);
 
   const loadResults = useCallback(
     async (pageNumber: number) => {
       try {
         setIsLoading(true);
-        
+
         const from = pageNumber * pageSize;
         const to = from + pageSize;
-        const res = await fetchRequest(from , to);
+        const results = await getResults(from, to);
+        const totalCount = await getCount();
 
-        const promiseParsedResults = parseResult
-          ? res.results?.map(parseResult)
-          : res.results;
-        const parsedResults = await Promise.all(promiseParsedResults);
-        const filteredResults = filterResult
-          ? parsedResults?.filter(filterResult)
-          : parsedResults;
-        
-        setTotalCount(res.totalCount ?? filteredResults?.length);
-        
-        setResults(filteredResults);
-        setError(undefined);
+        setCount(totalCount);
+        setResults(results);
       } catch (e) {
         console.error(e);
-        setError('error has happened');
-      }
-      finally {
+      } finally {
         setIsLoading(false);
       }
     },
-    [fetchRequest, parseResult],
+    [getResults, getCount],
   );
 
   useEffect(() => {
@@ -56,5 +39,5 @@ export function usePagination<T>(
     isDataFetched.current = true;
   }, []);
 
-  return { isLoading, error, results, loadMore: (pageNumber: number) => loadResults(pageNumber), totalCount };
+  return {isLoading, results, loadMore: (pageNumber: number) => loadResults(pageNumber), totalCount: count};
 }

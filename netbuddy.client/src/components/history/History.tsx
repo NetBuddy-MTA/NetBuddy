@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { Container, Typography } from '@mui/material';
+import {useState} from "react";
+import {Container, Typography} from '@mui/material';
 import HistoryTable from "./HistoryTable.tsx";
-import {getHistory} from "./historyProvider.ts";
 import {usePagination} from "./usePagination.tsx";
 import {useNavigate} from "react-router-dom";
+import {GetResultCount, GetResultRange} from "../../api/history/history.ts";
 
 const ROWS_PER_PAGE = 10;
 
 const History = () => {
   const navigate = useNavigate();
-  const {loadMore, results, totalCount, isLoading} = usePagination(getHistory, ROWS_PER_PAGE);
-  
+  const {loadMore, results, totalCount, isLoading} = usePagination(GetResultRange, GetResultCount, ROWS_PER_PAGE);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
-  
+
   const handleChangePage = async (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-     await loadMore(newPage);
-     setPage(newPage);
+    await loadMore(newPage);
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +27,7 @@ const History = () => {
   const goToSequenceDetails = (id: string) => {
     navigate(`/history/${id}`, {state: results.find(r => r.id === id)});
   };
-  
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom>

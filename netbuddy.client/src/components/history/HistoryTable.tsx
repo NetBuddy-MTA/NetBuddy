@@ -1,13 +1,20 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper,
+  Paper,
+  Skeleton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
   TablePagination,
-  Skeleton
+  TableRow
 } from '@mui/material';
-import {PastSequence} from "../../api/sequences/sequences.ts";
+import {SequenceResult} from "../../api/history/history.ts";
+import {GetExecutableSequence, Sequence} from "../../api/sequences/sequences.ts";
 
 interface SequenceTableProps {
-  sequences: PastSequence[]
+  sequences: SequenceResult[]
   page: number;
   rowsPerPage: number;
   totalCount: number;
@@ -17,19 +24,33 @@ interface SequenceTableProps {
   isLoading: boolean;
 }
 
-const HistoryTable: React.FC<SequenceTableProps> = ({
-       sequences,
-       page,
-       rowsPerPage,
-       totalCount,
-       onPageChange,
-       onRowClick, 
-       isLoading
-     }) => {
-  
+const HistoryTable = ({
+                        sequences,
+                        page,
+                        rowsPerPage,
+                        totalCount,
+                        onPageChange,
+                        onRowClick,
+                        isLoading
+                      }: SequenceTableProps) => {
+
+  const [resultsWithInfo, setResultsWithInfo] = useState<(Sequence & SequenceResult)[]>([])
+
+  useEffect(() => {
+    const sequenceInfoPromises = sequences.map(curr => GetExecutableSequence(curr.sequenceId));
+    let newResultsWithInfo: (Sequence & SequenceResult)[] = [];
+    Promise.all(sequenceInfoPromises)
+    .then(infoArr => {
+      for (let i = 0; i < sequences.length; i++) {
+        newResultsWithInfo.push({...sequences[i], ...infoArr[i]})
+      }
+      setResultsWithInfo(newResultsWithInfo);
+    })
+  }, [sequences]);
+
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ '& td, & th': { borderLeft: 1 , borderColor: 'divider'} }}>
+      <Table sx={{'& td, & th': {borderLeft: 1, borderColor: 'divider'}}}>
         <TableHead>
           <TableRow>
             <TableCell>Name</TableCell>
@@ -40,19 +61,19 @@ const HistoryTable: React.FC<SequenceTableProps> = ({
         <TableBody>
           {isLoading ? Array.from(new Array(rowsPerPage)).map((_, index) => (
             <TableRow key={index}>
-              <TableCell><Skeleton /></TableCell>
-              <TableCell><Skeleton /></TableCell>
-              <TableCell><Skeleton /></TableCell>
+              <TableCell><Skeleton/></TableCell>
+              <TableCell><Skeleton/></TableCell>
+              <TableCell><Skeleton/></TableCell>
             </TableRow>
-          )) : sequences.map(sequence => (
+          )) : resultsWithInfo.map(sequence => (
             <TableRow
               key={sequence.id}
               onClick={() => onRowClick(sequence.id)}
-              style={{ cursor: 'pointer' }}
+              style={{cursor: 'pointer'}}
             >
-              <TableCell>{sequence.owner.userName}</TableCell>
-              <TableCell>{new Date(Date.now() - 10 * 60 * 1000).toLocaleString()}</TableCell>
-              <TableCell>{new Date().toLocaleString()}</TableCell>
+              <TableCell>{sequence.name}</TableCell>
+              <TableCell>{sequence.startAt.toLocaleString()}</TableCell>
+              <TableCell>{sequence.endAt.toLocaleString()}</TableCell>
             </TableRow>
           ))}
         </TableBody>
