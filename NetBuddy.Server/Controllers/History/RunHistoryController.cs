@@ -46,6 +46,7 @@ public class RunHistoryController : ControllerBase
 
         // get the requested range
         var sequenceResults = await session.Query<SequenceResult>()
+            .Where(x => x.Owner != null && x.Owner.Email == user.Email)
             .OrderByDescending(x => x.EndAt)
             .Skip(from)
             .Take(to - from)
