@@ -241,15 +241,9 @@ public sealed class PopulateActions : IInitialData
             [
                 new Variable
                 {
-                    Name = "Selector",
-                    Description = "The selector to try and match",
-                    Type = "Selector"
-                },
-                new Variable
-                {
-                    Name = "Index",
-                    Description = "The index in the match list to interact with",
-                    Type = "Number"
+                    Name = "Element",
+                    Description = "The element to write to",
+                    Type = "Element"
                 },
                 new Variable
                 {
