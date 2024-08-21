@@ -1,22 +1,30 @@
 import {useState} from "react";
 import {Container, Typography} from '@mui/material';
 import HistoryTable from "./HistoryTable.tsx";
-import {usePagination} from "./usePagination.tsx";
-import {useNavigate} from "react-router-dom";
-import {GetResultCount, GetResultRange} from "../../api/history/history.ts";
+import {GetResultCount, GetResultRange, SequenceResult} from "../../api/history/history.ts";
+import PaginationComponent from "./PaginationComponent.tsx";
+import Paper from "@mui/material/Paper";
+import SequenceDetailsTable from "./SequenceDetailsTable.tsx";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 
 const ROWS_PER_PAGE = 10;
 
 const History = () => {
-  const navigate = useNavigate();
-  const {loadMore, results, totalCount, isLoading} = usePagination(GetResultRange, GetResultCount, ROWS_PER_PAGE);
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
+  const [results, setResults] = useState<any[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState<(pageNumber: number) => Promise<void>>(() => async () => {});
+
+  const [selectedSequence, setSelectedSequence] = useState<SequenceResult | null>(null);
 
   const handleChangePage = async (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    await loadMore(newPage);
-    setPage(newPage);
+    if (loadMore) {
+      await loadMore(newPage);
+      setPage(newPage);
+    }
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,7 +33,12 @@ const History = () => {
   };
 
   const goToSequenceDetails = (id: string) => {
-    navigate(`/history/${id}`, {state: results.find(r => r.id === id)});
+    const sequenceDetails = results.find(r => r.sequenceId === id);
+    setSelectedSequence(sequenceDetails);
+  };
+
+  const goBackToHistory = () => {
+    setSelectedSequence(null);
   };
 
   return (
@@ -33,16 +46,40 @@ const History = () => {
       <Typography variant="h4" gutterBottom>
         History
       </Typography>
-      <HistoryTable
-        sequences={results}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        totalCount={totalCount}
-        isLoading={isLoading}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        onRowClick={goToSequenceDetails}
-      />
+      {selectedSequence ? (
+        <Paper elevation={4} style={{ padding: '16px' }}>
+          <SequenceDetailsTable
+            actions={selectedSequence.results}
+            onRowClick={(actionString) => console.log(`Action clicked: ${actionString}`)}
+          />
+          <Divider style={{ marginTop: '24px', marginBottom: '16px' }} />
+          <Button variant="contained" color="secondary" onClick={goBackToHistory}>
+            Back to History
+          </Button>
+        </Paper>
+      ) : (
+        <>
+          <PaginationComponent
+            getResults={GetResultRange}
+            getCount={GetResultCount}
+            pageSize={ROWS_PER_PAGE}
+            onLoadMore={(newResults) => setResults(newResults)}
+            setIsLoading={setIsLoading}
+            setTotalCount={setTotalCount}
+            onLoadMoreRef={setLoadMore}
+          />
+          <HistoryTable
+            sequences={results}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            totalCount={totalCount}
+            isLoading={isLoading}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            onRowClick={goToSequenceDetails}
+          />
+        </>
+      )}
     </Container>
   );
 }

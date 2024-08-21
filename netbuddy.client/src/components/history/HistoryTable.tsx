@@ -67,8 +67,8 @@ const HistoryTable = ({
             </TableRow>
           )) : resultsWithInfo.map(sequence => (
             <TableRow
-              key={sequence.id}
-              onClick={() => onRowClick(sequence.id)}
+              key={sequence.sequenceId}
+              onClick={() => onRowClick(sequence.sequenceId)}
               style={{cursor: 'pointer'}}
             >
               <TableCell>{sequence.name}</TableCell>
