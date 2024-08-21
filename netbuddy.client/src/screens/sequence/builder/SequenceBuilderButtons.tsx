@@ -25,6 +25,8 @@ const SequenceBuilderButtons = (props: {
     testSequence, saveSequence, loadSequence, uploadSequence, downloadSequence, moreDetails
   } = props;
 
+  const isUploadDisabled = !sequence.name;
+
   return (
     <Grid container direction="row" spacing={4} justifyContent="center" alignContent="center">
       <Grid item xs={3}>
@@ -66,13 +68,17 @@ const SequenceBuilderButtons = (props: {
               <FileOpenRoundedIcon/>
             </IconButton>
           </Tooltip>
-          <Tooltip title="Upload" followCursor={true}>
-            <IconButton onClick={e => {
-              e.preventDefault();
-              uploadSequence();
-            }}>
-              <CloudUploadRoundedIcon/>
-            </IconButton>
+          <Tooltip title={isUploadDisabled ? "Name must be defined" : "Upload"} followCursor={true}>
+            <span>
+              <IconButton onClick={e => {
+                  e.preventDefault();
+                  if (!isUploadDisabled) uploadSequence();
+                }}
+                disabled={isUploadDisabled}
+              >
+                <CloudUploadRoundedIcon/>
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="Download" followCursor={true}>
             <IconButton onClick={e => {
