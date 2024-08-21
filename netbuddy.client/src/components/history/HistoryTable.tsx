@@ -1,20 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {
-  Paper,
-  Skeleton,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow
-} from '@mui/material';
+import {Paper, Skeleton, Table, TableBody, TableCell, TableContainer,
+  TableHead, TablePagination, TableRow} from '@mui/material';
 import {formatToIsraelTime, SequenceResult} from "../../api/history/history.ts";
 import {GetExecutableSequence, Sequence} from "../../api/sequences/sequences.ts";
 
 interface SequenceTableProps {
-  sequences: SequenceResult[]
+  sequences: SequenceResult[];
   page: number;
   rowsPerPage: number;
   totalCount: number;
@@ -31,7 +22,7 @@ const HistoryTable = ({
                         totalCount,
                         onPageChange,
                         onRowClick,
-                        isLoading
+                        isLoading,
                       }: SequenceTableProps) => {
 
   const [resultsWithInfo, setResultsWithInfo] = useState<(Sequence & SequenceResult)[]>([])
