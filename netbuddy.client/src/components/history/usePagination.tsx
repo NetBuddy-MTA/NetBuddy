@@ -20,11 +20,9 @@ export function usePagination(
 
         const from = pageNumber * pageSize;
         const to = from + pageSize;
-        const results = await getResults(from, to);
-        const totalCount = await getCount();
-
-        setCount(totalCount);
-        setResults(results);
+        setResults(await getResults(from, to));
+        setCount(await getCount());
+        
       } catch (e) {
         console.error(e);
       } finally {
