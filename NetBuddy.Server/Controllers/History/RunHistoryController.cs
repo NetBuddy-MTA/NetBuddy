@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using NetBuddy.Server.Controllers.Execution;
 using NetBuddy.Server.Models.Executables;
 using NetBuddy.Server.Models.History;
 using NetBuddy.Server.Models.User;
@@ -14,11 +13,11 @@ namespace NetBuddy.Server.Controllers.History;
 [Authorize]
 public class RunHistoryController : ControllerBase
 {
-    private readonly ILogger<ExecutionController> _logger;
+    private readonly ILogger<RunHistoryController> _logger;
     private readonly IDocumentStore _store;
     private readonly UserManager<UserAccount> _userManager;
 
-    public RunHistoryController(ILogger<ExecutionController> logger, IDocumentStore store,
+    public RunHistoryController(ILogger<RunHistoryController> logger, IDocumentStore store,
         UserManager<UserAccount> userManager)
     {
         _logger = logger;
@@ -46,6 +45,7 @@ public class RunHistoryController : ControllerBase
 
         // get the requested range
         var sequenceResults = await session.Query<SequenceResult>()
+            .Where(x => x.Owner != null && x.Owner.Email == user.Email)
             .OrderByDescending(x => x.EndAt)
             .Skip(from)
             .Take(to - from)
