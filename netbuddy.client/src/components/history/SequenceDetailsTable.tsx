@@ -3,24 +3,27 @@ import {
   Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper,
   Collapse, Box, Typography
 } from '@mui/material';
-import {ActionResult, formatToIsraelTime} from "../../api/history/history.ts";
+import {ActionResult} from "../../api/history/history.ts";
+import {formatToIsraelTime} from "./utils/utils.ts";
 
 interface SequenceDetailsTableProps {
   actions: ActionResult[];
   onRowClick: (id: string) => void;
 }
 
+const getId = (action: string, index: number) => `${action}-${index}`;
+
 const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
-                                             actions,
-                                             onRowClick,
-                                           }) => {
+         actions,
+         onRowClick,
+   }) => {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
-  const handleRowClick = (id: string) => {
-    setExpandedRow(expandedRow === id ? null : id);
+  const handleRowClick = (id: string, index: number) => {
+    setExpandedRow(expandedRow === getId(id, index) ? null : getId(id,index));
     onRowClick(id);
   };
-
+  
   return (
     <TableContainer component={Paper}>
       <Typography variant="h6" gutterBottom>Actions:</Typography>
@@ -33,10 +36,10 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {actions.map(action => (
+          {actions.map((action, index) => (
             <React.Fragment key={action.action.actionString}>
               <TableRow
-                onClick={() => handleRowClick(action.action.actionString)}
+                onClick={() => handleRowClick(action.action.actionString, index)}
                 style={{ cursor: 'pointer' }}
               >
                 <TableCell>{action.action.actionString}</TableCell>
@@ -45,7 +48,7 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
               </TableRow>
               <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                  <Collapse in={expandedRow === action.action.actionString} timeout="auto" unmountOnExit>
+                  <Collapse in={expandedRow === getId(action.action.actionString, index)} timeout="auto" unmountOnExit>
                     <Box margin={2} padding={2} borderRadius={2} border={1} borderColor="#ddd">
                       <Typography variant="h6" gutterBottom sx={{ marginBottom: 2 }}>Action Logs:</Typography>
                       {action.actionLogs.map(log => (

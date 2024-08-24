@@ -2,29 +2,23 @@ import {useState} from "react";
 import {Container, Typography} from '@mui/material';
 import HistoryTable from "./HistoryTable.tsx";
 import {GetResultCount, GetResultRange, SequenceResult} from "../../api/history/history.ts";
-import PaginationComponent from "./PaginationComponent.tsx";
 import Paper from "@mui/material/Paper";
 import SequenceDetailsTable from "./SequenceDetailsTable.tsx";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
+import {usePagination} from "./usePagination.tsx";
 
 const ROWS_PER_PAGE = 10;
 
 const History = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(ROWS_PER_PAGE);
-  const [results, setResults] = useState<any[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadMore, setLoadMore] = useState<(pageNumber: number) => Promise<void>>(() => async () => {});
-
+  const {loadMore, results, totalCount, isLoading} = usePagination(GetResultRange, GetResultCount, ROWS_PER_PAGE);  
   const [selectedSequence, setSelectedSequence] = useState<SequenceResult | null>(null);
 
   const handleChangePage = async (_: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    if (loadMore) {
-      await loadMore(newPage);
-      setPage(newPage);
-    }
+    await loadMore(newPage);
+    setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +27,7 @@ const History = () => {
   };
 
   const goToSequenceDetails = (id: string) => {
-    const sequenceDetails = results.find(r => r.sequenceId === id);
+    const sequenceDetails = results.find(r => r.sequenceId === id) || null;
     setSelectedSequence(sequenceDetails);
   };
 
@@ -58,27 +52,16 @@ const History = () => {
           </Button>
         </Paper>
       ) : (
-        <>
-          <PaginationComponent
-            getResults={GetResultRange}
-            getCount={GetResultCount}
-            pageSize={ROWS_PER_PAGE}
-            onLoadMore={(newResults) => setResults(newResults)}
-            setIsLoading={setIsLoading}
-            setTotalCount={setTotalCount}
-            onLoadMoreRef={setLoadMore}
-          />
-          <HistoryTable
-            sequences={results}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            totalCount={totalCount}
-            isLoading={isLoading}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            onRowClick={goToSequenceDetails}
-          />
-        </>
+        <HistoryTable
+          sequences={results}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          totalCount={totalCount}
+          isLoading={isLoading}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          onRowClick={goToSequenceDetails}
+        />
       )}
     </Container>
   );

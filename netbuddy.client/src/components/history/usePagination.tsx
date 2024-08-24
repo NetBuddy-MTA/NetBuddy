@@ -1,15 +1,16 @@
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {SequenceResult} from "../../api/history/history.ts";
+import {GetExecutableSequence, Sequence} from "../../api/sequences/sequences.ts";
 
 export function usePagination(
   getResults: (from: number, to: number) => Promise<SequenceResult[]>,
   getCount: () => Promise<number>,
   pageSize: number = 10,
-  firstPage: number = 0
+  firstPage: number = 0,
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState<SequenceResult[]>([]);
-  const [count, setCount] = useState<number>(0)
+  const [results, setResults] = useState<Array<Sequence & SequenceResult>>([]);
+  const [count, setCount] = useState<number>(pageSize)
 
   const isDataFetched = useRef(false);
 
@@ -20,9 +21,13 @@ export function usePagination(
 
         const from = pageNumber * pageSize;
         const to = from + pageSize;
-        setResults(await getResults(from, to));
         setCount(await getCount());
+        const data = (await getResults(from, to));
         
+        const r = await Promise.all(data.map(async (sequence)  =>
+          ({...sequence, ...await GetExecutableSequence(sequence.sequenceId)})
+        )); 
+        setResults(r);
       } catch (e) {
         console.error(e);
       } finally {

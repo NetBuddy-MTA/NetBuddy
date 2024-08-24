@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Paper, Skeleton, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow} from '@mui/material';
-import {formatToIsraelTime, SequenceResult} from "../../api/history/history.ts";
-import {GetExecutableSequence, Sequence} from "../../api/sequences/sequences.ts";
+import {SequenceResult} from "../../api/history/history.ts";
+import {Sequence} from "../../api/sequences/sequences.ts";
+import {formatToIsraelTime} from "./utils/utils.ts";
 
 interface SequenceTableProps {
-  sequences: SequenceResult[];
+  sequences: Array<Sequence & SequenceResult>;
   page: number;
   rowsPerPage: number;
   totalCount: number;
@@ -25,20 +26,6 @@ const HistoryTable = ({
                         isLoading,
                       }: SequenceTableProps) => {
 
-  const [resultsWithInfo, setResultsWithInfo] = useState<(Sequence & SequenceResult)[]>([])
-
-  useEffect(() => {
-    const sequenceInfoPromises = sequences.map(curr => GetExecutableSequence(curr.sequenceId));
-    let newResultsWithInfo: (Sequence & SequenceResult)[] = [];
-    Promise.all(sequenceInfoPromises)
-    .then(infoArr => {
-      for (let i = 0; i < sequences.length; i++) {
-        newResultsWithInfo.push({...sequences[i], ...infoArr[i]})
-      }
-      setResultsWithInfo(newResultsWithInfo);
-    })
-  }, [sequences]);
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{'& td, & th': {borderLeft: 1, borderColor: 'divider'}}}>
@@ -56,7 +43,7 @@ const HistoryTable = ({
               <TableCell><Skeleton/></TableCell>
               <TableCell><Skeleton/></TableCell>
             </TableRow>
-          )) : resultsWithInfo.map(sequence => (
+          )) : sequences.map(sequence => (
             <TableRow
               key={sequence.sequenceId}
               onClick={() => onRowClick(sequence.sequenceId)}
