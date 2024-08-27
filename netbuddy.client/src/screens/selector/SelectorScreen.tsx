@@ -15,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import AddIcon from '@mui/icons-material/Add';
+import {GetExtensionId} from "../../api/extension/extension.ts";
 
 export type SelectorScreenProps = {
   open: boolean;
@@ -121,7 +122,9 @@ const SelectorScreen = (props: SelectorScreenProps) => {
             null
         }
         <Tooltip title="Create New Selector">
-          <IconButton id="CreateNewSelectorButton">
+          <IconButton onClick={() => {
+            window.postMessage(GetExtensionId());
+          }}>
             <AddIcon/>
           </IconButton>
         </Tooltip>
