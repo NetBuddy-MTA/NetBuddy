@@ -16,7 +16,7 @@ const ProfileMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const {userInfo, setUserInfo} = useContext(UserInfoContext);
   const [preferencesOpen, setPreferencesOpen] = useState(false);
-  const {theme, toggleTheme, onThemeChange} = useTheme();
+  const {theme, onThemeChange} = useTheme();
 
   useEffect(() => {
   }, [userInfo]);
@@ -25,38 +25,14 @@ const ProfileMenu = () => {
   const switchMenuClose = () => setAnchorEl(null);
 
   const navigate = useNavigate();
-
-  // todo: don't need to be here?
+  
   const preferences: Preferences[] = [
-    {
-      label: "the best input in the whole world",
-      type: 'text',
-      onChange: (value: React.ChangeEvent<HTMLInputElement>) => console.log(value.target.value),
-      defaultValue: ''
-    },
-    {
-      label: "theme",
-      type: 'boolean',
-      onChange: toggleTheme,
-      value: theme !== 'light'
-    },
     {
       label: "theme",
       type: 'buttonGroup',
       onChange: onThemeChange,
       value: theme,
       options: [{text: "light", icon: <LightModeIcon/>}, {text: "dark", icon: <DarkModeIcon/>}],
-    },
-    {
-      label: "number",
-      type: 'number',
-      onChange: (value: React.ChangeEvent<HTMLInputElement>) => console.log(value.target.value),
-    },
-    {
-      label: "family members",
-      type: 'select',
-      onChange: (value: string) => console.log(value),
-      options: [{text: "Shirley", value: 1}, {text: "Dana", value: 2}, {text: "Robin", value: 3}]
     },
   ];
 
