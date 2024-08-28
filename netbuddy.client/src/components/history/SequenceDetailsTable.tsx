@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper,
   Collapse, Box, Typography
 } from '@mui/material';
 import {ActionResult} from "../../api/history/history.ts";
 import {formatToIsraelTime} from "./utils/utils.ts";
+import agent from "../../api/agent.ts";
+
+interface ActionDetails {
+  actionString: string;
+  displayName: string;
+}
 
 interface SequenceDetailsTableProps {
   actions: ActionResult[];
@@ -18,7 +24,34 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
          onRowClick,
    }) => {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [actionDetails, setActionDetails] = useState<Record<string, string>>({});
 
+  useEffect(() => {
+    const fetchActionDetails = async () => {
+      try {
+        const actionStrings = actions.map(action => action.action.actionString);
+        console.log("Fetching details for actionStrings:", actionStrings);
+
+        const response = await agent
+        .post<ActionDetails[]>('/info/action', actionStrings)
+        .then(response => response?.data);
+        
+        const detailsMap = response.reduce((acc, detail) => {
+          acc[detail.actionString] = detail.displayName;
+          return acc;
+        }, {} as Record<string, string>);
+
+        console.log("Mapped actionDetails:", detailsMap[0]);
+
+        setActionDetails(detailsMap);
+      } catch (error) {
+        console.error("Error fetching action details:", error);
+      }
+    };
+
+    fetchActionDetails();
+  }, [actions]);
+  
   const handleRowClick = (id: string, index: number) => {
     setExpandedRow(expandedRow === getId(id, index) ? null : getId(id,index));
     onRowClick(id);
@@ -42,7 +75,7 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
                 onClick={() => handleRowClick(action.action.actionString, index)}
                 style={{ cursor: 'pointer' }}
               >
-                <TableCell>{action.action.actionString}</TableCell>
+                <TableCell>{actionDetails[action.action.actionString] || action.action.actionString}</TableCell>        
                 <TableCell>{formatToIsraelTime(action.startAt)}</TableCell>
                 <TableCell>{formatToIsraelTime(action.endAt)}</TableCell>
               </TableRow>
