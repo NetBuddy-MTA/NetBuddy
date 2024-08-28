@@ -123,7 +123,7 @@ const SelectorScreen = (props: SelectorScreenProps) => {
         }
         <Tooltip title="Create New Selector">
           <IconButton onClick={() => {
-            window.postMessage(GetExtensionId());
+            GetExtensionId().then(window.postMessage);
           }}>
             <AddIcon/>
           </IconButton>
