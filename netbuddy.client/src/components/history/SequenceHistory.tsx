@@ -1,5 +1,5 @@
 import {useLocation, useNavigate} from 'react-router-dom';
-import {Button, Container, Paper} from '@mui/material';
+import {Button, Container} from '@mui/material';
 import {SequenceResult} from "../../api/history/history.ts";
 import SequenceDetailsTable from "./SequenceDetailsTable.tsx";
 import Divider from "@mui/material/Divider";
@@ -20,7 +20,6 @@ const SequenceHistory: React.FC = () => {
 
   return (
     <Container>
-      <Paper elevation={4} style={{padding: '16px'}}>
         <SequenceDetailsTable
           actions={sequenceDetails.results}
           onRowClick={(actionString) => console.log(`Action clicked: ${actionString}`)}
@@ -29,7 +28,6 @@ const SequenceHistory: React.FC = () => {
         <Button variant="contained" color="secondary" onClick={goBack}>
           Back to History
         </Button>
-      </Paper>
     </Container>
   );
 };
