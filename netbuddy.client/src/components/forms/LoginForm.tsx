@@ -20,6 +20,8 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const {userInfo, setUserInfo} = useContext(UserInfoContext);
   
+  if(userInfo?.username) navigate("/home");
+  
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     // prevent sending multiple requests
     if (waiting) return;
