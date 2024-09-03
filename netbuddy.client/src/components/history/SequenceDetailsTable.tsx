@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import {ActionResult} from "../../api/history/history.ts";
 import {formatToIsraelTime} from "./utils/utils.ts";
+import ActionResultDetails from "./ActionResultDetails.tsx";
 
 interface SequenceDetailsTableProps {
   actions: ActionResult[];
@@ -26,6 +27,8 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
                                                                    }) => {
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
+  console.log(actions[0].actionOutputs);
+  
   const handleRowClick = (id: string, index: number) => {
     setExpandedRow(expandedRow === getId(id, index) ? null : getId(id, index));
     onRowClick(id);
@@ -60,16 +63,9 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
                   <TableCell>{formatToIsraelTime(action.endAt)}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell style={{paddingBottom: 0, paddingTop: 0}} colSpan={4}>
+                  <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
                     <Collapse in={expandedRow === getId(action.action.actionString, index)} timeout="auto" unmountOnExit>
-                      <Box margin={2} padding={2} borderRadius={2} border={1} borderColor="#ddd">
-                        <Typography variant="h6" gutterBottom sx={{marginBottom: 2}}>Action Logs:</Typography>
-                        {action.actionLogs.map(log => (
-                          <Typography key={log.key}>
-                            <strong>{log.key}:</strong> {log.value}
-                          </Typography>
-                        ))}
-                      </Box>
+                      <ActionResultDetails actionResult={action} />
                     </Collapse>
                   </TableCell>
                 </TableRow>
