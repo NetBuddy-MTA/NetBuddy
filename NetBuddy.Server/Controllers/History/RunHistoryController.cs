@@ -49,6 +49,7 @@ public class RunHistoryController : ControllerBase
             .OrderByDescending(x => x.EndAt)
             .Skip(from)
             .Take(to - from)
+            .Select(x => x.toDTO())
             .ToListAsync();
 
         return Ok(sequenceResults);
