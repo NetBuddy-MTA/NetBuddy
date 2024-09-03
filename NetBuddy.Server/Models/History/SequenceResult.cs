@@ -22,4 +22,16 @@ public class SequenceResult
 
     // Owner
     public UserAccount? Owner { get; set; }
+
+    public object toDTO()
+    {
+        return new
+        {
+            Id,
+            StartAt,
+            EndAt,
+            SequenceId,
+            Results
+        };
+    }
 }
