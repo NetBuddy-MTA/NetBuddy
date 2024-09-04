@@ -337,6 +337,37 @@ public sealed class PopulateActions : IInitialData
         },
         new Action
         {
+            DisplayName = "Multiplication",
+            ActionString = "Multiplication",
+            Description = "Multiply two numbers",
+            Category = "Math",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Multiplier",
+                    Description = "Amount of times the multiplicand needs to be added",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "Multiplicand",
+                    Description = "The number that needs to be added the multiplier times",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+                [
+                    new Variable
+                    {
+                        Name = "Result",
+                        Description = "The multiplication result",
+                        Type = "Number"
+                    }
+                ]
+        },
+        new Action
+        {
             DisplayName = "Addition",
             ActionString = "Addition",
             Description = "Add 2 numbers",
@@ -357,14 +388,14 @@ public sealed class PopulateActions : IInitialData
                 }
             ],
             Outputs =
-                [
-                    new Variable
-                    {
-                        Name = "Result",
-                        Description = "The addition result",
-                        Type = "Number"
-                    }
-                ]
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The addition result",
+                    Type = "Number"
+                }
+            ]
         }
     ];
 
