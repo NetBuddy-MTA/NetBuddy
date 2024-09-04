@@ -382,7 +382,7 @@ public sealed class PopulateActions : IInitialData
                 },
                 new Variable
                 {
-                    Name = "divisior",
+                    Name = "Divisior",
                     Description = "The divisor number",
                     Type = "Number"
                 }
