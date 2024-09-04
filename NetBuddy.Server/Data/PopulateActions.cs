@@ -368,6 +368,37 @@ public sealed class PopulateActions : IInitialData
         },
         new Action
         {
+            DisplayName = "Division",
+            ActionString = "Division",
+            Description = "Devide the dividend by the divisior",
+            Category = "Math",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Dividend",
+                    Description = "The dividend number",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "divisior",
+                    Description = "The divisor number",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The division result",
+                    Type = "Number"
+                }
+            ]
+        },
+        new Action
+        {
             DisplayName = "Addition",
             ActionString = "Addition",
             Description = "Add 2 numbers",
