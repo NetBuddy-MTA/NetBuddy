@@ -334,13 +334,45 @@ public sealed class PopulateActions : IInitialData
                     Type = "Number"
                 }
             ]
+        },
+        new Action
+        {
+            DisplayName = "Addition",
+            ActionString = "Addition",
+            Description = "Add 2 numbers",
+            Category = "Math",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "First Addend",
+                    Description = "First number to add to the result",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "Second Addend",
+                    Description = "Second number to add to result",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+                [
+                    new Variable
+                    {
+                        Name = "Result",
+                        Description = "The addition result",
+                        Type = "Number"
+                    }
+                ]
         }
     ];
 
-    public async Task Populate(IDocumentStore store, CancellationToken cancellation)
-    {
-        await using var session = store.LightweightSession();
-        session.Store(_actions);
-        await session.SaveChangesAsync(cancellation);
-    }
+public async Task Populate(IDocumentStore store, CancellationToken cancellation)
+{
+    await using var session = store.LightweightSession();
+    session.Store(_actions);
+    await session.SaveChangesAsync(cancellation);
+}
+
 }
