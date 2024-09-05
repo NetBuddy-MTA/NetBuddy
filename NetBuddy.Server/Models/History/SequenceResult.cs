@@ -1,4 +1,5 @@
 ﻿using Marten.Schema;
+using NetBuddy.Server.DTOs.History;
 using NetBuddy.Server.Models.User;
 
 namespace NetBuddy.Server.Models.History;
@@ -22,4 +23,16 @@ public class SequenceResult
 
     // Owner
     public UserAccount? Owner { get; set; }
+
+    public ResultDto ToDto()
+    {
+        return new ResultDto
+        {
+            Id = Id,
+            StartAt = StartAt,
+            EndAt = EndAt,
+            SequenceId = SequenceId,
+            Results = Results
+        };
+    }
 }

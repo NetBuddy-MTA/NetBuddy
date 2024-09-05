@@ -1,4 +1,5 @@
-﻿using Marten;
+﻿using JasperFx.Core;
+using Marten;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +52,10 @@ public class RunHistoryController : ControllerBase
             .Take(to - from)
             .ToListAsync();
 
-        return Ok(sequenceResults);
+        _logger.LogDebug($"Found {sequenceResults.Count} results");
+        _logger.LogDebug($"{sequenceResults}");
+
+        return Ok(sequenceResults.Map(result => result.ToDto()));
     }
 
     [HttpPut]

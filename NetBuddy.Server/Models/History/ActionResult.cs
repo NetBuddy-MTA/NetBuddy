@@ -1,5 +1,4 @@
-﻿using NetBuddy.Server.Models.Executables.Action;
-using Action = NetBuddy.Server.Models.Executables.Action.Action;
+﻿using Action = NetBuddy.Server.Models.Executables.Action.Action;
 
 namespace NetBuddy.Server.Models.History;
 

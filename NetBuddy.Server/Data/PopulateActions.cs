@@ -302,6 +302,38 @@ public sealed class PopulateActions : IInitialData
                     Type = "HttpResponse"
                 }
             ]
+        },
+        // subtract 2 numbers
+        new Action
+        {
+            DisplayName = "Subtract",
+            ActionString = "Subtract",
+            Description = "Subtracts 2 numbers",
+            Category = "Math",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Subtract From",
+                    Description = "The number to subtract from",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "To Subtract",
+                    Description = "The number to subtract",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The subtraction result",
+                    Type = "Number"
+                }
+            ]
         }
     ];
 
