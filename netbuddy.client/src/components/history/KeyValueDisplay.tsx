@@ -6,25 +6,23 @@ interface KeyValueDisplayProps {
 }
 
 const formatOutput = (data: any, indentLevel = 0): JSX.Element[] => {
-  const indent = (level: number) => ' '.repeat(level * 4); // Increase indentation level
-
   if (typeof data === 'object' && data !== null) {
     if (Array.isArray(data)) {
       return data.map((item, index) => (
         <Typography
           key={index}
-          style={{ whiteSpace: 'pre-wrap', marginBottom: '8px' }} // Add space between lines
+          sx={{ whiteSpace: 'pre-wrap', mb: 1, ml: indentLevel }}
         >
-          {indent(indentLevel)}- {formatOutput(item, indentLevel + 1)}
+          {formatOutput(item, indentLevel + 1)}
         </Typography>
       ));
     } else {
       return Object.entries(data).map(([key, value]) => (
         <Typography
           key={key}
-          style={{ whiteSpace: 'pre-wrap', marginBottom: '8px' }} // Add space between lines
+          sx={{ whiteSpace: 'pre-wrap', mb: 1, ml: indentLevel }}
         >
-          {indent(indentLevel)}{key}: {formatOutput(value, indentLevel + 1)}
+          {key}: {formatOutput(value, indentLevel + 1)}
         </Typography>
       ));
     }
@@ -35,16 +33,18 @@ const formatOutput = (data: any, indentLevel = 0): JSX.Element[] => {
 
 const KeyValueDisplay: React.FC<KeyValueDisplayProps> = ({ data }) => {
   return (
-    <>
+    <Box>
       {Object.entries(data).map(([key, value]) => (
-        <Box key={key} marginLeft={2}>
-          <Typography><strong>{key}:</strong></Typography>
-          <Box marginLeft={2}>
+        <Box key={key} sx={{ ml: 2, mb: 2 }}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            {key}:
+          </Typography>
+          <Box sx={{ ml: 2 }}>
             {formatOutput(JSON.parse(value))}
           </Box>
         </Box>
       ))}
-    </>
+    </Box>
   );
 };
 
