@@ -15,7 +15,7 @@ export type ActionResult = {
   endAt: Date;
   actionContext: Record<string, string>;
   actionLogs: { key: string, value: string }[];
-  actionOutputs: Record<string, string>
+  actionOutputs: Record<string, string>;
 };
 
 export async function GetResultRange(from: number, to: number) {
