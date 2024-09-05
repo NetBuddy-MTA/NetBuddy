@@ -357,20 +357,20 @@ public sealed class PopulateActions : IInitialData
                 }
             ],
             Outputs =
-                [
-                    new Variable
-                    {
-                        Name = "Result",
-                        Description = "The multiplication result",
-                        Type = "Number"
-                    }
-                ]
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The multiplication result",
+                    Type = "Number"
+                }
+            ]
         },
         new Action
         {
             DisplayName = "Division",
             ActionString = "Division",
-            Description = "Devide the dividend by the divisior",
+            Description = "Divide the dividend by the divisior",
             Category = "Math",
             Inputs =
             [
@@ -430,11 +430,10 @@ public sealed class PopulateActions : IInitialData
         }
     ];
 
-public async Task Populate(IDocumentStore store, CancellationToken cancellation)
-{
-    await using var session = store.LightweightSession();
-    session.Store(_actions);
-    await session.SaveChangesAsync(cancellation);
-}
-
+    public async Task Populate(IDocumentStore store, CancellationToken cancellation)
+    {
+        await using var session = store.LightweightSession();
+        session.Store(_actions);
+        await session.SaveChangesAsync(cancellation);
+    }
 }
