@@ -334,6 +334,47 @@ public sealed class PopulateActions : IInitialData
                     Type = "Number"
                 }
             ]
+        },
+        // wait for a number of milliseconds
+        new Action
+        {
+            DisplayName = "Wait For Milliseconds",
+            ActionString = "WaitForMilliseconds",
+            Description = "Waits for the number of milliseconds specified",
+            Category = "Time",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Milliseconds",
+                    Description = "The number of milliseconds to wait for",
+                    Optional = false,
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+            ]
+        },
+        // explicitly wait for tab to finish loading
+        new Action
+        {
+            DisplayName = "Wait For Tab To Load",
+            ActionString = "WaitForTab",
+            Description = "Waits for the tab to load before continuing",
+            Category = "Time",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Tab",
+                    Description = "The tab that was created",
+                    Type = "Tab"
+                }
+            ],
+            Outputs =
+            [
+            ]
         }
     ];
 
