@@ -9,8 +9,9 @@ type ActionProps = {
   inputsToFill: SequenceVariable[];
   action: ExecutableAction;
   createSetValue: (field: string) => (value?: any) => void;
+  values: Record<string, any>;
 }
-export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
+export const Action = ({inputsToFill, action, createSetValue, values}: ActionProps) => {
   return (
     <Card key={action.id}>
       <CardContent>
@@ -22,11 +23,13 @@ export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
             inputsToFill.map(input => {
               const [t] = input.type.split("[]", 1);
               const InputComponent = mapSequenceVarToInput[t];
+              const value = values[input.name];
+
               return (
                 <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
                   <InputComponent
                     key={action.actionString + "|" + input.originalName}
-                    title={input.originalName}
+                    title={value ?? input.originalName}
                     defaultValue={input.defaultValue}
                     required={!input.optional}
                     setValue={createSetValue(input.name)}
