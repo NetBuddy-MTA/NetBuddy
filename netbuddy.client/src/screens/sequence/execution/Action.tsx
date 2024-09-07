@@ -22,11 +22,12 @@ export const Action = ({inputsToFill, action, createSetValue}: ActionProps) => {
             inputsToFill.map(input => {
               const [t] = input.type.split("[]", 1);
               const InputComponent = mapSequenceVarToInput[t];
+
               return (
                 <Grid item xs={12} sm={6} key={action.actionString + "|" + input.originalName}>
                   <InputComponent
                     key={action.actionString + "|" + input.originalName}
-                    title={input.originalName}
+                    title={input.name !== undefined ? `${input.name} - ${input.originalName}` : input.originalName}
                     defaultValue={input.defaultValue}
                     required={!input.optional}
                     setValue={createSetValue(input.name)}

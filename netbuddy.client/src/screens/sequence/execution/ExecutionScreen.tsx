@@ -49,7 +49,7 @@ const ExecutionScreen = () => {
       action.outputs.forEach(output => seen.add(output.name));
       return {components, inputs};
     }, {components, inputs}) ?? {components, inputs};
-  };
+  }
 
   const createSetValue = (field: string) => {
     return (value?: any) => {
