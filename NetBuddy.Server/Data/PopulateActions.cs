@@ -381,7 +381,7 @@ public sealed class PopulateActions : IInitialData
         {
             DisplayName = "Parse Number",
             ActionString = "ParseNumber",
-            Description = "Converts the string representation of a number to a number",
+            Description = "Converts the string representation of a number to a number if possible",
             Category = "Parsing",
             Inputs =
             [
@@ -404,6 +404,38 @@ public sealed class PopulateActions : IInitialData
                 {
                     Name = "Converted Successfully",
                     Description = "Whether the string converted to a number or not",
+                    Type = "Boolean"
+                }
+            ]
+        },
+        // parse string to url
+        new Action
+        {
+            DisplayName = "Parse URL",
+            ActionString = "ParseURL",
+            Description = "Converts the string into a url if possible",
+            Category = "Parsing",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "URL String",
+                    Description = "The string to convert",
+                    Type = "String"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "URL",
+                    Description = "The converted URL",
+                    Type = "URL"
+                },
+                new Variable
+                {
+                    Name = "Converted Successfully",
+                    Description = "Whether the string converted to a URL or not",
                     Type = "Boolean"
                 }
             ]
