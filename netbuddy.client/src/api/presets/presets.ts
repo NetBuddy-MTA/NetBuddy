@@ -1,15 +1,24 @@
 ﻿import agent from "../agent.ts";
 
-export type Preset = {
+export type DisplayPreset = {
   id: string;
   name: string;
   description: string;
+}
+
+export type Preset = DisplayPreset & {
   sequenceId: string;
   context: Record<string, string>;
 };
 
 export async function GetPresets(sequenceId: string) {
-  return agent.get<Preset[]>("/execution/presets/", {params: {sequenceId}})
+  return agent.get<DisplayPreset[]>(`/execution/presets/${sequenceId}`)
+  .catch(error => console.log(error))
+  .then(response => response?.data);
+}
+
+export async function GetPreset(presetId: string) {
+  return agent.get<Preset>(`/execution/presets/get/${presetId}`)
   .catch(error => console.log(error))
   .then(response => response?.data);
 }
@@ -22,5 +31,5 @@ export async function PutPreset(preset: Preset) {
 }
 
 export async function DeletePreset(presetId: string) {
-  return agent.delete("/execution/presets/delete/", {params: {presetId}});
+  return agent.delete(`/execution/presets/delete/${presetId}`);
 }

@@ -1,4 +1,5 @@
-﻿using Marten;
+﻿using JasperFx.Core;
+using Marten;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -128,7 +129,7 @@ public class ExecutionController : ControllerBase
     [Authorize]
     [Route("presets/{sequenceId}")]
     [HttpGet]
-    public async Task<IActionResult> GetPresets([FromQuery] string sequenceId)
+    public async Task<IActionResult> GetPresets([FromRoute] string sequenceId)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -148,12 +149,41 @@ public class ExecutionController : ControllerBase
         }
 
         await using var session = _store.QuerySession();
-        var presets = session.Query<Preset>()
+        var presets = await session.Query<Preset>()
             .Where(x => x.Owner == null || x.Owner.Email == user.Email)
             .Where(x => x.SequenceId == id)
             .ToListAsync();
 
-        return Ok(presets);
+        return Ok(presets.Map(x => x.ToDisplayPreset()));
+    }
+
+    [Authorize]
+    [Route("presets/get/{presetId}")]
+    [HttpGet]
+    public async Task<IActionResult> GetPreset([FromRoute] string presetId)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        Guid id;
+        try
+        {
+            id = Guid.Parse(presetId);
+            _logger.LogInformation("Parsed preset id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid preset id.");
+        }
+
+        await using var session = _store.QuerySession();
+        var preset = await session.LoadAsync<Preset>(id);
+        if (preset == null) return BadRequest();
+
+        return Ok(preset);
     }
 
     [Authorize]
@@ -188,7 +218,7 @@ public class ExecutionController : ControllerBase
     [Authorize]
     [Route("presets/delete/{presetId}")]
     [HttpDelete]
-    public async Task<IActionResult> DeletePreset([FromQuery] string presetId)
+    public async Task<IActionResult> DeletePreset([FromRoute] string presetId)
     {
         // validate the model state
         if (!ModelState.IsValid) return BadRequest(ModelState);
