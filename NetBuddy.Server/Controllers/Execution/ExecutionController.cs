@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NetBuddy.Server.Models.Executables.Sequence;
+using NetBuddy.Server.Models.Preset;
 using NetBuddy.Server.Models.User;
 using Action = NetBuddy.Server.Models.Executables.Action.Action;
 
@@ -122,5 +123,100 @@ public class ExecutionController : ControllerBase
             sequence.Id,
             errors
         });
+    }
+
+    [Authorize]
+    [Route("presets/{sequenceId}")]
+    [HttpGet]
+    public async Task<IActionResult> GetPresets([FromQuery] string sequenceId)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        Guid id;
+        try
+        {
+            id = Guid.Parse(sequenceId);
+            _logger.LogInformation("Parsed sequence id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid sequence id.");
+        }
+
+        await using var session = _store.QuerySession();
+        var presets = session.Query<Preset>()
+            .Where(x => x.Owner == null || x.Owner.Email == user.Email)
+            .Where(x => x.SequenceId == id)
+            .ToListAsync();
+
+        return Ok(presets);
+    }
+
+    [Authorize]
+    [Route("presets/save")]
+    [HttpPut]
+    public async Task<IActionResult> PutPreset([FromBody] Preset preset)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        // if existing preset check if it belongs to the user, if so update it, else unauthorized
+        if (preset.Id != Guid.Empty)
+        {
+            await using var querySession = _store.QuerySession();
+            var existingPreset = await querySession.LoadAsync<Preset>(preset.Id);
+            if (existingPreset != null && (existingPreset.Owner == null || existingPreset.Owner.Email != user.Email))
+                // bad owner
+                return Unauthorized();
+        }
+
+        preset.Owner = user;
+        await using var writeSession = _store.LightweightSession();
+        writeSession.Store(preset);
+        await writeSession.SaveChangesAsync();
+
+        return Ok(preset.Id);
+    }
+
+    [Authorize]
+    [Route("presets/delete/{presetId}")]
+    [HttpDelete]
+    public async Task<IActionResult> DeletePreset([FromQuery] string presetId)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        Guid id;
+        try
+        {
+            id = Guid.Parse(presetId);
+            _logger.LogInformation("Parsed sequence id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid sequence id.");
+        }
+
+        await using var querySession = _store.QuerySession();
+        var preset = await querySession.LoadAsync<Preset>(id);
+        if (preset != null && preset.Owner?.Email == user.Email)
+        {
+            await using var writeSession = _store.LightweightSession();
+            writeSession.Delete<Preset>(id);
+            await writeSession.SaveChangesAsync();
+            return Ok(id);
+        }
+
+        return BadRequest();
     }
 }
