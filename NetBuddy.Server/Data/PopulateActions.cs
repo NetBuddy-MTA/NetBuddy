@@ -439,6 +439,33 @@ public sealed class PopulateActions : IInitialData
                     Type = "Boolean"
                 }
             ]
+        },
+        // Goto action
+        new Action
+        {
+            DisplayName = "Goto",
+            ActionString = "Goto",
+            Description = "Goes a number of actions back or forward in the sequence",
+            Category = "Control Flow",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Number",
+                    Description = "A positive (jump ahead) or negative (jump back) number",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "Condition",
+                    Description = "If present will check if true and jump if and only if it is",
+                    Type = "Boolean",
+                    Optional = true
+                }
+            ],
+            Outputs =
+            [
+            ]
         }
     ];
 
