@@ -25,12 +25,19 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
                                                                      actions,
                                                                      onRowClick,
                                                                    }) => {
-  const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const [expandedRows, setExpandedRows] = useState<string[]>([]);
 
   console.log(actions[0].actionOutputs);
   
   const handleRowClick = (id: string, index: number) => {
-    setExpandedRow(expandedRow === getId(id, index) ? null : getId(id, index));
+    const rowId = getId(id, index);
+    
+    if (expandedRows.includes(rowId)) {
+      setExpandedRows(expandedRows.filter(row => row !== rowId));
+    } else {
+      setExpandedRows([...expandedRows, rowId]);
+    }
+
     onRowClick(id);
   };
 
@@ -64,7 +71,11 @@ const SequenceDetailsTable: React.FC<SequenceDetailsTableProps> = ({
                 </TableRow>
                 <TableRow>
                   <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={4}>
-                    <Collapse in={expandedRow === getId(action.action.actionString, index)} timeout="auto" unmountOnExit>
+                    <Collapse
+                      in={expandedRows.includes(getId(action.action.actionString, index))}
+                      timeout="auto"
+                      unmountOnExit
+                    >
                       <ActionResultDetails actionResult={action} />
                     </Collapse>
                   </TableCell>
