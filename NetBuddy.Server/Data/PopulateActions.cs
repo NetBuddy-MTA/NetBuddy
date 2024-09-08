@@ -466,6 +466,96 @@ public sealed class PopulateActions : IInitialData
             Outputs =
             [
             ]
+        },
+        // not for booleans
+        new Action
+        {
+            DisplayName = "Not",
+            ActionString = "BooleanNot",
+            Description = "Gives the opposite value of the boolean input",
+            Category = "Logic",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "In",
+                    Description = "The boolean to invert",
+                    Type = "Boolean"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Out",
+                    Description = "The inverted value of the input",
+                    Type = "Boolean"
+                }
+            ]
+        },
+        // and gate
+        new Action
+        {
+            DisplayName = "And",
+            ActionString = "BooleanAnd",
+            Description = "Performs a logical and operation on the inputs",
+            Category = "Logic",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "In 1",
+                    Description = "The first input",
+                    Type = "Boolean"
+                },
+                new Variable
+                {
+                    Name = "In 2",
+                    Description = "The first input",
+                    Type = "Boolean"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Out",
+                    Description = "The result of the operation",
+                    Type = "Boolean"
+                }
+            ]
+        },
+        // or gate
+        new Action
+        {
+            DisplayName = "And",
+            ActionString = "BooleanOr",
+            Description = "Performs a logical or operation on the inputs",
+            Category = "Logic",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "In 1",
+                    Description = "The first input",
+                    Type = "Boolean"
+                },
+                new Variable
+                {
+                    Name = "In 2",
+                    Description = "The first input",
+                    Type = "Boolean"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Out",
+                    Description = "The result of the operation",
+                    Type = "Boolean"
+                }
+            ]
         }
     ];
 
