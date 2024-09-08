@@ -375,6 +375,38 @@ public sealed class PopulateActions : IInitialData
             Outputs =
             [
             ]
+        },
+        // integer parser
+        new Action
+        {
+            DisplayName = "Parse Number",
+            ActionString = "ParseNumber",
+            Description = "Converts the string representation of a number to a number",
+            Category = "Parsing",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Number String",
+                    Description = "The string representing a number",
+                    Type = "String"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Number",
+                    Description = "The numeric representation of the string",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "Converted Successfully",
+                    Description = "Whether the string converted to a number or not",
+                    Type = "Boolean"
+                }
+            ]
         }
     ];
 
