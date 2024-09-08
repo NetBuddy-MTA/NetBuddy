@@ -23,6 +23,7 @@ const ExecutionScreen = () => {
   const [sequence, setSequence] = useState<Sequence>();
   const [values, setValues] = useState<Record<string, any>>({});
   const [preset, setPreset] = useState<Preset>();
+  const [fromPreset, setFromPreset] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (preset !== undefined) {
@@ -32,6 +33,7 @@ const ExecutionScreen = () => {
       for (const key in preset.context) {
         context[key] = JSON.parse(preset.context[key]);
       }
+      setFromPreset(new Set(Object.keys(context)));
       setValues(context);
       setPreset(undefined);
     }
@@ -39,6 +41,7 @@ const ExecutionScreen = () => {
 
   useEffect(() => {
     setPreset(undefined);
+    setFromPreset(new Set());
     setValues({});
   }, [sequence]);
 
@@ -54,7 +57,7 @@ const ExecutionScreen = () => {
     return sequence?.actions.reduce(({components, inputs}, action) => {
       // get list of all inputs that aren't filled by a previous action
       const relevant = (input: SequenceVariable) =>
-        !seen.has(input.name) && !(input.name in values) && input.type.split("[]", 1).some(t => t in mapSequenceVarToInput);
+        !seen.has(input.name) && !fromPreset.has(input.name) && input.type.split("[]", 1).some(t => t in mapSequenceVarToInput);
       const relevantInputs = action.inputs.filter(relevant);
       // if the list isn't empty
       if (relevantInputs.length > 0) {
