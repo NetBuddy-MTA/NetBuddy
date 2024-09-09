@@ -556,6 +556,63 @@ public sealed class PopulateActions : IInitialData
                     Type = "Boolean"
                 }
             ]
+        },
+        // define a new number variable
+        new Action
+        {
+            DisplayName = "Declare Number",
+            Description = "Just allows you to define a numeric variable",
+            ActionString = "DeclareNumber",
+            Category = "Variables",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Number",
+                    Description = "The number declared",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+            ]
+        },
+        // define a new string variable
+        new Action
+        {
+            DisplayName = "Declare String",
+            Description = "Just allows you to define a string variable",
+            ActionString = "DeclareString",
+            Category = "Variables",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "String",
+                    Description = "The string declared",
+                    Type = "String"
+                }
+            ]
+        },
+        // define a new boolean variable
+        new Action
+        {
+            DisplayName = "Declare Boolean",
+            Description = "Just allows you to define a boolean variable",
+            ActionString = "DeclareBoolean",
+            Category = "Variables",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Boolean",
+                    Description = "The boolean declared",
+                    Type = "Boolean"
+                }
+            ],
+            Outputs =
+            [
+            ]
         }
     ];
 
