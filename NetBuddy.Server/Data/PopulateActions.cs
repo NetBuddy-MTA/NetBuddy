@@ -621,6 +621,38 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
+        // concatenate 2 strings
+        new Action
+        {
+            DisplayName = "Concatenate",
+            Description = "Concatenate the second string to the end of the first",
+            ActionString = "StringConcatenate",
+            Category = "Strings",
+            Inputs = 
+            [
+                new Variable
+                {
+                    Name = "First",
+                    Description = "The first string",
+                    Type = "String"
+                },
+                new Variable
+                {
+                    Name = "Second",
+                    Description = "The second string",
+                    Type = "String"
+                }
+            ],
+            Outputs = 
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The concatenated result",
+                    Type = "String"
+                }
+            ]
+        }
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
