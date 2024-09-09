@@ -57,7 +57,7 @@ const ExecutionScreen = () => {
     return sequence?.actions.reduce(({components, inputs}, action) => {
       // get list of all inputs that aren't filled by a previous action
       const relevant = (input: SequenceVariable) =>
-        !seen.has(input.name) && !fromPreset.has(input.name) && input.type.split("[]", 1).some(t => t in mapSequenceVarToInput);
+        !seen.has(input.name) && !fromPreset.has(input.name) && input.name !== "" && input.type.split("[]", 1).some(t => t in mapSequenceVarToInput);
       const relevantInputs = action.inputs.filter(relevant);
       // if the list isn't empty
       if (relevantInputs.length > 0) {
