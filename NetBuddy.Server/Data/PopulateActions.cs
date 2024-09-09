@@ -588,7 +588,39 @@ public sealed class PopulateActions : IInitialData
                     Type = "Element"
                 }
             ]
-        }
+        },
+        // number less than action
+        new Action
+        {
+            DisplayName = "Less Than",
+            Description = "Whether the first number is smaller than the second",
+            ActionString = "NumberLessThan",
+            Category = "Math",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "First",
+                    Description = "The first number",
+                    Type = "Number"
+                },
+                new Variable
+                {
+                    Name = "Second",
+                    Description = "The second number",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "First < Second",
+                    Type = "Boolean"
+                }
+            ]
+        },
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
