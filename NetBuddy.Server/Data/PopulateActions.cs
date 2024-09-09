@@ -556,6 +556,44 @@ public sealed class PopulateActions : IInitialData
                     Type = "Boolean"
                 }
             ]
+        },
+        // get an element array index
+        new Action
+        {
+            DisplayName = "Get Element At Index",
+            Description = "Retrieves the element from an index of the array",
+            ActionString = "GetElementFromArray",
+            Category = "Arrays",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Array",
+                    Description = "The array to get the element from",
+                    Type = "Element[]"
+                },
+                new Variable
+                {
+                    Name = "Index",
+                    Description = "The index to retrieve from",
+                    Type = "Number"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Element",
+                    Description = "The retrieved element",
+                    Type = "Element"
+                },
+                new Variable
+                {
+                    Name = "Success",
+                    Description = "Whether or not the operation was successful",
+                    Type = "Boolean"
+                }
+            ]
         }
     ];
 
