@@ -621,6 +621,76 @@ public sealed class PopulateActions : IInitialData
                 }
             ]
         },
+        // concatenate 2 strings
+        new Action
+        {
+            DisplayName = "Concatenate",
+            Description = "Concatenate the second string to the end of the first",
+            ActionString = "StringConcatenate",
+            Category = "Strings",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "First",
+                    Description = "The first string",
+                    Type = "String"
+                },
+                new Variable
+                {
+                    Name = "Second",
+                    Description = "The second string",
+                    Type = "String"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The concatenated result",
+                    Type = "String"
+                }
+            ]
+        },
+        // string replace
+        new Action
+        {
+            DisplayName = "Replace",
+            Description = "Replaces all instances of a substring within the input string with another",
+            ActionString = "StringReplace",
+            Category = "Strings",
+            Inputs =
+            [
+                new Variable
+                {
+                    Name = "Main String",
+                    Description = "The string in which the substring will be replaced",
+                    Type = "String"
+                },
+                new Variable
+                {
+                    Name = "Substring",
+                    Description = "The substring to replace with another string",
+                    Type = "String"
+                },
+                new Variable
+                {
+                    Name = "Replacement String",
+                    Description = "The string to replace instances of the substring with",
+                    Type = "String"
+                }
+            ],
+            Outputs =
+            [
+                new Variable
+                {
+                    Name = "Result",
+                    Description = "The result of the operation",
+                    Type = "String"
+                }
+            ]
+        }
     ];
 
     public async Task Populate(IDocumentStore store, CancellationToken cancellation)
