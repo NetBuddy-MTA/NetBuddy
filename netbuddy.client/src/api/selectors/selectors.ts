@@ -12,6 +12,7 @@ export type SelectorStage = {
   tag: string;
   attributes: { [key: string]: string };
   useAttributes: { [key: string]: boolean };
+  attributeFullMatch: { [key: string]: boolean };
   inUse: boolean;
 };
 
@@ -33,7 +34,7 @@ export function selectorToString(selector: Selector): string {
     // add the attributes in use to the stage string
     for (const key in stage.attributes) {
       if (!stage.useAttributes[key]) continue;
-      stageString += `[${key}="${stage.attributes[key]}"]`;
+      stageString += `[${key}${stage.attributeFullMatch[key] ? "" : "*"}="${stage.attributes[key]}"]`;
     }
 
     // add the stage string to the selector string

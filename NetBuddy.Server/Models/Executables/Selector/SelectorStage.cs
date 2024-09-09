@@ -11,6 +11,9 @@ public sealed class SelectorStage
     // whether to use the attribute or not
     public Dictionary<string, bool> UseAttributes { get; set; } = new();
 
+    // whether to full match on the attribute or not
+    public Dictionary<string, bool> AttributeFullMatch { get; set; } = new();
+
     // if this stage should be included in the selector or not
     public bool InUse { get; set; } = true;
 }

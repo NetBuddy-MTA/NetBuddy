@@ -8,16 +8,19 @@ export type AttributeItemProps = {
   name: string;
   value: string;
   inUse: boolean;
+  fullMatch: boolean;
   setValue: (value: string) => void;
   setInUse: (inUse: boolean) => void;
+  setFullMatch: (fullMatch: boolean) => void;
 };
 
 const AttributeItem = (props: AttributeItemProps) => {
   const {
-    name, value, inUse, setValue, setInUse
+    name, value, inUse, setValue, setInUse, fullMatch, setFullMatch
   } = props;
 
   const [used, setUsed] = useState<boolean>(inUse);
+  const [doFullMatch, setDoFullMatch] = useState<boolean>(fullMatch);
 
   return (
     <Stack direction="row" justifyItems="left" alignItems="left" maxWidth={600}>
@@ -38,6 +41,12 @@ const AttributeItem = (props: AttributeItemProps) => {
         value={value}
         onChange={e => setValue(e.target.value)}
       />
+      <Tooltip title="Full Match?">
+        <Checkbox checked={doFullMatch} onClick={() => {
+          setFullMatch(!doFullMatch);
+          setDoFullMatch(!doFullMatch);
+        }}/>
+      </Tooltip>
     </Stack>
   );
 };

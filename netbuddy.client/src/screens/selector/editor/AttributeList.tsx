@@ -4,7 +4,7 @@ import AttributeItem from "./AttributeItem.tsx";
 
 export type AttributeListProps = {
   stageIndex?: number;
-  selector?: Selector
+  selector?: Selector;
   setSelector: (selector?: Selector) => void;
 };
 
@@ -31,6 +31,16 @@ const AttributeList = (props: AttributeListProps) => {
     });
   };
 
+  const generateSetFullMatch = (key: string) => (fullMatch: boolean) => {
+    selector && setSelector({
+      ...selector,
+      stages: selector.stages.map((stage, index) => index === stageIndex ? {
+        ...stage,
+        attributeFullMatch: {...stage.useAttributes, [key]: fullMatch}
+      } : stage)
+    });
+  }
+
   return (
     <Stack direction="column" padding={1} spacing={1}>
       {
@@ -43,8 +53,10 @@ const AttributeList = (props: AttributeListProps) => {
                 name={key}
                 value={stage.attributes[key]}
                 inUse={stage.useAttributes[key]}
+                fullMatch={stage.attributeFullMatch[key]}
                 setValue={generateSetValue(key)}
                 setInUse={generateSetInUse(key)}
+                setFullMatch={generateSetFullMatch(key)}
               />
             );
           }) :
