@@ -586,12 +586,6 @@ public sealed class PopulateActions : IInitialData
                     Name = "Element",
                     Description = "The retrieved element",
                     Type = "Element"
-                },
-                new Variable
-                {
-                    Name = "Success",
-                    Description = "Whether or not the operation was successful",
-                    Type = "Boolean"
                 }
             ]
         }
