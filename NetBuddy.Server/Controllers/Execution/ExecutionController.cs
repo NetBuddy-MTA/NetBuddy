@@ -127,6 +127,47 @@ public class ExecutionController : ControllerBase
     }
 
     [Authorize]
+    [Route("sequence/{sequenceId}")]
+    [HttpDelete]
+    public async Task<IActionResult> DeleteSequence([FromRoute] string sequenceId)
+    {
+        // validate the model state
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null) return Unauthorized();
+
+        Guid id;
+        try
+        {
+            id = Guid.Parse(sequenceId);
+            _logger.LogInformation("Parsed sequence id successfully: {id}", id);
+        }
+        catch (Exception)
+        {
+            return BadRequest("Invalid sequence id.");
+        }
+
+        // check if sequence exists and if the user is its owner
+        await using var querySession = _store.QuerySession();
+        var sequence = await querySession.LoadAsync<Sequence>(id);
+        if (sequence != null)
+        {
+            if (sequence.Owner == null || sequence.Owner.Email != user.Email)
+                // user is not the owner of the sequence
+                return NotFound();
+
+            // user is the owner and sequence found
+            await using var writeSession = _store.LightweightSession();
+            writeSession.Delete(sequence);
+            writeSession.SaveChangesAsync();
+            return Ok();
+        }
+
+        return NotFound();
+    }
+
+    [Authorize]
     [Route("presets/{sequenceId}")]
     [HttpGet]
     public async Task<IActionResult> GetPresets([FromRoute] string sequenceId)

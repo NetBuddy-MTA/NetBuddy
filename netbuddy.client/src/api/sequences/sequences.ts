@@ -47,3 +47,7 @@ export async function SaveExecutableSequence(sequence: Sequence) {
   .catch((error) => console.log(error.error))
   .then((response) => response?.data as { id: string; errors: string[] });
 }
+
+export async function DeleteSequence(sequenceId: string) {
+  return await agent.delete(`/execution/sequence/${sequenceId}`);
+}
